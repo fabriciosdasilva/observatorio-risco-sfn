@@ -4,8 +4,8 @@
 
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-black.svg)](https://nextjs.org/)
-[![Deploy with Vercel](https://img.shields.io/badge/Deploy-Vercel-000000.svg)](https://vercel.com/)
 [![Tests Passing](https://img.shields.io/badge/Tests-Pytest%20Passing-brightgreen.svg)]()
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Ffabriciosdasilva%2Fobservatorio-risco-sfn&root-directory=web)
 
 ---
 
