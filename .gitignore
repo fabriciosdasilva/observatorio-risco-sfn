@@ -1,0 +1,29 @@
+# Ambientes virtuais
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.ipynb_checkpoints/
+.pytest_cache/
+*.log
+
+# Dados brutos grandes
+data/raw/*.zip
+data/raw/*.csv
+data/processed/*.parquet
+!data/processed/.gitkeep
+
+# Node / Next.js
+web/node_modules/
+web/.next/
+web/out/
+
+# IDE
+.vscode/
+.idea/
+.DS_Store

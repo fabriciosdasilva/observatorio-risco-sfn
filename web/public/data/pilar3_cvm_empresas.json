@@ -1,0 +1,549 @@
+{
+  "metadata": {
+    "title": "Early Warning de Risco de Crédito PJ (CVM)",
+    "train_period": "2018-2021",
+    "test_oot_period": "2022-2023",
+    "n_train_samples": 1633,
+    "n_test_samples": 952
+  },
+  "oot_backtesting_metrics": {
+    "logistic_regression": {
+      "roc_auc": 0.8923,
+      "gini": 0.7846,
+      "ks_stat": 0.6449,
+      "ks_pvalue": 0.0,
+      "brier_score": 0.0643,
+      "pr_auc": 0.5598
+    },
+    "calibrated_xgboost": {
+      "roc_auc": 0.9927,
+      "gini": 0.9855,
+      "ks_stat": 0.9605,
+      "ks_pvalue": 0.0,
+      "brier_score": 0.008,
+      "pr_auc": 0.9833
+    }
+  },
+  "feature_importance_shap": {
+    "roe": 2.4573,
+    "liquidez_corrente": 0.6597,
+    "margem_liquida": 0.4834,
+    "disponibilidades": 0.2524,
+    "cobertura_juros": 0.2248,
+    "receita_liquida": 0.1629,
+    "ebit_operacional": 0.1035,
+    "pressao_curto_prazo": 0.0965,
+    "alavancagem_dl_ebit": 0.0645,
+    "divida_bruta": 0.0551,
+    "divida_liquida": 0.0489,
+    "fco_caixa_operacional": 0.0451
+  },
+  "sample_companies_monitor": [
+    {
+      "CNPJ_CIA": "00.776.574/0001-56",
+      "DENOM_CIA": "AMERICANAS S.A. - EM RECUPERAÇÃO JUDICIAL",
+      "ano": 2023,
+      "DT_REFER": "2023-12-31",
+      "prob_distress": 98.7,
+      "rating": "CCC/Distress",
+      "ground_truth_distress": 1,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": 3.059
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": 1.732
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": 0.707
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "06.164.253/0001-87",
+      "DENOM_CIA": "GOL LINHAS AEREAS INTELIGENTES S.A.",
+      "ano": 2023,
+      "DT_REFER": "2023-12-31",
+      "prob_distress": 97.91,
+      "rating": "CCC/Distress",
+      "ground_truth_distress": 1,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": 3.522
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": 1.408
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": 0.528
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "33.041.260/0652-90",
+      "DENOM_CIA": "GRUPO CASAS BAHIA S.A.",
+      "ano": 2023,
+      "DT_REFER": "2023-12-31",
+      "prob_distress": 15.82,
+      "rating": "BBB",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "cobertura_juros",
+          "shap_impact": 0.851
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": 0.754
+        },
+        {
+          "feature": "roe",
+          "shap_impact": -0.624
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "61.189.288/0001-89",
+      "DENOM_CIA": "MARISA LOJAS S.A.",
+      "ano": 2023,
+      "DT_REFER": "2023-12-31",
+      "prob_distress": 5.49,
+      "rating": "A",
+      "ground_truth_distress": 1,
+      "top_shap_drivers": [
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": 1.165
+        },
+        {
+          "feature": "roe",
+          "shap_impact": -1.083
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": 0.506
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "03.378.521/0001-75",
+      "DENOM_CIA": "LIGHT S.A. - EM RECUPERAÇÃO JUDICIAL",
+      "ano": 2023,
+      "DT_REFER": "2023-12-31",
+      "prob_distress": 1.4,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -2.625
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": 1.333
+        },
+        {
+          "feature": "pressao_curto_prazo",
+          "shap_impact": 0.589
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "01.917.818/0001-36",
+      "DENOM_CIA": "LIGHT ENERGIA S.A.",
+      "ano": 2023,
+      "DT_REFER": "2023-12-31",
+      "prob_distress": 1.12,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -3.139
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": 1.135
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": -0.562
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "47.960.950/0001-21",
+      "DENOM_CIA": "MAGAZINE LUIZA S.A.",
+      "ano": 2023,
+      "DT_REFER": "2023-12-31",
+      "prob_distress": 1.11,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -2.45
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": -0.631
+        },
+        {
+          "feature": "disponibilidades",
+          "shap_impact": -0.343
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "60.746.948/0001-12",
+      "DENOM_CIA": "BCO BRADESCO S.A.",
+      "ano": 2023,
+      "DT_REFER": "2023-12-31",
+      "prob_distress": 1.09,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -1.805
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": -0.479
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": -0.305
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "60.872.504/0001-23",
+      "DENOM_CIA": "ITAU UNIBANCO HOLDING S.A.",
+      "ano": 2023,
+      "DT_REFER": "2023-12-31",
+      "prob_distress": 1.09,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -2.376
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": 0.738
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": -0.545
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "33.000.167/0001-01",
+      "DENOM_CIA": "PETROLEO BRASILEIRO S.A. PETROBRAS",
+      "ano": 2023,
+      "DT_REFER": "2023-12-31",
+      "prob_distress": 1.08,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -2.411
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": -0.625
+        },
+        {
+          "feature": "cobertura_juros",
+          "shap_impact": -0.269
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "33.592.510/0001-54",
+      "DENOM_CIA": "VALE S.A.",
+      "ano": 2023,
+      "DT_REFER": "2023-12-31",
+      "prob_distress": 1.07,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -2.341
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": -0.605
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": -0.508
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "00.776.574/0001-56",
+      "DENOM_CIA": "AMERICANAS S.A. - EM RECUPERAÇÃO JUDICIAL",
+      "ano": 2022,
+      "DT_REFER": "2022-12-31",
+      "prob_distress": 98.71,
+      "rating": "CCC/Distress",
+      "ground_truth_distress": 1,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": 3.042
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": 1.614
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": 0.653
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "06.164.253/0001-87",
+      "DENOM_CIA": "GOL LINHAS AEREAS INTELIGENTES S.A.",
+      "ano": 2022,
+      "DT_REFER": "2022-12-31",
+      "prob_distress": 98.39,
+      "rating": "CCC/Distress",
+      "ground_truth_distress": 1,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": 3.532
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": 1.49
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": 0.644
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "03.378.521/0001-75",
+      "DENOM_CIA": "LIGHT S.A. - EM RECUPERAÇÃO JUDICIAL",
+      "ano": 2022,
+      "DT_REFER": "2022-12-31",
+      "prob_distress": 1.62,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -0.949
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": 0.492
+        },
+        {
+          "feature": "disponibilidades",
+          "shap_impact": -0.279
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "61.189.288/0001-89",
+      "DENOM_CIA": "MARISA LOJAS S.A.",
+      "ano": 2022,
+      "DT_REFER": "2022-12-31",
+      "prob_distress": 1.15,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -1.308
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": -0.903
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": 0.433
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "60.872.504/0001-23",
+      "DENOM_CIA": "ITAU UNIBANCO HOLDING S.A.",
+      "ano": 2022,
+      "DT_REFER": "2022-12-31",
+      "prob_distress": 1.13,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -1.929
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": -0.508
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": -0.429
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "33.041.260/0652-90",
+      "DENOM_CIA": "GRUPO CASAS BAHIA S.A.",
+      "ano": 2022,
+      "DT_REFER": "2022-12-31",
+      "prob_distress": 1.1,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -2.525
+        },
+        {
+          "feature": "cobertura_juros",
+          "shap_impact": -0.457
+        },
+        {
+          "feature": "disponibilidades",
+          "shap_impact": -0.219
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "60.746.948/0001-12",
+      "DENOM_CIA": "BCO BRADESCO S.A.",
+      "ano": 2022,
+      "DT_REFER": "2022-12-31",
+      "prob_distress": 1.09,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -1.782
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": -0.49
+        },
+        {
+          "feature": "cobertura_juros",
+          "shap_impact": -0.369
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "33.000.167/0001-01",
+      "DENOM_CIA": "PETROLEO BRASILEIRO S.A. PETROBRAS",
+      "ano": 2022,
+      "DT_REFER": "2022-12-31",
+      "prob_distress": 1.08,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -2.402
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": -0.623
+        },
+        {
+          "feature": "disponibilidades",
+          "shap_impact": -0.26
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "47.960.950/0001-21",
+      "DENOM_CIA": "MAGAZINE LUIZA S.A.",
+      "ano": 2022,
+      "DT_REFER": "2022-12-31",
+      "prob_distress": 1.08,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -2.326
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": -0.622
+        },
+        {
+          "feature": "disponibilidades",
+          "shap_impact": -0.287
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "01.917.818/0001-36",
+      "DENOM_CIA": "LIGHT ENERGIA S.A.",
+      "ano": 2022,
+      "DT_REFER": "2022-12-31",
+      "prob_distress": 1.07,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -2.4
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": -0.589
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": -0.565
+        }
+      ]
+    },
+    {
+      "CNPJ_CIA": "33.592.510/0001-54",
+      "DENOM_CIA": "VALE S.A.",
+      "ano": 2022,
+      "DT_REFER": "2022-12-31",
+      "prob_distress": 1.07,
+      "rating": "AAA",
+      "ground_truth_distress": 0,
+      "top_shap_drivers": [
+        {
+          "feature": "roe",
+          "shap_impact": -2.311
+        },
+        {
+          "feature": "margem_liquida",
+          "shap_impact": -0.612
+        },
+        {
+          "feature": "liquidez_corrente",
+          "shap_impact": -0.456
+        }
+      ]
+    }
+  ]
+}

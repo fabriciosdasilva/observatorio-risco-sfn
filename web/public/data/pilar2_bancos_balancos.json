@@ -1,0 +1,482 @@
+{
+  "metadata": {
+    "title": "Raio-X dos Grandes Bancos Brasileiros (CVM/BACEN)",
+    "period": "2018-2023",
+    "n_institutions": 8,
+    "stress_scenario_standard": "Resolução CMN nº 4.966 / IFRS 9 Forward-Looking Stress"
+  },
+  "banks": {
+    "Itaú Unibanco": {
+      "cnpj": "60.872.504/0001-23",
+      "tipo": "Tradicional",
+      "historico": [
+        {
+          "ano": 2018,
+          "ativo_total_bi": 1552.8,
+          "patrimonio_liquido_bi": 1119.73,
+          "lucro_liquido_bi": 25.64,
+          "despesas_captacao_bi": 2.4,
+          "roe_pct": 2.29
+        },
+        {
+          "ano": 2019,
+          "ativo_total_bi": 1637.48,
+          "patrimonio_liquido_bi": 1159.83,
+          "lucro_liquido_bi": 27.81,
+          "despesas_captacao_bi": 5.66,
+          "roe_pct": 2.4
+        },
+        {
+          "ano": 2020,
+          "ativo_total_bi": 2019.25,
+          "patrimonio_liquido_bi": 1495.64,
+          "lucro_liquido_bi": 15.06,
+          "despesas_captacao_bi": 18.49,
+          "roe_pct": 1.01
+        },
+        {
+          "ano": 2021,
+          "ativo_total_bi": 2069.21,
+          "patrimonio_liquido_bi": 1553.11,
+          "lucro_liquido_bi": 28.38,
+          "despesas_captacao_bi": 7.19,
+          "roe_pct": 1.83
+        },
+        {
+          "ano": 2022,
+          "ativo_total_bi": 2323.44,
+          "patrimonio_liquido_bi": 1755.5,
+          "lucro_liquido_bi": 30.74,
+          "despesas_captacao_bi": 0.2,
+          "roe_pct": 1.75
+        },
+        {
+          "ano": 2023,
+          "ativo_total_bi": 2543.1,
+          "patrimonio_liquido_bi": 1944.16,
+          "lucro_liquido_bi": 33.88,
+          "despesas_captacao_bi": 2.86,
+          "roe_pct": 1.74
+        }
+      ],
+      "stress_test": {
+        "ano_base": 2023,
+        "cenario": "Choque de Inadimplência (+1.5% do Ativo)",
+        "perda_adicional_estimada_bi": 38.15,
+        "lucro_pos_choque_bi": -4.27,
+        "roe_base_pct": 1.74,
+        "roe_pos_choque_pct": -0.22,
+        "resiliente": false
+      }
+    },
+    "Bradesco": {
+      "cnpj": "60.746.948/0001-12",
+      "tipo": "Tradicional",
+      "historico": [
+        {
+          "ano": 2018,
+          "ativo_total_bi": 1305.54,
+          "patrimonio_liquido_bi": 852.33,
+          "lucro_liquido_bi": 16.75,
+          "despesas_captacao_bi": 2.96,
+          "roe_pct": 1.97
+        },
+        {
+          "ano": 2019,
+          "ativo_total_bi": 1378.53,
+          "patrimonio_liquido_bi": 893.21,
+          "lucro_liquido_bi": 21.17,
+          "despesas_captacao_bi": 15.23,
+          "roe_pct": 2.37
+        },
+        {
+          "ano": 2020,
+          "ativo_total_bi": 1604.65,
+          "patrimonio_liquido_bi": 311.23,
+          "lucro_liquido_bi": 16.03,
+          "despesas_captacao_bi": 17.51,
+          "roe_pct": 5.15
+        },
+        {
+          "ano": 2021,
+          "ativo_total_bi": 1675.57,
+          "patrimonio_liquido_bi": 317.3,
+          "lucro_liquido_bi": 23.38,
+          "despesas_captacao_bi": 3.53,
+          "roe_pct": 7.37
+        },
+        {
+          "ano": 2022,
+          "ativo_total_bi": 1799.62,
+          "patrimonio_liquido_bi": 343.57,
+          "lucro_liquido_bi": 21.22,
+          "despesas_captacao_bi": 2.54,
+          "roe_pct": 6.18
+        },
+        {
+          "ano": 2023,
+          "ativo_total_bi": 1927.52,
+          "patrimonio_liquido_bi": 370.61,
+          "lucro_liquido_bi": 14.5,
+          "despesas_captacao_bi": 10.92,
+          "roe_pct": 3.91
+        }
+      ],
+      "stress_test": {
+        "ano_base": 2023,
+        "cenario": "Choque de Inadimplência (+1.5% do Ativo)",
+        "perda_adicional_estimada_bi": 28.91,
+        "lucro_pos_choque_bi": -14.41,
+        "roe_base_pct": 3.91,
+        "roe_pos_choque_pct": -3.89,
+        "resiliente": false
+      }
+    },
+    "Banco do Brasil": {
+      "cnpj": "00.000.000/0001-91",
+      "tipo": "Público",
+      "historico": [
+        {
+          "ano": 2018,
+          "ativo_total_bi": 1396.51,
+          "patrimonio_liquido_bi": 1201.11,
+          "lucro_liquido_bi": 15.09,
+          "despesas_captacao_bi": 2.02,
+          "roe_pct": 1.26
+        },
+        {
+          "ano": 2019,
+          "ativo_total_bi": 1452.27,
+          "patrimonio_liquido_bi": 1220.56,
+          "lucro_liquido_bi": 18.89,
+          "despesas_captacao_bi": 12.74,
+          "roe_pct": 1.55
+        },
+        {
+          "ano": 2020,
+          "ativo_total_bi": 1693.79,
+          "patrimonio_liquido_bi": 16.89,
+          "lucro_liquido_bi": 13.29,
+          "despesas_captacao_bi": 5.31,
+          "roe_pct": 78.68
+        },
+        {
+          "ano": 2021,
+          "ativo_total_bi": 1899.34,
+          "patrimonio_liquido_bi": 19.49,
+          "lucro_liquido_bi": 19.72,
+          "despesas_captacao_bi": 0.72,
+          "roe_pct": 101.2
+        },
+        {
+          "ano": 2022,
+          "ativo_total_bi": 2007.73,
+          "patrimonio_liquido_bi": 21.96,
+          "lucro_liquido_bi": 29.85,
+          "despesas_captacao_bi": 1.66,
+          "roe_pct": 135.94
+        },
+        {
+          "ano": 2023,
+          "ativo_total_bi": 2153.88,
+          "patrimonio_liquido_bi": 21.79,
+          "lucro_liquido_bi": 33.17,
+          "despesas_captacao_bi": 0.77,
+          "roe_pct": 152.23
+        }
+      ],
+      "stress_test": {
+        "ano_base": 2023,
+        "cenario": "Choque de Inadimplência (+1.5% do Ativo)",
+        "perda_adicional_estimada_bi": 32.31,
+        "lucro_pos_choque_bi": 0.86,
+        "roe_base_pct": 152.23,
+        "roe_pos_choque_pct": 3.95,
+        "resiliente": true
+      }
+    },
+    "Santander Brasil": {
+      "cnpj": "90.400.888/0001-42",
+      "tipo": "Tradicional",
+      "historico": [
+        {
+          "ano": 2018,
+          "ativo_total_bi": 723.87,
+          "patrimonio_liquido_bi": 547.3,
+          "lucro_liquido_bi": 12.8,
+          "despesas_captacao_bi": 1.59,
+          "roe_pct": 2.34
+        },
+        {
+          "ano": 2019,
+          "ativo_total_bi": 762.24,
+          "patrimonio_liquido_bi": 575.23,
+          "lucro_liquido_bi": 16.63,
+          "despesas_captacao_bi": 1.05,
+          "roe_pct": 2.89
+        },
+        {
+          "ano": 2020,
+          "ativo_total_bi": 936.2,
+          "patrimonio_liquido_bi": 13.81,
+          "lucro_liquido_bi": 13.45,
+          "despesas_captacao_bi": 8.9,
+          "roe_pct": 97.36
+        },
+        {
+          "ano": 2021,
+          "ativo_total_bi": 931.21,
+          "patrimonio_liquido_bi": 11.6,
+          "lucro_liquido_bi": 15.56,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 134.08
+        },
+        {
+          "ano": 2022,
+          "ativo_total_bi": 985.45,
+          "patrimonio_liquido_bi": 9.12,
+          "lucro_liquido_bi": 14.34,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 157.31
+        },
+        {
+          "ano": 2023,
+          "ativo_total_bi": 1115.65,
+          "patrimonio_liquido_bi": 11.47,
+          "lucro_liquido_bi": 9.5,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 82.79
+        }
+      ],
+      "stress_test": {
+        "ano_base": 2023,
+        "cenario": "Choque de Inadimplência (+1.5% do Ativo)",
+        "perda_adicional_estimada_bi": 16.73,
+        "lucro_pos_choque_bi": -7.23,
+        "roe_base_pct": 82.79,
+        "roe_pos_choque_pct": -63.03,
+        "resiliente": false
+      }
+    },
+    "BTG Pactual": {
+      "cnpj": "30.306.294/0001-45",
+      "tipo": "Investimento",
+      "historico": [
+        {
+          "ano": 2018,
+          "ativo_total_bi": 131.99,
+          "patrimonio_liquido_bi": 77.67,
+          "lucro_liquido_bi": 2.44,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 3.14
+        },
+        {
+          "ano": 2019,
+          "ativo_total_bi": 166.34,
+          "patrimonio_liquido_bi": 86.5,
+          "lucro_liquido_bi": 4.05,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 4.69
+        },
+        {
+          "ano": 2020,
+          "ativo_total_bi": 244.23,
+          "patrimonio_liquido_bi": 165.06,
+          "lucro_liquido_bi": 4.28,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 2.59
+        },
+        {
+          "ano": 2021,
+          "ativo_total_bi": 352.92,
+          "patrimonio_liquido_bi": 242.41,
+          "lucro_liquido_bi": 7.06,
+          "despesas_captacao_bi": 4.11,
+          "roe_pct": 2.91
+        },
+        {
+          "ano": 2022,
+          "ativo_total_bi": 454.1,
+          "patrimonio_liquido_bi": 297.16,
+          "lucro_liquido_bi": 8.02,
+          "despesas_captacao_bi": 0.68,
+          "roe_pct": 2.7
+        },
+        {
+          "ano": 2023,
+          "ativo_total_bi": 495.12,
+          "patrimonio_liquido_bi": 341.91,
+          "lucro_liquido_bi": 10.25,
+          "despesas_captacao_bi": 0.73,
+          "roe_pct": 3.0
+        }
+      ],
+      "stress_test": {
+        "ano_base": 2023,
+        "cenario": "Choque de Inadimplência (+1.5% do Ativo)",
+        "perda_adicional_estimada_bi": 7.43,
+        "lucro_pos_choque_bi": 2.82,
+        "roe_base_pct": 3.0,
+        "roe_pos_choque_pct": 0.82,
+        "resiliente": true
+      }
+    },
+    "Banco Inter": {
+      "cnpj": "00.416.968/0001-01",
+      "tipo": "Digital",
+      "historico": [
+        {
+          "ano": 2018,
+          "ativo_total_bi": 5.62,
+          "patrimonio_liquido_bi": 4.54,
+          "lucro_liquido_bi": 0.06,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 1.23
+        },
+        {
+          "ano": 2021,
+          "ativo_total_bi": 36.64,
+          "patrimonio_liquido_bi": 27.89,
+          "lucro_liquido_bi": -0.04,
+          "despesas_captacao_bi": 0.23,
+          "roe_pct": -0.14
+        },
+        {
+          "ano": 2022,
+          "ativo_total_bi": 38.63,
+          "patrimonio_liquido_bi": 29.94,
+          "lucro_liquido_bi": -0.03,
+          "despesas_captacao_bi": 0.1,
+          "roe_pct": -0.09
+        }
+      ],
+      "stress_test": {
+        "ano_base": 2022,
+        "cenario": "Choque de Inadimplência (+1.5% do Ativo)",
+        "perda_adicional_estimada_bi": 0.58,
+        "lucro_pos_choque_bi": -0.61,
+        "roe_base_pct": -0.09,
+        "roe_pos_choque_pct": -2.04,
+        "resiliente": false
+      }
+    },
+    "Banco Pan": {
+      "cnpj": "59.285.411/0001-13",
+      "tipo": "Varejo/Consignado",
+      "historico": [
+        {
+          "ano": 2018,
+          "ativo_total_bi": 27.47,
+          "patrimonio_liquido_bi": 20.62,
+          "lucro_liquido_bi": 0.2,
+          "despesas_captacao_bi": 0.18,
+          "roe_pct": 0.96
+        },
+        {
+          "ano": 2019,
+          "ativo_total_bi": 33.18,
+          "patrimonio_liquido_bi": 24.18,
+          "lucro_liquido_bi": 0.62,
+          "despesas_captacao_bi": 0.35,
+          "roe_pct": 2.57
+        },
+        {
+          "ano": 2020,
+          "ativo_total_bi": 38.86,
+          "patrimonio_liquido_bi": 28.47,
+          "lucro_liquido_bi": 0.63,
+          "despesas_captacao_bi": 0.13,
+          "roe_pct": 2.2
+        },
+        {
+          "ano": 2021,
+          "ativo_total_bi": 48.14,
+          "patrimonio_liquido_bi": 35.92,
+          "lucro_liquido_bi": 0.73,
+          "despesas_captacao_bi": 0.05,
+          "roe_pct": 2.03
+        },
+        {
+          "ano": 2022,
+          "ativo_total_bi": 55.63,
+          "patrimonio_liquido_bi": 42.6,
+          "lucro_liquido_bi": 0.67,
+          "despesas_captacao_bi": 0.26,
+          "roe_pct": 1.57
+        },
+        {
+          "ano": 2023,
+          "ativo_total_bi": 57.27,
+          "patrimonio_liquido_bi": 44.8,
+          "lucro_liquido_bi": 0.59,
+          "despesas_captacao_bi": 0.15,
+          "roe_pct": 1.32
+        }
+      ],
+      "stress_test": {
+        "ano_base": 2023,
+        "cenario": "Choque de Inadimplência (+1.5% do Ativo)",
+        "perda_adicional_estimada_bi": 0.86,
+        "lucro_pos_choque_bi": -0.27,
+        "roe_base_pct": 1.32,
+        "roe_pos_choque_pct": -0.6,
+        "resiliente": false
+      }
+    },
+    "ABC Brasil": {
+      "cnpj": "28.195.667/0001-06",
+      "tipo": "Atacado/Corporate",
+      "historico": [
+        {
+          "ano": 2018,
+          "ativo_total_bi": 30.12,
+          "patrimonio_liquido_bi": 24.53,
+          "lucro_liquido_bi": 0.42,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 1.7
+        },
+        {
+          "ano": 2019,
+          "ativo_total_bi": 32.65,
+          "patrimonio_liquido_bi": 26.8,
+          "lucro_liquido_bi": 0.5,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 1.86
+        },
+        {
+          "ano": 2020,
+          "ativo_total_bi": 40.24,
+          "patrimonio_liquido_bi": 0.0,
+          "lucro_liquido_bi": 0.34,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 0.0
+        },
+        {
+          "ano": 2021,
+          "ativo_total_bi": 43.34,
+          "patrimonio_liquido_bi": 0.0,
+          "lucro_liquido_bi": 0.56,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 0.0
+        },
+        {
+          "ano": 2022,
+          "ativo_total_bi": 57.25,
+          "patrimonio_liquido_bi": 0.0,
+          "lucro_liquido_bi": 0.79,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 0.0
+        },
+        {
+          "ano": 2023,
+          "ativo_total_bi": 60.51,
+          "patrimonio_liquido_bi": 0.0,
+          "lucro_liquido_bi": 0.8,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 0.0
+        }
+      ],
+      "stress_test": {}
+    }
+  }
+}
