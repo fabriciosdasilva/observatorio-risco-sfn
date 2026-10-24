@@ -2,6 +2,8 @@
 
 > **Inteligência Analítica, Modelagem Preditiva e Backtesting com Dados Reais Oficiais do Banco Central do Brasil (BACEN) e da Comissão de Valores Mobiliários (CVM).**
 
+[![Live Demo](https://img.shields.io/badge/Demo%20Online-observatorioriscosfn.vercel.app-success?style=for-the-badge&logo=vercel)](https://observatorioriscosfn.vercel.app/)
+
 [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-black.svg)](https://nextjs.org/)
 [![Tests Passing](https://img.shields.io/badge/Tests-Pytest%20Passing-brightgreen.svg)]()
@@ -111,19 +113,12 @@ Abra `http://localhost:3000` no seu navegador.
 
 ---
 
-## 🚀 Deploy na Vercel
+## 🚀 Aplicação em Produção (Live Demo)
 
-O dashboard foi projetado para deploy estático ultra-rápido na Vercel:
+O dashboard está publicado e acessível publicamente em:
+👉 **[https://observatorioriscosfn.vercel.app/](https://observatorioriscosfn.vercel.app/)**
 
-1. Suba o repositório para o seu GitHub:
-   ```bash
-   git add .
-   git commit -m "feat: observatorio de risco do sfn com bacen e cvm"
-   git push origin main
-   ```
-2. Na [Vercel](https://vercel.com/), clique em **Add New Project** e selecione este repositório.
-3. Configure o **Root Directory** como `web`.
-4. Clique em **Deploy**. O site estará no ar em menos de 1 minuto!
+O deploy é automatizado com Next.js 16 (App Router) e entrega os dados analíticos compilados com latência sub-segundo via CDN global da Vercel.
 
 ---
 
