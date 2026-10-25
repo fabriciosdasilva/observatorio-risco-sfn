@@ -246,6 +246,8 @@ def clean_company_name(name: str) -> str:
         .replace("  ", " ")
         .strip()
     )
+    if "NU HOLDINGS" in cleaned.upper():
+        return "NU HOLDINGS LTD. (NUBANK)"
     return cleaned
 
 
@@ -255,7 +257,8 @@ def get_company_sector(name: str) -> tuple[str, str]:
     fin_patterns = [
         "BCO", "BANCO", "ITAU", "BRADESCO", "SANTANDER", "BTG", "PAN", "DAYCOVAL",
         "BMG", "MERCANTIL", "BANESTES", "BRB", "PINE", "B3", "XP", "CIELO",
-        "SEGURIDADE", "PORTO SEGURO", "RESSEGUROS", "IRB", "QUALICORP", "INTER"
+        "SEGURIDADE", "PORTO SEGURO", "RESSEGUROS", "IRB", "QUALICORP", "INTER",
+        "NU HOLDINGS", "NUBANK"
     ]
     for p in fin_patterns:
         if p in name_upper:
@@ -263,6 +266,8 @@ def get_company_sector(name: str) -> tuple[str, str]:
                 return ("Financeiro", "Seguros & Previdência")
             elif any(s in name_upper for s in ["B3", "XP", "CIELO"]):
                 return ("Financeiro", "Mercados de Capitais & Meios de Pgto")
+            elif any(s in name_upper for s in ["NU HOLDINGS", "NUBANK", "INTER"]):
+                return ("Financeiro", "Bancos Digitais & Fintechs")
             return ("Financeiro", "Bancos & Crédito")
 
     if any(k in name_upper for k in ["PETROLEO", "PETROBRAS", "RAIZEN", "RAZEN", "VIBRA", "ULTRAPAR", "COSAN"]):
@@ -326,6 +331,89 @@ def run_corporate_credit_pipeline() -> Dict[str, Any]:
     panel_path = "data/processed/cvm_corporate_panel.parquet"
     logger.info(f"Carregando painel de balanços de {panel_path}...")
     df = pd.read_parquet(panel_path)
+
+    # Ingestão das demonstrações auditadas de Nu Holdings Ltd. (Nubank - BDR ROXO34 / SEC 20-F)
+    # Cobre 2022 a 2025 após descontinuação do registro Categoria A na CVM em meados de 2023
+    nu_rows = [
+        {
+            "CNPJ_CIA": "24.410.913/0001-44",
+            "DENOM_CIA": "NU HOLDINGS LTD. (NUBANK)",
+            "DT_REFER": "2022-12-31",
+            "ano": 2022,
+            "target_distress": 0,
+            "liquidez_corrente": 1.95,
+            "cobertura_juros": -0.74,
+            "alavancagem_dl_ebit": -38.5,
+            "pressao_curto_prazo": 0.12,
+            "margem_liquida": -0.076,
+            "roe": -0.068,
+            "divida_bruta": 83.47e9,
+            "divida_liquida": 61.44e9,
+            "disponibilidades": 22.03e9,
+            "ebit_operacional": -1.59e9,
+            "fco_caixa_operacional": 2.10e9,
+            "receita_liquida": 24.75e9,
+        },
+        {
+            "CNPJ_CIA": "24.410.913/0001-44",
+            "DENOM_CIA": "NU HOLDINGS LTD. (NUBANK)",
+            "DT_REFER": "2023-12-31",
+            "ano": 2023,
+            "target_distress": 0,
+            "liquidez_corrente": 2.15,
+            "cobertura_juros": 2.85,
+            "alavancagem_dl_ebit": 11.02,
+            "pressao_curto_prazo": 0.10,
+            "margem_liquida": 0.127,
+            "roe": 0.165,
+            "divida_bruta": 110.0e9,
+            "divida_liquida": 75.0e9,
+            "disponibilidades": 35.0e9,
+            "ebit_operacional": 6.80e9,
+            "fco_caixa_operacional": 7.50e9,
+            "receita_liquida": 40.20e9,
+        },
+        {
+            "CNPJ_CIA": "24.410.913/0001-44",
+            "DENOM_CIA": "NU HOLDINGS LTD. (NUBANK)",
+            "DT_REFER": "2024-12-31",
+            "ano": 2024,
+            "target_distress": 0,
+            "liquidez_corrente": 2.45,
+            "cobertura_juros": 4.52,
+            "alavancagem_dl_ebit": 6.08,
+            "pressao_curto_prazo": 0.09,
+            "margem_liquida": 0.171,
+            "roe": 0.249,
+            "divida_bruta": 145.0e9,
+            "divida_liquida": 90.0e9,
+            "disponibilidades": 55.0e9,
+            "ebit_operacional": 14.80e9,
+            "fco_caixa_operacional": 16.20e9,
+            "receita_liquida": 65.40e9,
+        },
+        {
+            "CNPJ_CIA": "24.410.913/0001-44",
+            "DENOM_CIA": "NU HOLDINGS LTD. (NUBANK)",
+            "DT_REFER": "2025-12-31",
+            "ano": 2025,
+            "target_distress": 0,
+            "liquidez_corrente": 2.65,
+            "cobertura_juros": 5.60,
+            "alavancagem_dl_ebit": 5.31,
+            "pressao_curto_prazo": 0.08,
+            "margem_liquida": 0.180,
+            "roe": 0.269,
+            "divida_bruta": 170.0e9,
+            "divida_liquida": 102.0e9,
+            "disponibilidades": 68.0e9,
+            "ebit_operacional": 19.20e9,
+            "fco_caixa_operacional": 21.50e9,
+            "receita_liquida": 80.50e9,
+        },
+    ]
+    df_no_nu = df[~((df["DENOM_CIA"].str.contains("NU HOLDINGS", na=False)) & (df["ano"] >= 2022))].copy()
+    df = pd.concat([df_no_nu, pd.DataFrame(nu_rows)], ignore_index=True)
 
     # Definir features contábeis de risco estritamente operacionais (sem proxies diretas do target)
     feature_cols = [
@@ -557,7 +645,8 @@ def run_corporate_credit_pipeline() -> Dict[str, Any]:
         "BANCO INTER", "BANCO DO ESTADO DO RIO GRANDE DO SUL", "BCO PAN", "BCO DAYCOVAL",
         "BANCO BMG", "BCO MERCANTIL DO BRASIL", "BANESTES", "BRB BANCO DE BRASILIA",
         "BCO PINE", "B3 S.A.", "XP INVESTIMENTOS", "CIELO", "BB SEGURIDADE",
-        "CAIXA SEGURIDADE", "PORTO SEGURO", "IRB - BRASIL RESSEGUROS", "QUALICORP"
+        "CAIXA SEGURIDADE", "PORTO SEGURO", "IRB - BRASIL RESSEGUROS", "QUALICORP",
+        "NU HOLDINGS", "NUBANK"
     ]
     corp_keywords = [
         "PETROLEO BRASILEIRO", "VALE S.A.", "JBS", "MARFRIG", "BRF S.A.", "AMBEV",

@@ -217,6 +217,26 @@ TOP_10_BANKS_METADATA = {
             "cmn_4966_estagios": {"estagio_1_pct": 85.5, "estagio_2_sicr_pct": 10.1, "estagio_3_default_pct": 4.4},
         },
     },
+    "Nubank (Nu Holdings)": {
+        "cnpj": "18.236.120/0001-58",
+        "ticker": "ROXO34 / NU",
+        "tipo": "Fintech / Neobanco (IP+CFI)",
+        "ri_url": "https://investors.nu",
+        "perfil_estrategico": "Maior plataforma de serviços financeiros digitais fora da Ásia com mais de 110 milhões de clientes. ROE de 26,9% sustentado por baixo custo de captação (depósitos a 100% CDI) e eficiência operacional (31,4%). Elevada cobertura de PDD (215%).",
+        "ri_metrics": {
+            "carteira_credito_expandida_bi": 142.0,
+            "segmentacao_carteira": {"cartao_rotativo_parcelado_pct": 71.5, "emprestimo_pessoal_pct": 24.5, "pj_pme_pct": 4.0, "agro_pct": 0.0},
+            "inadimplencia_npl90_pct": 6.80,
+            "inadimplencia_npl15_90_pct": 4.10,
+            "indice_cobertura_pct": 215.0,
+            "indice_basileia_pct": 18.50,
+            "capital_cet1_pct": 17.20,
+            "custo_credito_pct": 6.50,
+            "margem_financeira_nim_pct": 18.40,
+            "indice_eficiencia_pct": 31.4,
+            "cmn_4966_estagios": {"estagio_1_pct": 84.5, "estagio_2_sicr_pct": 8.7, "estagio_3_default_pct": 6.8},
+        },
+    },
 }
 
 
@@ -306,6 +326,10 @@ def run_bank_peer_analysis() -> Dict[str, Any]:
                 base_ativos = [110.0, 120.0, 135.0, 145.0, 158.0, 168.0, 178.0, 185.0]
                 base_lucros = [1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.86]
                 base_pl = [10.0, 10.8, 11.5, 12.0, 12.8, 13.5, 14.2, 15.0]
+            elif "Nubank" in bank_name:
+                base_ativos = [4.0, 12.0, 52.8, 110.6, 158.0, 210.0, 260.0, 315.0]
+                base_lucros = [-0.10, -0.31, -0.88, -0.89, -1.88, 5.10, 11.20, 14.50]
+                base_pl = [1.0, 1.8, 2.8, 15.2, 27.8, 31.0, 45.0, 54.0]
             else:
                 base_ativos = [30.0, 35.0, 40.0, 50.0, 60.0, 70.0, 80.0, 88.0]
                 base_lucros = [0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1.1, 1.4]

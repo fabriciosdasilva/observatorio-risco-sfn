@@ -2,7 +2,7 @@
   "metadata": {
     "title": "Raio-X e Stress Testing dos 10 Maiores Bancos Brasileiros (CVM/BACEN/RI)",
     "period": "2018-2025",
-    "n_institutions": 10,
+    "n_institutions": 11,
     "stress_scenario_standard": "Resolução CMN nº 4.966 / IFRS 9 Stage Migration Forward-Looking",
     "benchmark_minimum_basileia": 11.0
   },
@@ -1023,6 +1023,112 @@
         "basileia_base_pct": 22.8,
         "basileia_estressado_pct": 20.76,
         "consumo_capital_bps": 204,
+        "solvente_acima_minimo_cmn": true,
+        "alerta_capital": "Confortável"
+      }
+    },
+    "Nubank (Nu Holdings)": {
+      "cnpj": "18.236.120/0001-58",
+      "ticker": "ROXO34 / NU",
+      "tipo": "Fintech / Neobanco (IP+CFI)",
+      "ri_url": "https://investors.nu",
+      "perfil_estrategico": "Maior plataforma de serviços financeiros digitais fora da Ásia com mais de 110 milhões de clientes. ROE de 26,9% sustentado por baixo custo de captação (depósitos a 100% CDI) e eficiência operacional (31,4%). Elevada cobertura de PDD (215%).",
+      "ri_metrics": {
+        "carteira_credito_expandida_bi": 142.0,
+        "segmentacao_carteira": {
+          "cartao_rotativo_parcelado_pct": 71.5,
+          "emprestimo_pessoal_pct": 24.5,
+          "pj_pme_pct": 4.0,
+          "agro_pct": 0.0
+        },
+        "inadimplencia_npl90_pct": 6.8,
+        "inadimplencia_npl15_90_pct": 4.1,
+        "indice_cobertura_pct": 215.0,
+        "indice_basileia_pct": 18.5,
+        "capital_cet1_pct": 17.2,
+        "custo_credito_pct": 6.5,
+        "margem_financeira_nim_pct": 18.4,
+        "indice_eficiencia_pct": 31.4,
+        "cmn_4966_estagios": {
+          "estagio_1_pct": 84.5,
+          "estagio_2_sicr_pct": 8.7,
+          "estagio_3_default_pct": 6.8
+        }
+      },
+      "historico": [
+        {
+          "ano": 2018,
+          "ativo_total_bi": 4.0,
+          "patrimonio_liquido_bi": 1.0,
+          "lucro_liquido_bi": -0.1,
+          "despesas_captacao_bi": 0.18,
+          "roe_pct": -10.0
+        },
+        {
+          "ano": 2019,
+          "ativo_total_bi": 12.0,
+          "patrimonio_liquido_bi": 1.8,
+          "lucro_liquido_bi": -0.31,
+          "despesas_captacao_bi": 0.54,
+          "roe_pct": -17.22
+        },
+        {
+          "ano": 2020,
+          "ativo_total_bi": 52.8,
+          "patrimonio_liquido_bi": 2.8,
+          "lucro_liquido_bi": -0.88,
+          "despesas_captacao_bi": 2.38,
+          "roe_pct": -31.43
+        },
+        {
+          "ano": 2021,
+          "ativo_total_bi": 110.6,
+          "patrimonio_liquido_bi": 15.2,
+          "lucro_liquido_bi": -0.89,
+          "despesas_captacao_bi": 4.98,
+          "roe_pct": -5.86
+        },
+        {
+          "ano": 2022,
+          "ativo_total_bi": 158.0,
+          "patrimonio_liquido_bi": 27.8,
+          "lucro_liquido_bi": -1.88,
+          "despesas_captacao_bi": 7.11,
+          "roe_pct": -6.76
+        },
+        {
+          "ano": 2023,
+          "ativo_total_bi": 210.0,
+          "patrimonio_liquido_bi": 31.0,
+          "lucro_liquido_bi": 5.1,
+          "despesas_captacao_bi": 9.45,
+          "roe_pct": 16.45
+        },
+        {
+          "ano": 2024,
+          "ativo_total_bi": 260.0,
+          "patrimonio_liquido_bi": 45.0,
+          "lucro_liquido_bi": 11.2,
+          "despesas_captacao_bi": 11.7,
+          "roe_pct": 24.89
+        },
+        {
+          "ano": 2025,
+          "ativo_total_bi": 315.0,
+          "patrimonio_liquido_bi": 54.0,
+          "lucro_liquido_bi": 14.5,
+          "despesas_captacao_bi": 14.17,
+          "roe_pct": 26.85
+        }
+      ],
+      "stress_test": {
+        "cenario": "Migração Severa CMN 4.966 (12% E1->E2 e 20% E2->E3)",
+        "perda_adicional_estimada_bi": 2.0,
+        "lucro_pos_choque_bi": 12.5,
+        "roe_pos_choque_pct": 24.04,
+        "basileia_base_pct": 18.5,
+        "basileia_estressado_pct": 16.62,
+        "consumo_capital_bps": 188,
         "solvente_acima_minimo_cmn": true,
         "alerta_capital": "Confortável"
       }

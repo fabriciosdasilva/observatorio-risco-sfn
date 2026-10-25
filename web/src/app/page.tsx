@@ -651,14 +651,14 @@ export default function EditorialObservatorio() {
             <section className="space-y-12 animate-fadeIn">
               <div>
                 <h2 className="major-heading text-xl sm:text-2xl text-gray-900">
-                  2. Raio-X dos 10 Maiores Bancos &amp; Stress Testing (IFRS 9 / CMN 4.966)
+                  2. Raio-X dos Maiores Bancos &amp; Neobancos (IFRS 9 / CMN 4.966)
                 </h2>
                 <p className="text-sm text-gray-600 leading-relaxed max-w-3xl">
-                  Análise comparativa aprofundada com base nas demonstrações contábeis auditadas da CVM (2018–2025) e dados oficiais extraídos diretamente dos <strong>Releases de Resultados das Relações com Investidores (RI)</strong> das 10 maiores instituições financeiras do Brasil. Inclui simulação de estresse prospectivo de <strong>migração de estágios de risco de crédito</strong> e impacto no Capital Regulatório de Basileia.
+                  Análise comparativa aprofundada com base nas demonstrações contábeis auditadas (2018–2025) e dados oficiais extraídos diretamente dos <strong>Releases de Resultados das Relações com Investidores (RI)</strong> dos maiores bancos tradicionais e neobancos do Brasil (incluindo Itaú, BB, Bradesco, Caixa, Santander, BTG, Nubank, Safra, BV, Banrisul e Inter). Inclui simulação de estresse prospectivo de <strong>migração de estágios de risco de crédito</strong> e impacto no Capital Regulatório de Basileia.
                 </p>
               </div>
 
-              {/* 2.1 Tabela Comparativa de Benchmark dos 10 Maiores Bancos */}
+              {/* 2.1 Tabela Comparativa de Benchmark dos Bancos & Neobancos */}
               {pilar2Data && (
                 <div>
                   <div className="flex items-center justify-between mb-3">
@@ -668,7 +668,7 @@ export default function EditorialObservatorio() {
                         Ranking Comparativo de Crédito, Solvência e Risco (RI Benchmark)
                       </h3>
                       <p className="text-xs text-gray-600">
-                        Indicadores regulatórios oficiais dos 10 maiores conglomerados bancários brasileiros:
+                        Indicadores regulatórios oficiais dos maiores conglomerados bancários e instituições financeiras do Brasil:
                       </p>
                     </div>
                     <span className="text-xs font-mono text-gray-500 hidden sm:inline-block">
@@ -753,13 +753,13 @@ export default function EditorialObservatorio() {
                 </div>
               )}
 
-              {/* 2.2 Grid de Seleção dos 10 Bancos */}
+              {/* 2.2 Grid de Seleção das Instituições Financeiras */}
               {pilar2Data && (
                 <div>
                   <h3 className="font-serif font-bold text-gray-900 text-sm mb-3">
                     Selecione uma Instituição para Análise Aprofundada de RI:
                   </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
                     {Object.keys(pilar2Data.banks).map((bName) => {
                       const b = pilar2Data.banks[bName];
                       const rm = b.ri_metrics;
