@@ -228,8 +228,8 @@ def compute_financial_ratios(df: pd.DataFrame) -> pd.DataFrame:
 
 
 if __name__ == "__main__":
-    # Processar histórico de anos representativos para treino e backtesting OOT (2018 a 2023)
-    years = [2018, 2019, 2020, 2021, 2022, 2023]
+    # Processar histórico de anos representativos para treino e backtesting OOT (2018 a 2025)
+    years = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]
     df_panel = parse_cvm_financial_statements(years)
     output_parquet = "data/processed/cvm_corporate_panel.parquet"
     df_panel.to_parquet(output_parquet, index=False)

@@ -16,8 +16,8 @@
 No setor bancário e no mercado financeiro brasileiro, áreas de **Risco de Crédito, Modelagem Quantitativa e Inteligência de Mercado** frequentemente operam em silos. Este projeto integra dados públicos oficiais das três esferas do crédito nacional em um produto analítico ponta a ponta:
 
 1. **Esfera Macroeconômica (BACEN SGS):** Identificação empírica do tempo de defasagem (*transmission lags*) da taxa Selic na inadimplência das principais modalidades de crédito, com validação **Walk-Forward** e teste de **Diebold-Mariano**.
-2. **Esfera Institucional (BACEN / CVM Balanços):** Análise da trajetória de ativos de trilhões, rentabilidade (ROE) e simulação de **Stress Testing prospectivo** alinhado à **Resolução CMN nº 4.966** e **IFRS 9** para as principais instituições financeiras (Itaú, Bradesco, Banco do Brasil, Santander, BTG, Inter, etc.).
-3. **Esfera Corporativa (CVM DFP):** Painel com mais de **2.500 balanços contábeis auditados** e modelo de **Early Warning** (XGBoost Calibrado + TreeSHAP) avaliado estritamente **Out-of-Time (2022–2023)** para sinalizar distress financeiro de empresas antes de calotes formais.
+2. **Esfera Institucional (BACEN / CVM Balanços):** Análise da trajetória de ativos de trilhões (2018–2025, com o Itaú atingindo a marca histórica de R$ 3,06 trilhões), rentabilidade (ROE) e simulação de **Stress Testing prospectivo** alinhado à **Resolução CMN nº 4.966** e **IFRS 9** para as principais instituições financeiras (Itaú, Bradesco, Banco do Brasil, Santander, BTG, Inter, etc.).
+3. **Esfera Corporativa (CVM DFP):** Painel com quase **3.500 balanços contábeis auditados (2018–2025)** e modelo de **Early Warning** (XGBoost Calibrado + TreeSHAP) avaliado estritamente **Out-of-Time (2022–2025)** para sinalizar distress financeiro de empresas antes de calotes formais.
 
 ---
 
@@ -29,8 +29,8 @@ No setor bancário e no mercado financeiro brasileiro, áreas de **Risco de Cré
   * **Capital de Giro (PJ):** Pico de defasagem de **10 meses** ($r = 0.5738$). Empresas postergam e refinanciam passivos por quase um ano antes do pico da inadimplência.
   * **Crédito Consignado:** Resposta inversa ($r = -0.7975$ em 10 meses), com estabilidade assegurada por desconto em folha e garantias públicas.
 
-* **Discriminação de Risco Corporativo (OOT 2022–2023):**
-  * O modelo calibrado obteve **ROC-AUC de 0.9927**, **Gini de 0.9855** e **Estatística KS de 0.9605** no teste cego fora do tempo durante o ciclo agudo de Selic a 13,75%.
+* **Discriminação de Risco Corporativo (OOT 2022–2025):**
+  * O modelo calibrado obteve **ROC-AUC de 0.9946**, **Gini de 0.9891** e **Estatística KS de 0.9535** no teste cego fora do tempo (1.859 companhias avaliadas estritamente fora da base de treino).
   * O algoritmo isolou com precisão casos como **Americanas S.A.** ($PD = 98.34\%$) e **Gol Linhas Aéreas** ($PD = 97.72\%$) na faixa de risco crítico (*CCC/Distress*), mantendo bancos e grandes exportadoras na faixa *AAA* ($PD < 1.0\%$).
   * A decomposição **TreeSHAP** apontou `ROE`, `Liquidez Corrente`, `Margem Líquida` e `Disponibilidades de Caixa` como os 4 maiores vetores determinantes de insolvência no mercado brasileiro.
 

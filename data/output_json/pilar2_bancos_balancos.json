@@ -1,7 +1,7 @@
 {
   "metadata": {
     "title": "Raio-X dos Grandes Bancos Brasileiros (CVM/BACEN)",
-    "period": "2018-2023",
+    "period": "2018-2025",
     "n_institutions": 8,
     "stress_scenario_standard": "Resolução CMN nº 4.966 / IFRS 9 Forward-Looking Stress"
   },
@@ -57,15 +57,31 @@
           "lucro_liquido_bi": 33.88,
           "despesas_captacao_bi": 2.86,
           "roe_pct": 1.74
+        },
+        {
+          "ano": 2024,
+          "ativo_total_bi": 2854.47,
+          "patrimonio_liquido_bi": 2148.78,
+          "lucro_liquido_bi": 42.13,
+          "despesas_captacao_bi": 4.0,
+          "roe_pct": 1.96
+        },
+        {
+          "ano": 2025,
+          "ativo_total_bi": 3066.17,
+          "patrimonio_liquido_bi": 2350.9,
+          "lucro_liquido_bi": 45.85,
+          "despesas_captacao_bi": 6.29,
+          "roe_pct": 1.95
         }
       ],
       "stress_test": {
-        "ano_base": 2023,
+        "ano_base": 2025,
         "cenario": "Choque de Inadimplência (+1.5% do Ativo)",
-        "perda_adicional_estimada_bi": 38.15,
-        "lucro_pos_choque_bi": -4.27,
-        "roe_base_pct": 1.74,
-        "roe_pos_choque_pct": -0.22,
+        "perda_adicional_estimada_bi": 45.99,
+        "lucro_pos_choque_bi": -0.14,
+        "roe_base_pct": 1.95,
+        "roe_pos_choque_pct": -0.01,
         "resiliente": false
       }
     },
@@ -120,15 +136,31 @@
           "lucro_liquido_bi": 14.5,
           "despesas_captacao_bi": 10.92,
           "roe_pct": 3.91
+        },
+        {
+          "ano": 2024,
+          "ativo_total_bi": 2069.51,
+          "patrimonio_liquido_bi": 402.55,
+          "lucro_liquido_bi": 17.54,
+          "despesas_captacao_bi": 8.06,
+          "roe_pct": 4.36
+        },
+        {
+          "ano": 2025,
+          "ativo_total_bi": 2330.33,
+          "patrimonio_liquido_bi": 443.36,
+          "lucro_liquido_bi": 23.92,
+          "despesas_captacao_bi": 9.96,
+          "roe_pct": 5.4
         }
       ],
       "stress_test": {
-        "ano_base": 2023,
+        "ano_base": 2025,
         "cenario": "Choque de Inadimplência (+1.5% do Ativo)",
-        "perda_adicional_estimada_bi": 28.91,
-        "lucro_pos_choque_bi": -14.41,
-        "roe_base_pct": 3.91,
-        "roe_pos_choque_pct": -3.89,
+        "perda_adicional_estimada_bi": 34.95,
+        "lucro_pos_choque_bi": -11.03,
+        "roe_base_pct": 5.4,
+        "roe_pos_choque_pct": -2.49,
         "resiliente": false
       }
     },
@@ -183,16 +215,32 @@
           "lucro_liquido_bi": 33.17,
           "despesas_captacao_bi": 0.77,
           "roe_pct": 152.23
+        },
+        {
+          "ano": 2024,
+          "ativo_total_bi": 2398.72,
+          "patrimonio_liquido_bi": 26.1,
+          "lucro_liquido_bi": 29.17,
+          "despesas_captacao_bi": 10.97,
+          "roe_pct": 111.77
+        },
+        {
+          "ano": 2025,
+          "ativo_total_bi": 2455.14,
+          "patrimonio_liquido_bi": 38.69,
+          "lucro_liquido_bi": 16.78,
+          "despesas_captacao_bi": 17.28,
+          "roe_pct": 43.38
         }
       ],
       "stress_test": {
-        "ano_base": 2023,
+        "ano_base": 2025,
         "cenario": "Choque de Inadimplência (+1.5% do Ativo)",
-        "perda_adicional_estimada_bi": 32.31,
-        "lucro_pos_choque_bi": 0.86,
-        "roe_base_pct": 152.23,
-        "roe_pos_choque_pct": 3.95,
-        "resiliente": true
+        "perda_adicional_estimada_bi": 36.83,
+        "lucro_pos_choque_bi": -20.05,
+        "roe_base_pct": 43.38,
+        "roe_pos_choque_pct": -51.82,
+        "resiliente": false
       }
     },
     "Santander Brasil": {
@@ -246,15 +294,31 @@
           "lucro_liquido_bi": 9.5,
           "despesas_captacao_bi": 0.0,
           "roe_pct": 82.79
+        },
+        {
+          "ano": 2024,
+          "ativo_total_bi": 1238.8,
+          "patrimonio_liquido_bi": 10.98,
+          "lucro_liquido_bi": 13.41,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 122.2
+        },
+        {
+          "ano": 2025,
+          "ativo_total_bi": 1270.03,
+          "patrimonio_liquido_bi": 11.8,
+          "lucro_liquido_bi": 12.97,
+          "despesas_captacao_bi": 0.0,
+          "roe_pct": 109.83
         }
       ],
       "stress_test": {
-        "ano_base": 2023,
+        "ano_base": 2025,
         "cenario": "Choque de Inadimplência (+1.5% do Ativo)",
-        "perda_adicional_estimada_bi": 16.73,
-        "lucro_pos_choque_bi": -7.23,
-        "roe_base_pct": 82.79,
-        "roe_pos_choque_pct": -63.03,
+        "perda_adicional_estimada_bi": 19.05,
+        "lucro_pos_choque_bi": -6.08,
+        "roe_base_pct": 109.83,
+        "roe_pos_choque_pct": -51.53,
         "resiliente": false
       }
     },
@@ -309,15 +373,31 @@
           "lucro_liquido_bi": 10.25,
           "despesas_captacao_bi": 0.73,
           "roe_pct": 3.0
+        },
+        {
+          "ano": 2024,
+          "ativo_total_bi": 649.22,
+          "patrimonio_liquido_bi": 413.05,
+          "lucro_liquido_bi": 11.08,
+          "despesas_captacao_bi": 0.18,
+          "roe_pct": 2.68
+        },
+        {
+          "ano": 2025,
+          "ativo_total_bi": 809.3,
+          "patrimonio_liquido_bi": 567.56,
+          "lucro_liquido_bi": 16.66,
+          "despesas_captacao_bi": 2.55,
+          "roe_pct": 2.94
         }
       ],
       "stress_test": {
-        "ano_base": 2023,
+        "ano_base": 2025,
         "cenario": "Choque de Inadimplência (+1.5% do Ativo)",
-        "perda_adicional_estimada_bi": 7.43,
-        "lucro_pos_choque_bi": 2.82,
-        "roe_base_pct": 3.0,
-        "roe_pos_choque_pct": 0.82,
+        "perda_adicional_estimada_bi": 12.14,
+        "lucro_pos_choque_bi": 4.52,
+        "roe_base_pct": 2.94,
+        "roe_pos_choque_pct": 0.8,
         "resiliente": true
       }
     },
@@ -411,15 +491,23 @@
           "lucro_liquido_bi": 0.59,
           "despesas_captacao_bi": 0.15,
           "roe_pct": 1.32
+        },
+        {
+          "ano": 2024,
+          "ativo_total_bi": 64.5,
+          "patrimonio_liquido_bi": 51.99,
+          "lucro_liquido_bi": 0.53,
+          "despesas_captacao_bi": 0.52,
+          "roe_pct": 1.02
         }
       ],
       "stress_test": {
-        "ano_base": 2023,
+        "ano_base": 2024,
         "cenario": "Choque de Inadimplência (+1.5% do Ativo)",
-        "perda_adicional_estimada_bi": 0.86,
-        "lucro_pos_choque_bi": -0.27,
-        "roe_base_pct": 1.32,
-        "roe_pos_choque_pct": -0.6,
+        "perda_adicional_estimada_bi": 0.97,
+        "lucro_pos_choque_bi": -0.44,
+        "roe_base_pct": 1.02,
+        "roe_pos_choque_pct": -0.85,
         "resiliente": false
       }
     },

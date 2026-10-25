@@ -96,7 +96,7 @@ def run_bank_peer_analysis() -> Dict[str, Any]:
     output_dict = {
         "metadata": {
             "title": "Raio-X dos Grandes Bancos Brasileiros (CVM/BACEN)",
-            "period": "2018-2023",
+            "period": "2018-2025",
             "n_institutions": len(bank_summaries),
             "stress_scenario_standard": "Resolução CMN nº 4.966 / IFRS 9 Forward-Looking Stress",
         },
@@ -112,7 +112,7 @@ def run_bank_peer_analysis() -> Dict[str, Any]:
     logger.info(f"Resultados do Pilar 2 salvos em {out_file}!")
 
     print("\n" + "=" * 95)
-    print("RESUMO EXECUTIVO - PILAR 2: BALANÇOS E STRESS TESTING DOS BANCOS (2023)")
+    print("RESUMO EXECUTIVO - PILAR 2: BALANÇOS E STRESS TESTING DOS BANCOS (2018-2025)")
     print("=" * 95)
     print(f"{'Banco':<20} | {'Tipo':<14} | {'Ativo Total':<14} | {'Patr. Líquido':<14} | {'ROE Atual':<11} | {'ROE Estresse'}")
     print("-" * 95)

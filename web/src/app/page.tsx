@@ -289,7 +289,7 @@ export default function EditorialObservatorio() {
                   2. Raio-X dos Grandes Bancos &amp; Teste de Estresse
                 </h2>
                 <p className="text-sm text-gray-600 leading-relaxed max-w-3xl">
-                  Demonstrações contábeis auditadas pela CVM e BACEN de 2018 a 2023. Revela a dimensão dos ativos de trilhões dos grandes conglomerados brasileiros e simula um teste de estresse prospectivo (*Forward-Looking Stress*) de perda de crédito adicional de +1.5% do ativo total, espelhando os requisitos da <strong>Resolução CMN nº 4.966</strong> e <strong>IFRS 9</strong>.
+                  Demonstrações contábeis auditadas pela CVM e BACEN de 2018 a 2025. Revela a dimensão dos ativos de trilhões dos grandes conglomerados brasileiros e simula um teste de estresse prospectivo (*Forward-Looking Stress*) de perda de crédito adicional de +1.5% do ativo total, espelhando os requisitos da <strong>Resolução CMN nº 4.966</strong> e <strong>IFRS 9</strong>.
                 </p>
               </div>
 
@@ -334,7 +334,7 @@ export default function EditorialObservatorio() {
                             </span>
                           </div>
                           <div className="flex justify-between text-gray-600">
-                            <span>ROE 2023:</span>
+                            <span>ROE {latest.ano}:</span>
                             <span
                               className={`font-bold ${
                                 latest.roe_pct >= 0 ? "text-emerald-700" : "text-rose-700"
@@ -469,7 +469,7 @@ export default function EditorialObservatorio() {
                   3. Early Warning de Crédito Corporativo (CVM)
                 </h2>
                 <p className="text-sm text-gray-600 leading-relaxed max-w-3xl">
-                  Painel de <strong>2.585 balanços contábeis da CVM</strong> de companhias abertas na B3. O modelo preditivo <strong>XGBoost Calibrado</strong> foi treinado no período 2018–2021 e submetido a <strong>teste cego Out-of-Time (2022–2023)</strong> no ápice do ciclo de Selic alta. A metodologia de explicabilidade <strong>TreeSHAP</strong> revela as variáveis contábeis que precipitam a quebra antes de atrasos bancários formais.
+                  Painel de mais de <strong>3.400 balanços contábeis da CVM</strong> de companhias abertas na B3. O modelo preditivo <strong>XGBoost Calibrado</strong> foi treinado no período 2018–2021 e submetido a <strong>teste cego Out-of-Time (2022–2025)</strong> no ápice do ciclo de Selic alta e recuperação subsequente. A metodologia de explicabilidade <strong>TreeSHAP</strong> revela as variáveis contábeis que precipitam a quebra antes de atrasos bancários formais.
                 </p>
               </div>
 

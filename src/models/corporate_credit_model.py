@@ -56,7 +56,7 @@ def run_corporate_credit_pipeline() -> Dict[str, Any]:
         df_clean[col] = df_clean[col].clip(lower=p01, upper=p99)
 
     # 1. Divisão Out-of-Time (OOT) Rigorosa
-    # Treino: 2018 a 2021 | Teste OOT: 2022 e 2023 (alta severa de juros e quebra de empresas)
+    # Treino: 2018 a 2021 | Teste OOT: 2022 a 2025 (ciclo agudo de juros, quebras e recuperação)
     train_mask = df_clean["ano"] <= 2021
     test_mask = df_clean["ano"] >= 2022
 
@@ -66,7 +66,7 @@ def run_corporate_credit_pipeline() -> Dict[str, Any]:
     y_test = df_clean.loc[test_mask, "target_distress"]
     meta_test = df_clean.loc[test_mask, ["CNPJ_CIA", "DENOM_CIA", "ano", "DT_REFER"]]
 
-    logger.info(f"Divisão OOT: Treino {X_train.shape[0]} amostras (2018-2021), Teste {X_test.shape[0]} amostras (2022-2023).")
+    logger.info(f"Divisão OOT: Treino {X_train.shape[0]} amostras (2018-2021), Teste {X_test.shape[0]} amostras (2022-2025).")
 
     # 2. Baseline 1: Regressão Logística
     imputer = SimpleImputer(strategy="median")
@@ -155,7 +155,7 @@ def run_corporate_credit_pipeline() -> Dict[str, Any]:
         "metadata": {
             "title": "Early Warning de Risco de Crédito PJ (CVM)",
             "train_period": "2018-2021",
-            "test_oot_period": "2022-2023",
+            "test_oot_period": "2022-2025",
             "n_train_samples": len(X_train),
             "n_test_samples": len(X_test),
         },
