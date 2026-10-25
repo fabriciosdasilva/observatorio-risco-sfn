@@ -968,7 +968,7 @@ export default function EditorialObservatorio() {
                         Ranking Comparativo de Crédito, Solvência e Risco (RI Benchmark)
                       </h3>
                       <p className="text-xs text-gray-600">
-                        Indicadores regulatórios oficiais dos maiores conglomerados bancários e instituições financeiras do Brasil:
+                        Indicadores regulatórios oficiais dos maiores conglomerados bancários e instituições financeiras do Brasil. <strong>Clique em qualquer linha</strong> para selecionar a instituição e abrir sua análise completa:
                       </p>
                     </div>
                     <span className="text-xs font-mono text-gray-500 hidden sm:inline-block">
@@ -976,7 +976,7 @@ export default function EditorialObservatorio() {
                     </span>
                   </div>
 
-                  <div tabIndex={0} role="region" aria-label="Ranking dos 10 Maiores Bancos" className="table-wrapper shadow-xs">
+                  <div tabIndex={0} role="region" aria-label="Ranking dos Maiores Bancos" className="table-wrapper shadow-xs">
                     <table>
                       <thead>
                         <tr>
@@ -990,7 +990,6 @@ export default function EditorialObservatorio() {
                           <th>Custo Crédito</th>
                           <th>ROE Atual</th>
                           <th>Basileia Estressada</th>
-                          <th>Ação</th>
                         </tr>
                       </thead>
                       <tbody className="font-mono text-xs">
@@ -1005,12 +1004,16 @@ export default function EditorialObservatorio() {
                           return (
                             <tr
                               key={bName}
-                              className={`transition-colors ${isSelected ? "font-semibold" : "hover:bg-slate-50"}`}
+                              onClick={() => setSelectedBank(bName)}
+                              title={`Clique para selecionar ${bName}`}
+                              className={`transition-all cursor-pointer select-none ${
+                                isSelected ? "font-semibold shadow-xs" : "hover:bg-slate-100/70"
+                              }`}
                               style={
                                 isSelected && theme
                                   ? { backgroundColor: theme.accentLight, borderLeft: `4px solid ${theme.primary}` }
                                   : isSelected
-                                  ? { backgroundColor: "#fff5f5" }
+                                  ? { backgroundColor: "#fff5f5", borderLeft: "4px solid #f56a6a" }
                                   : {}
                               }
                             >
@@ -1033,6 +1036,18 @@ export default function EditorialObservatorio() {
                                   />
                                 )}
                                 <span className={isSelected && theme ? "font-bold text-gray-900" : ""}>{bName}</span>
+                                {isSelected && (
+                                  <span
+                                    className="text-[9px] font-sans font-bold px-1.5 py-0.2 rounded border ml-1 shrink-0"
+                                    style={
+                                      theme
+                                        ? { backgroundColor: theme.badgeBg, color: theme.badgeText, borderColor: theme.borderColor }
+                                        : { backgroundColor: "#fef2f2", color: "#991b1b", borderColor: "#fecaca" }
+                                    }
+                                  >
+                                    Ativo
+                                  </span>
+                                )}
                               </td>
                               <td className="font-sans text-gray-500 text-[11px]">
                                 {theme ? (
@@ -1076,15 +1091,6 @@ export default function EditorialObservatorio() {
                                 <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${st.solvente_acima_minimo_cmn ? "bg-emerald-100 text-emerald-800" : "bg-rose-100 text-rose-800"}`}>
                                   {st.basileia_estressado_pct}% ({st.alerta_capital})
                                 </span>
-                              </td>
-                              <td className="font-sans">
-                                <button
-                                  onClick={() => setSelectedBank(bName)}
-                                  className="text-xs hover:underline font-bold uppercase tracking-wider"
-                                  style={{ color: theme ? theme.primary : "#f56a6a" }}
-                                >
-                                  Inspecionar
-                                </button>
                               </td>
                             </tr>
                           );
