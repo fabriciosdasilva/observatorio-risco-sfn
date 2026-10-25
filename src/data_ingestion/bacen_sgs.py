@@ -29,6 +29,9 @@ BACEN_SGS_METADATA: Dict[str, Dict[str, Any]] = {
     "inad_pj_total": {"code": 21083, "name": "Inadimplência PJ Total (>90 dias %)", "pit_lag_days": 30},
     "inad_pj_capital_giro": {"code": 21095, "name": "Inadimplência Capital de Giro PJ (%)", "pit_lag_days": 30},
     "spread_medio": {"code": 20783, "name": "Spread Médio Total Operações Crédito (p.p.)", "pit_lag_days": 30},
+    "cambio_dolar": {"code": 3695, "name": "Taxa de Câmbio - R$ / US$ (Fim de Período)", "pit_lag_days": 0},
+    "saldo_credito_sfn_milhoes": {"code": 20539, "name": "Saldo Total da Carteira de Crédito do SFN (R$ Milhões)", "pit_lag_days": 45},
+    "ibc_br_dessaz": {"code": 24364, "name": "Índice de Atividade Econômica do BC (Dessazonalizado)", "pit_lag_days": 45},
 }
 
 

@@ -8,7 +8,11 @@
       "selic_anualizada",
       "ipca_12m",
       "ibc_br",
-      "desemprego_pnad"
+      "desemprego_pnad",
+      "comprometimento_renda",
+      "endividamento_familias",
+      "cambio_dolar",
+      "saldo_credito_sfn_milhoes"
     ]
   },
   "lag_summary_comparison": [
@@ -1436,5 +1440,307 @@
       },
       "label": "Capital de Giro (PJ)"
     }
-  }
+  },
+  "macro_snapshot": {
+    "selic_meta": {
+      "valor": 13.65,
+      "data": "2026-10-01"
+    },
+    "ipca_12m": {
+      "valor": 4.58,
+      "data": "2026-09-01"
+    },
+    "desemprego_pnad": {
+      "valor": 5.3,
+      "data": "2026-08-01"
+    },
+    "ibc_br_dessaz": {
+      "valor": 110.41,
+      "data": "2026-08-01"
+    },
+    "comprometimento_renda": {
+      "valor": 28.72,
+      "data": "2026-07-01"
+    },
+    "endividamento_familias": {
+      "valor": 49.86,
+      "data": "2026-07-01"
+    },
+    "saldo_credito_sfn_tri": {
+      "valor": 7.4,
+      "data": "2026-08-01"
+    },
+    "cambio_dolar": {
+      "valor": 5.18,
+      "data": "2026-09-01"
+    }
+  },
+  "macro_sensitivity_matrix": [
+    {
+      "target": "inad_pf_cartao_rotativo",
+      "label": "Cartão Rotativo (PF)",
+      "correlations": {
+        "selic_anualizada": 0.5296,
+        "ipca_12m": -0.2283,
+        "desemprego_pnad": -0.6134,
+        "ibc_br_dessaz": 0.7322,
+        "comprometimento_renda": 0.8331,
+        "endividamento_familias": 0.803
+      }
+    },
+    {
+      "target": "inad_pf_pessoal_livre",
+      "label": "Crédito Pessoal Não-Consignado (PF)",
+      "correlations": {
+        "selic_anualizada": 0.5104,
+        "ipca_12m": 0.0228,
+        "desemprego_pnad": -0.6469,
+        "ibc_br_dessaz": 0.6652,
+        "comprometimento_renda": 0.5017,
+        "endividamento_familias": 0.3892
+      }
+    },
+    {
+      "target": "inad_pf_consignado",
+      "label": "Crédito Consignado (PF)",
+      "correlations": {
+        "selic_anualizada": -0.6512,
+        "ipca_12m": 0.0236,
+        "desemprego_pnad": 0.625,
+        "ibc_br_dessaz": -0.4267,
+        "comprometimento_renda": -0.2641,
+        "endividamento_familias": 0.07
+      }
+    },
+    {
+      "target": "inad_pf_veiculos",
+      "label": "Financiamento de Veículos (PF)",
+      "correlations": {
+        "selic_anualizada": 0.6228,
+        "ipca_12m": 0.0039,
+        "desemprego_pnad": -0.7388,
+        "ibc_br_dessaz": 0.6176,
+        "comprometimento_renda": 0.55,
+        "endividamento_familias": 0.3752
+      }
+    },
+    {
+      "target": "inad_pf_imobiliario",
+      "label": "Financiamento Imobiliário (PF)",
+      "correlations": {
+        "selic_anualizada": 0.3049,
+        "ipca_12m": 0.1893,
+        "desemprego_pnad": -0.5894,
+        "ibc_br_dessaz": 0.4852,
+        "comprometimento_renda": 0.0806,
+        "endividamento_familias": -0.0298
+      }
+    },
+    {
+      "target": "inad_pj_capital_giro",
+      "label": "Capital de Giro (PJ)",
+      "correlations": {
+        "selic_anualizada": 0.3133,
+        "ipca_12m": -0.1704,
+        "desemprego_pnad": -0.0513,
+        "ibc_br_dessaz": -0.0179,
+        "comprometimento_renda": 0.0617,
+        "endividamento_familias": -0.0549
+      }
+    }
+  ],
+  "economic_cycles": [
+    {
+      "periodo": "2014 – 2016",
+      "titulo": "A Grande Recessão & Selic a 14,25%",
+      "selic_media": "13,37% a.a.",
+      "ipca_pico": "10,67% (2015)",
+      "desemprego": "Saltou de 6,8% para 12,0%",
+      "dinamica_credito": "Retração severa do PIB (-3,6% em 2015 e 2016). A quebra generalizada de pequenas e médias empresas levou a inadimplência do Capital de Giro PJ a picos de 18%. Bancos estancaram a concessão e elevaram spreads para cobrir o custo de crédito.",
+      "impacto_principal": "Crise de Solvência Corporativa (PJ)",
+      "status_risco": "Crítico"
+    },
+    {
+      "periodo": "2017 – 2019",
+      "titulo": "Desinflação Estrutural & Afrouxamento Monetário",
+      "selic_media": "Recuou de 14,25% até 4,50%",
+      "ipca_pico": "Ancorou em 3,74%",
+      "desemprego": "Caiu gradualmente para ~11,0%",
+      "dinamica_credito": "Corte de juros estimulou a tomada de crédito com garantia (imobiliário e veículos). A inadimplência recuou em praticamente todas as linhas bancárias e as famílias reorganizaram o fluxo de caixa.",
+      "impacto_principal": "Recuperação & Alongamento de Prazos",
+      "status_risco": "Moderado"
+    },
+    {
+      "periodo": "2020",
+      "titulo": "Choque Pandêmico & Selic a 2,00%",
+      "selic_media": "Mínima histórica de 2,00%",
+      "ipca_pico": "3,21% (baixa demanda inicial)",
+      "desemprego": "Pico de 14,9% na PNAD",
+      "dinamica_credito": "COPOM injetou liquidez maciça no SFN. O governo e o BACEN emitiram medidas provisórias de carência de dívidas. A inadimplência formal ficou artificialmente represada por renegociações em massa (moratórias).",
+      "impacto_principal": "Represamento de Risco & Alívio Regulatório",
+      "status_risco": "Alerta Latente"
+    },
+    {
+      "periodo": "2021 – 2023",
+      "titulo": "Choque Inflacionário Global & Choque de Selic (2% → 13,75%)",
+      "selic_media": "Aperto agressivo de +1.175 bps",
+      "ipca_pico": "12,13% (2022)",
+      "desemprego": "Recuo para 8,0%",
+      "dinamica_credito": "O endividamento das famílias atingiu pico histórico de 50,3% e o comprometimento de renda saltou para 28,5%. O efeito de defasagem se manifestou de forma fulminante: Cartão Rotativo explodiu em 3 meses (atingindo 52%), Financiamento de Veículos em 5 meses, e Capital de Giro PJ em 10 meses (culminando nas quebras de Americanas e Gol).",
+      "impacto_principal": "Explosão da Perda Esperada & Assimetria de Lags",
+      "status_risco": "Severo"
+    },
+    {
+      "periodo": "2024 – 2026",
+      "titulo": "Mercado de Trabalho Aquecido vs. Juros Reais Restritivos",
+      "selic_media": "13,65% a.a. (Juros Reais > 8,5%)",
+      "ipca_pico": "4,58% (ancorado perto do teto)",
+      "desemprego": "Mínima histórica de 5,3% a 6,8%",
+      "dinamica_credito": "Apesar do desemprego historicamente baixo, as famílias continuam sobrecarregadas com o serviço da dívida (comprometimento de 28,7%). A inadimplência do Cartão Rotativo bateu 66,15% (máxima histórica), provando que juros altos continuam corroendo a capacidade de pagamento de linhas rotativas caras.",
+      "impacto_principal": "Asfixia de Renda em Linhas Caras sem Garantia",
+      "status_risco": "Vigilância Ativa"
+    }
+  ],
+  "macro_timeline_data": [
+    {
+      "ano": 2013,
+      "selic": 8.18,
+      "ipca": 6.21,
+      "desemprego": 7.26,
+      "rotativo": 34.56,
+      "veiculos": 5.93,
+      "capital_giro": 14.45,
+      "comprometimento": 22.55
+    },
+    {
+      "ano": 2014,
+      "selic": 10.86,
+      "ipca": 6.33,
+      "desemprego": 6.86,
+      "rotativo": 34.29,
+      "veiculos": 4.7,
+      "capital_giro": 13.13,
+      "comprometimento": 22.77
+    },
+    {
+      "ano": 2015,
+      "selic": 13.37,
+      "ipca": 9.01,
+      "desemprego": 8.4,
+      "rotativo": 36.51,
+      "veiculos": 4.02,
+      "capital_giro": 17.9,
+      "comprometimento": 24.08
+    },
+    {
+      "ano": 2016,
+      "selic": 14.08,
+      "ipca": 8.77,
+      "desemprego": 11.37,
+      "rotativo": 36.67,
+      "veiculos": 4.61,
+      "capital_giro": 20.72,
+      "comprometimento": 23.66
+    },
+    {
+      "ano": 2017,
+      "selic": 10.08,
+      "ipca": 3.46,
+      "desemprego": 12.88,
+      "rotativo": 36.84,
+      "veiculos": 4.27,
+      "capital_giro": 17.88,
+      "comprometimento": 22.56
+    },
+    {
+      "ano": 2018,
+      "selic": 6.48,
+      "ipca": 3.66,
+      "desemprego": 12.37,
+      "rotativo": 35.3,
+      "veiculos": 3.6,
+      "capital_giro": 15.38,
+      "comprometimento": 22.26
+    },
+    {
+      "ano": 2019,
+      "selic": 5.94,
+      "ipca": 3.74,
+      "desemprego": 12.03,
+      "rotativo": 35.49,
+      "veiculos": 3.37,
+      "capital_giro": 14.52,
+      "comprometimento": 23.64
+    },
+    {
+      "ano": 2020,
+      "selic": 2.79,
+      "ipca": 3.21,
+      "desemprego": 13.47,
+      "rotativo": 39.99,
+      "veiculos": 3.74,
+      "capital_giro": 18.89,
+      "comprometimento": 21.48
+    },
+    {
+      "ano": 2021,
+      "selic": 4.42,
+      "ipca": 8.28,
+      "desemprego": 13.5,
+      "rotativo": 33.47,
+      "veiculos": 3.38,
+      "capital_giro": 12.2,
+      "comprometimento": 23.52
+    },
+    {
+      "ano": 2022,
+      "selic": 12.43,
+      "ipca": 9.34,
+      "desemprego": 9.51,
+      "rotativo": 44.55,
+      "veiculos": 4.86,
+      "capital_giro": 13.25,
+      "comprometimento": 26.4
+    },
+    {
+      "ano": 2023,
+      "selic": 13.2,
+      "ipca": 4.6,
+      "desemprego": 8.04,
+      "rotativo": 52.5,
+      "veiculos": 5.52,
+      "capital_giro": 15.85,
+      "comprometimento": 27.23
+    },
+    {
+      "ano": 2024,
+      "selic": 10.84,
+      "ipca": 4.37,
+      "desemprego": 6.92,
+      "rotativo": 53.99,
+      "veiculos": 4.75,
+      "capital_giro": 16.16,
+      "comprometimento": 26.3
+    },
+    {
+      "ano": 2025,
+      "selic": 14.32,
+      "ipca": 5.02,
+      "desemprego": 5.95,
+      "rotativo": 58.66,
+      "veiculos": 5.21,
+      "capital_giro": 18.45,
+      "comprometimento": 27.38
+    },
+    {
+      "ano": 2026,
+      "selic": 14.35,
+      "ipca": 4.38,
+      "desemprego": 5.59,
+      "rotativo": 62.91,
+      "veiculos": 6.28,
+      "capital_giro": 20.85,
+      "comprometimento": 28.42
+    }
+  ]
 }

@@ -19,6 +19,12 @@ import {
   X,
   ChevronRight,
   Info,
+  Percent,
+  Briefcase,
+  Users,
+  DollarSign,
+  Layers,
+  History,
 } from "lucide-react";
 
 export default function EditorialObservatorio() {
@@ -131,24 +137,280 @@ export default function EditorialObservatorio() {
           {/* PILAR 1: TRANSMISSÃO DA SELIC & DEFASAGEM               */}
           {/* ======================================================== */}
           {activeTab === "pilar1" && (
-            <section className="space-y-10 animate-fadeIn">
+            <section className="space-y-12 animate-fadeIn">
               <div>
                 <h2 className="major-heading text-xl sm:text-2xl text-gray-900">
                   1. Transmissão Monetária &amp; Defasagem Temporal
                 </h2>
                 <p className="text-sm text-gray-600 leading-relaxed max-w-3xl">
-                  Investigação empírica com <strong>166 meses de dados contínuos do BACEN SGS (2013–2026)</strong>. Demonstra a assimetria na velocidade em que os juros atingem cada modalidade de crédito. O modelo regularizado <strong>Ridge AR-X</strong> é comparado contra o <strong>Naive Random Walk</strong> em validação <strong>Walk-Forward</strong> (janela de expansão com horizonte trimestral).
+                  Investigação empírica com <strong>166 meses de dados contínuos do BACEN SGS (2013–2026)</strong>. Demonstra como os ciclos de aperto monetário do COPOM se propagam pela economia real até atingir a inadimplência das diferentes carteiras de crédito, com validação <strong>Walk-Forward</strong> (janela expansiva trimestral sem <em>look-ahead bias</em>).
                 </p>
               </div>
 
-              {/* Responsive Data Table */}
+              {/* 1.1 Snapshot Macroeconômico Oficial */}
+              {pilar1Data?.macro_snapshot && (
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-serif font-bold text-gray-900 text-base flex items-center gap-2">
+                      <Activity className="w-4 h-4 text-[#f56a6a]" />
+                      Painel Macroeconômico Multivariado (BACEN SGS Oficial)
+                    </h3>
+                    <span className="text-xs font-mono text-gray-500">
+                      Posições mais recentes consolidadas
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                    <div className="p-4 bg-white border-2 border-gray-200 rounded-lg shadow-xs hover:border-[#f56a6a] transition-colors">
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-gray-500 font-sans block mb-1">
+                        Taxa Selic Meta
+                      </span>
+                      <div className="text-2xl font-serif font-bold text-[#f56a6a]">
+                        {pilar1Data.macro_snapshot.selic_meta.valor}%
+                      </div>
+                      <span className="text-[10px] text-gray-500 font-mono mt-1 block">
+                        a.a. • {pilar1Data.macro_snapshot.selic_meta.data}
+                      </span>
+                    </div>
+
+                    <div className="p-4 bg-white border-2 border-gray-200 rounded-lg shadow-xs hover:border-[#f56a6a] transition-colors">
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-gray-500 font-sans block mb-1">
+                        Inflação IPCA 12m
+                      </span>
+                      <div className="text-2xl font-serif font-bold text-gray-900">
+                        {pilar1Data.macro_snapshot.ipca_12m.valor}%
+                      </div>
+                      <span className="text-[10px] text-gray-500 font-mono mt-1 block">
+                        Acumulado • {pilar1Data.macro_snapshot.ipca_12m.data}
+                      </span>
+                    </div>
+
+                    <div className="p-4 bg-white border-2 border-gray-200 rounded-lg shadow-xs hover:border-[#f56a6a] transition-colors">
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-gray-500 font-sans block mb-1">
+                        Desemprego (PNAD)
+                      </span>
+                      <div className="text-2xl font-serif font-bold text-emerald-700">
+                        {pilar1Data.macro_snapshot.desemprego_pnad.valor}%
+                      </div>
+                      <span className="text-[10px] text-gray-500 font-mono mt-1 block">
+                        Mínima Histórica • IBGE
+                      </span>
+                    </div>
+
+                    <div className="p-4 bg-white border-2 border-gray-200 rounded-lg shadow-xs hover:border-[#f56a6a] transition-colors">
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-gray-500 font-sans block mb-1">
+                        Atividade (IBC-Br)
+                      </span>
+                      <div className="text-2xl font-serif font-bold text-gray-900">
+                        {pilar1Data.macro_snapshot.ibc_br_dessaz.valor}
+                      </div>
+                      <span className="text-[10px] text-gray-500 font-mono mt-1 block">
+                        Índice Dessaz. • BACEN
+                      </span>
+                    </div>
+
+                    <div className="p-4 bg-white border-2 border-gray-200 rounded-lg shadow-xs hover:border-[#f56a6a] transition-colors">
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-gray-500 font-sans block mb-1">
+                        Comprometimento Renda
+                      </span>
+                      <div className="text-2xl font-serif font-bold text-rose-700">
+                        {pilar1Data.macro_snapshot.comprometimento_renda.valor}%
+                      </div>
+                      <span className="text-[10px] text-gray-500 font-mono mt-1 block">
+                        Serviço da Dívida Famílias
+                      </span>
+                    </div>
+
+                    <div className="p-4 bg-white border-2 border-gray-200 rounded-lg shadow-xs hover:border-[#f56a6a] transition-colors">
+                      <span className="text-[10px] uppercase font-bold tracking-wider text-gray-500 font-sans block mb-1">
+                        Saldo Carteira SFN
+                      </span>
+                      <div className="text-2xl font-serif font-bold text-gray-900">
+                        R$ {pilar1Data.macro_snapshot.saldo_credito_sfn_tri.valor} T
+                      </div>
+                      <span className="text-[10px] text-gray-500 font-mono mt-1 block">
+                        Ativo de Crédito Total
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* 1.2 Mecanismo Didático de Transmissão */}
+              <div className="bg-white border-2 border-gray-200 rounded-lg p-6 sm:p-8 shadow-xs space-y-6">
+                <div>
+                  <h3 className="font-serif font-bold text-gray-900 text-base mb-1">
+                    Como a Política Monetária vira Inadimplência Bancária? (O Ciclo em 4 Fases)
+                  </h3>
+                  <p className="text-xs text-gray-600">
+                    O canal de transmissão do juro não é instantâneo. Ele percorre uma cadeia de atrito financeiro até bater nas provisões de crédito:
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="p-4 bg-gray-50 border-l-4 border-gray-400 rounded">
+                    <span className="text-xs font-mono font-bold text-gray-500 block mb-1">FASE 1 • MÊS 0</span>
+                    <h4 className="font-bold text-gray-900 text-sm mb-1">Choque de Decisão</h4>
+                    <p className="text-xs text-gray-600 leading-relaxed">
+                      COPOM eleva a Selic. O custo de captação interbancário (CDI) sobe instantaneamente na mesa de operações do banco.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-gray-50 border-l-4 border-gray-600 rounded">
+                    <span className="text-xs font-mono font-bold text-gray-500 block mb-1">FASE 2 • MÊS 1</span>
+                    <h4 className="font-bold text-gray-900 text-sm mb-1">Repasse &amp; Spreads</h4>
+                    <p className="text-xs text-gray-600 leading-relaxed">
+                      Bancos repassam o custo para as linhas rotativas e de giro. A política de concessão fica mais seletiva e os limites caem.
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-gray-50 border-l-4 border-[#f56a6a] rounded">
+                    <span className="text-xs font-mono font-bold text-[#f56a6a] block mb-1">FASE 3 • MÊS 2 A 3</span>
+                    <h4 className="font-bold text-gray-900 text-sm mb-1">Asfixia Orçamentária</h4>
+                    <p className="text-xs text-gray-600 leading-relaxed">
+                      Juros compostos multiplicam o saldo devedor. Famílias deixam de pagar faturas integrais e entram no rotativo (atraso de 30-60d).
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-gray-50 border-l-4 border-rose-700 rounded">
+                    <span className="text-xs font-mono font-bold text-rose-700 block mb-1">FASE 4 • MÊS 3 A 10</span>
+                    <h4 className="font-bold text-gray-900 text-sm mb-1">Default Contábil (NPL 90)</h4>
+                    <p className="text-xs text-gray-600 leading-relaxed">
+                      O atraso cruza o marco de <strong>90 dias</strong> do BACEN. A perda é reconhecida na DRE via provisão (IFRS 9 / CMN 4.966).
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 1.3 Matriz de Sensibilidade Macroeconômica */}
+              {pilar1Data?.macro_sensitivity_matrix && (
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h3 className="font-serif font-bold text-gray-900 text-base">
+                        Matriz de Sensibilidade Macroeconômica Multivariada
+                      </h3>
+                      <p className="text-xs text-gray-600">
+                        Correlação linear de Pearson de cada modalidade de crédito com os principais indicadores do país:
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="table-wrapper shadow-xs">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Modalidade</th>
+                          <th>Selic (% a.a.)</th>
+                          <th>Inflação (IPCA)</th>
+                          <th>Desemprego</th>
+                          <th>Atividade (IBC-Br)</th>
+                          <th>Comprometimento Renda</th>
+                          <th>Endividamento Famílias</th>
+                        </tr>
+                      </thead>
+                      <tbody className="font-mono text-xs">
+                        {pilar1Data.macro_sensitivity_matrix.map((row: any) => (
+                          <tr key={row.target} className={selectedModality === row.target ? "bg-[#fff5f5] font-semibold" : ""}>
+                            <td className="font-sans font-medium text-gray-900">
+                              {row.label}
+                            </td>
+                            <td className={row.correlations.selic_anualizada > 0.4 ? "text-[#f56a6a] font-bold" : "text-gray-700"}>
+                              {row.correlations.selic_anualizada > 0 ? `+${row.correlations.selic_anualizada}` : row.correlations.selic_anualizada}
+                            </td>
+                            <td className="text-gray-700">
+                              {row.correlations.ipca_12m > 0 ? `+${row.correlations.ipca_12m}` : row.correlations.ipca_12m}
+                            </td>
+                            <td className={row.correlations.desemprego_pnad > 0.4 ? "text-rose-700 font-bold" : "text-gray-700"}>
+                              {row.correlations.desemprego_pnad > 0 ? `+${row.correlations.desemprego_pnad}` : row.correlations.desemprego_pnad}
+                            </td>
+                            <td className="text-gray-700">
+                              {row.correlations.ibc_br_dessaz > 0 ? `+${row.correlations.ibc_br_dessaz}` : row.correlations.ibc_br_dessaz}
+                            </td>
+                            <td className={row.correlations.comprometimento_renda > 0.6 ? "text-rose-700 font-bold bg-rose-50" : "text-gray-700"}>
+                              {row.correlations.comprometimento_renda > 0 ? `+${row.correlations.comprometimento_renda}` : row.correlations.comprometimento_renda}
+                            </td>
+                            <td className={row.correlations.endividamento_familias > 0.6 ? "text-rose-700 font-bold bg-rose-50" : "text-gray-700"}>
+                              {row.correlations.endividamento_familias > 0 ? `+${row.correlations.endividamento_familias}` : row.correlations.endividamento_familias}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div className="mt-2 text-xs text-gray-500 font-sans italic">
+                    💡 <strong>Insight Chave:</strong> O Cartão Rotativo tem correlação recorde com o <strong>Comprometimento de Renda (+0.8331)</strong> e com o <strong>Endividamento (+0.8030)</strong>, provando que o endividamento prévio das famílias atua como o principal catalisador para o calote no rotativo.
+                  </div>
+                </div>
+              )}
+
+              {/* 1.4 Linha do Tempo dos 5 Grandes Ciclos Econômicos */}
+              {pilar1Data?.economic_cycles && (
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-serif font-bold text-gray-900 text-base flex items-center gap-2">
+                      <History className="w-4 h-4 text-[#f56a6a]" />
+                      Linha do Tempo dos Ciclos de Crédito &amp; Choques Macroeconômicos
+                    </h3>
+                    <p className="text-xs text-gray-600">
+                      Como os choques históricos da Selic, inflação e emprego se desdobraram no Sistema Financeiro Nacional:
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {pilar1Data.economic_cycles.map((cycle: any, idx: number) => (
+                      <div
+                        key={idx}
+                        className="p-5 bg-white border-2 border-gray-200 rounded-lg shadow-xs flex flex-col justify-between hover:border-gray-400 transition-colors"
+                      >
+                        <div>
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-[11px] font-mono font-bold text-[#f56a6a]">
+                              {cycle.periodo}
+                            </span>
+                            <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-700 border border-gray-300">
+                              {cycle.status_risco}
+                            </span>
+                          </div>
+
+                          <h4 className="font-serif font-bold text-gray-900 text-sm mb-3">
+                            {cycle.titulo}
+                          </h4>
+
+                          <div className="space-y-1.5 font-mono text-[11px] text-gray-600 mb-3 bg-gray-50 p-2.5 rounded border border-gray-100">
+                            <div><span className="text-gray-400 font-sans">Selic Média:</span> <span className="font-bold text-gray-900">{cycle.selic_media}</span></div>
+                            <div><span className="text-gray-400 font-sans">IPCA Pico:</span> <span className="font-bold text-gray-900">{cycle.ipca_pico}</span></div>
+                            <div><span className="text-gray-400 font-sans">Mercado Trabalho:</span> <span className="font-bold text-gray-900">{cycle.desemprego}</span></div>
+                          </div>
+
+                          <p className="text-xs text-gray-600 leading-relaxed font-sans mb-3">
+                            {cycle.dinamica_credito}
+                          </p>
+                        </div>
+
+                        <div className="pt-2 border-t border-gray-100 text-[11px] font-sans font-semibold text-gray-800">
+                          🎯 <span className="text-gray-500 font-normal">Impacto Central:</span> {cycle.impacto_principal}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* 1.5 Matriz Econométrica de Defasagem (Lags) */}
               {pilar1Data && (
                 <div>
                   <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-serif font-bold text-gray-900 text-base">
-                      Matriz Econométrica de Defasagem (Lags) e Ganho de Erro
-                    </h3>
-                    <span className="text-xs font-mono text-gray-500">
+                    <div>
+                      <h3 className="font-serif font-bold text-gray-900 text-base">
+                        Matriz Econométrica de Defasagem (Lags) &amp; Backtesting Walk-Forward
+                      </h3>
+                      <p className="text-xs text-gray-600">
+                        Comparativo preditivo do modelo regularizado <strong>Ridge AR-X</strong> vs. <strong>Naive Baseline</strong> (Random Walk):
+                      </p>
+                    </div>
+                    <span className="text-xs font-mono text-gray-500 hidden sm:inline-block">
                       Walk-Forward • Horizonte: 3 Meses
                     </span>
                   </div>
@@ -217,7 +479,7 @@ export default function EditorialObservatorio() {
                 </div>
               )}
 
-              {/* Selected Modality Deep-Dive (HTML5 UP Spotlight Style) */}
+              {/* 1.6 Selected Modality Deep-Dive (HTML5 UP Spotlight Style) */}
               {modData && (
                 <div className="bg-white border-2 border-gray-200 rounded-lg p-6 sm:p-8 space-y-6 shadow-xs">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-gray-200 gap-2">
