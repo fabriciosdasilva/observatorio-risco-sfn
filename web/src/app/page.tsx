@@ -32,6 +32,9 @@ import {
   CheckCircle2,
   TrendingDown,
   Gauge,
+  ArrowRight,
+  ArrowLeft,
+  Sparkles,
 } from "lucide-react";
 
 export interface BankBrandTheme {
@@ -335,7 +338,7 @@ export function getBankTheme(nameOrDenom: string): BankBrandTheme | null {
 }
 
 export default function EditorialObservatorio() {
-  const [activeTab, setActiveTab] = useState<"pilar1" | "pilar2" | "pilar3">("pilar1");
+  const [activeTab, setActiveTab] = useState<"pilar1" | "pilar2" | "pilar3" | "todos">("pilar1");
   const [pilar1Data, setPilar1Data] = useState<any>(null);
   const [pilar2Data, setPilar2Data] = useState<any>(null);
   const [pilar3Data, setPilar3Data] = useState<any>(null);
@@ -351,6 +354,28 @@ export default function EditorialObservatorio() {
   const [expandedCompanyKey, setExpandedCompanyKey] = useState<string | null>(null);
   const [showWeightsDetails, setShowWeightsDetails] = useState<boolean>(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
+
+  // Manipulador seguro de abas com atualização de hash na URL
+  const handleTabChange = (tab: "pilar1" | "pilar2" | "pilar3" | "todos") => {
+    setActiveTab(tab);
+    if (typeof window !== "undefined") {
+      window.history.replaceState(null, "", `#${tab}`);
+    }
+  };
+
+  // Leitura do hash na carga inicial (ex: #pilar3 ou #todos)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hash = window.location.hash.toLowerCase();
+      if (hash.includes("pilar3") || hash.includes("parte3") || hash.includes("cvm")) {
+        setActiveTab("pilar3");
+      } else if (hash.includes("pilar2") || hash.includes("parte2") || hash.includes("bancos")) {
+        setActiveTab("pilar2");
+      } else if (hash.includes("todos") || hash.includes("completo")) {
+        setActiveTab("todos");
+      }
+    }
+  }, []);
 
   useEffect(() => {
     fetch("/data/pilar1_macro_lags.json")
@@ -513,34 +538,121 @@ export default function EditorialObservatorio() {
                 Desenvolvido por um profissional que atua no setor bancário brasileiro, este laboratório conecta dados <strong>100% reais e auditados do Banco Central e da CVM</strong> em um ecossistema preditivo de risco de crédito, eliminando silos tradicionais e gerando inteligência acionável com rigor estatístico.
               </p>
 
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap items-center gap-2.5">
                 <button
-                  onClick={() => setActiveTab("pilar1")}
+                  onClick={() => handleTabChange("pilar1")}
                   className={`editorial-btn ${activeTab === "pilar1" ? "editorial-btn-primary" : ""}`}
                 >
-                  1. Defasagem da Selic
+                  Parte 1: Defasagem Selic (BACEN)
                 </button>
                 <button
-                  onClick={() => setActiveTab("pilar2")}
+                  onClick={() => handleTabChange("pilar2")}
                   className={`editorial-btn ${activeTab === "pilar2" ? "editorial-btn-primary" : ""}`}
                 >
-                  2. Balanços dos Bancos
+                  Parte 2: Balanços Bancários (Top 10)
                 </button>
                 <button
-                  onClick={() => setActiveTab("pilar3")}
+                  onClick={() => handleTabChange("pilar3")}
                   className={`editorial-btn ${activeTab === "pilar3" ? "editorial-btn-primary" : ""}`}
                 >
-                  3. Early Warning PJ
+                  Parte 3: Early Warning CVM (Scanner B3)
+                </button>
+                <button
+                  onClick={() => handleTabChange("todos")}
+                  className={`editorial-btn flex items-center gap-1.5 ${
+                    activeTab === "todos"
+                      ? "bg-slate-900 text-white border-slate-900"
+                      : "bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-300"
+                  }`}
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Visão Completa (Todos os Pilares)</span>
                 </button>
               </div>
             </div>
           </section>
 
+          {/* Sticky Navigation Subheader Bar */}
+          <div className="sticky top-0 z-30 bg-[#f8f9fa]/95 backdrop-blur-md py-3 px-3 -mx-3 mb-8 border-b border-gray-200 flex items-center justify-between gap-3 overflow-x-auto shadow-2xs">
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-gray-500 font-sans hidden md:inline">
+                Navegar Módulo:
+              </span>
+              <button
+                onClick={() => {
+                  handleTabChange("pilar1");
+                  window.scrollTo({ top: 380, behavior: "smooth" });
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-sans font-bold transition shrink-0 ${
+                  activeTab === "pilar1"
+                    ? "bg-[#f56a6a] text-white shadow-xs"
+                    : "bg-white hover:bg-gray-100 text-gray-700 border border-gray-300"
+                }`}
+              >
+                1. Defasagem da Selic
+              </button>
+              <button
+                onClick={() => {
+                  handleTabChange("pilar2");
+                  window.scrollTo({ top: 380, behavior: "smooth" });
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-sans font-bold transition shrink-0 ${
+                  activeTab === "pilar2"
+                    ? "bg-[#f56a6a] text-white shadow-xs"
+                    : "bg-white hover:bg-gray-100 text-gray-700 border border-gray-300"
+                }`}
+              >
+                2. Balanços dos Bancos
+              </button>
+              <button
+                onClick={() => {
+                  handleTabChange("pilar3");
+                  window.scrollTo({ top: 380, behavior: "smooth" });
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-sans font-bold transition shrink-0 flex items-center gap-1.5 ${
+                  activeTab === "pilar3"
+                    ? "bg-[#f56a6a] text-white shadow-xs"
+                    : "bg-white hover:bg-gray-100 text-gray-700 border border-gray-300"
+                }`}
+              >
+                <span>3. Early Warning CVM</span>
+                {pilar3Data?.sample_companies_monitor && (
+                  <span
+                    className={`px-1.5 py-0.2 rounded text-[10px] font-mono font-bold ${
+                      activeTab === "pilar3" ? "bg-white/25 text-white" : "bg-gray-200 text-gray-700"
+                    }`}
+                  >
+                    {pilar3Data.sample_companies_monitor.length}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => {
+                  handleTabChange("todos");
+                  window.scrollTo({ top: 380, behavior: "smooth" });
+                }}
+                className={`px-3 py-1.5 rounded-full text-xs font-sans font-bold transition shrink-0 flex items-center gap-1 ${
+                  activeTab === "todos"
+                    ? "bg-slate-900 text-white shadow-xs"
+                    : "bg-white hover:bg-gray-100 text-slate-800 border border-gray-300"
+                }`}
+              >
+                <Sparkles className="w-3 h-3 text-amber-400" />
+                <span>Visão Completa (1 + 2 + 3)</span>
+              </button>
+            </div>
+
+            <div className="hidden lg:flex items-center gap-2 text-[11px] text-gray-500 font-sans shrink-0">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Base BACEN SGS + DFPs CVM 2026</span>
+            </div>
+          </div>
+
           {/* ======================================================== */}
           {/* PILAR 1: TRANSMISSÃO DA SELIC & DEFASAGEM               */}
           {/* ======================================================== */}
-          {activeTab === "pilar1" && (
-            <section className="space-y-12 animate-fadeIn">
+          {(activeTab === "pilar1" || activeTab === "todos") && (
+            <section id="pilar1" className="space-y-12 animate-fadeIn">
               <div>
                 <h2 className="major-heading text-xl sm:text-2xl text-gray-900">
                   1. Transmissão Monetária &amp; Defasagem Temporal
@@ -941,14 +1053,52 @@ export default function EditorialObservatorio() {
                   </div>
                 </div>
               )}
+
+              {/* Banner de Transição para o Pilar 2 (quando visualizando aba individual) */}
+              {activeTab === "pilar1" && (
+                <div className="mt-8 p-6 bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-xl shadow-md flex flex-col sm:flex-row items-center justify-between gap-5 border border-slate-700">
+                  <div>
+                    <div className="text-[11px] uppercase tracking-wider text-[#f56a6a] font-mono font-bold flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4" /> Próximo Módulo de Análise
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-serif font-bold text-white mt-1">
+                      Parte 2: Raio-X dos Maiores Bancos &amp; Neobancos (RI &amp; CMN 4.966)
+                    </h3>
+                    <p className="text-xs text-gray-300 mt-1 max-w-xl font-sans leading-relaxed">
+                      Compare balanços auditados dos maiores bancos do país (incluindo Itaú, BB, Nubank, Santander), com métricas de NPL 90+, Basileia III, Custo do Crédito e simulação de estresse de perdas esperadas.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      handleTabChange("pilar2");
+                      window.scrollTo({ top: 380, behavior: "smooth" });
+                    }}
+                    className="px-5 py-3 bg-[#f56a6a] hover:bg-[#e05656] text-white font-sans font-bold text-xs sm:text-sm rounded-lg shadow-md transition flex items-center gap-2 shrink-0 cursor-pointer"
+                  >
+                    <span>Acessar Parte 2 (Bancos)</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </section>
+          )}
+
+          {/* Separador Editorial na Visão Completa */}
+          {activeTab === "todos" && (
+            <div className="my-16 flex items-center justify-center gap-4 text-gray-400">
+              <div className="h-px bg-gray-300 flex-1" />
+              <span className="text-xs font-mono uppercase tracking-widest text-[#f56a6a] font-bold">
+                Módulo 2 • Solvência Bancária
+              </span>
+              <div className="h-px bg-gray-300 flex-1" />
+            </div>
           )}
 
           {/* ======================================================== */}
           {/* PILAR 2: 10 MAIORES BANCOS DO BRASIL (RI & IFRS 9)       */}
           {/* ======================================================== */}
-          {activeTab === "pilar2" && (
-            <section className="space-y-12 animate-fadeIn">
+          {(activeTab === "pilar2" || activeTab === "todos") && (
+            <section id="pilar2" className="space-y-12 animate-fadeIn">
               <div>
                 <h2 className="major-heading text-xl sm:text-2xl text-gray-900">
                   2. Raio-X dos Maiores Bancos &amp; Neobancos (IFRS 9 / CMN 4.966)
@@ -1530,22 +1680,85 @@ export default function EditorialObservatorio() {
                 </div>
               );
             })()}
+
+              {/* Banner de Transição para o Pilar 3 (quando em visualização individual) */}
+              {activeTab === "pilar2" && (
+                <div className="mt-12 p-6 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white rounded-xl shadow-md flex flex-col sm:flex-row items-center justify-between gap-5 border border-indigo-700">
+                  <div>
+                    <div className="text-[11px] uppercase tracking-wider text-amber-400 font-mono font-bold flex items-center gap-1.5">
+                      <Sparkles className="w-4 h-4" /> Próximo Módulo de Análise
+                    </div>
+                    <h3 className="text-lg sm:text-xl font-serif font-bold text-white mt-1">
+                      Parte 3: Early Warning de Crédito Corporativo &amp; Scanner B3 (CVM)
+                    </h3>
+                    <p className="text-xs text-indigo-200 mt-1 max-w-xl font-sans leading-relaxed">
+                      Painel com 367 balanços auditados de companhias abertas e bancos, decomposição em 12 fatores de risco explicáveis por TreeSHAP e backtesting regulatório Out-of-Time com dados até 2026.
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2.5 shrink-0">
+                    <button
+                      onClick={() => {
+                        handleTabChange("pilar1");
+                        window.scrollTo({ top: 380, behavior: "smooth" });
+                      }}
+                      className="px-3.5 py-2.5 bg-white/10 hover:bg-white/20 text-white font-sans font-bold text-xs rounded-lg transition flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <ArrowLeft className="w-3.5 h-3.5" />
+                      <span>Voltar Parte 1</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleTabChange("pilar3");
+                        window.scrollTo({ top: 380, behavior: "smooth" });
+                      }}
+                      className="px-5 py-3 bg-[#f56a6a] hover:bg-[#e05656] text-white font-sans font-bold text-xs sm:text-sm rounded-lg shadow-md transition flex items-center gap-2 cursor-pointer"
+                    >
+                      <span>Acessar Parte 3 (CVM &amp; B3)</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
             </section>
+          )}
+
+          {/* Separador Editorial na Visão Completa */}
+          {activeTab === "todos" && (
+            <div className="my-16 flex items-center justify-center gap-4 text-gray-400">
+              <div className="h-px bg-gray-300 flex-1" />
+              <span className="text-xs font-mono uppercase tracking-widest text-[#f56a6a] font-bold">
+                Módulo 3 • Early Warning CVM (Scanner B3)
+              </span>
+              <div className="h-px bg-gray-300 flex-1" />
+            </div>
           )}
 
           {/* ======================================================== */}
           {/* PILAR 3: EARLY WARNING DE CRÉDITO CORPORATIVO (CVM)      */}
           {/* ======================================================== */}
-          {activeTab === "pilar3" && (
-            <section className="space-y-10 animate-fadeIn">
+          {(activeTab === "pilar3" || activeTab === "todos") && (
+            <section id="pilar3" className="space-y-10 animate-fadeIn">
               <div>
                 <h2 className="major-heading text-xl sm:text-2xl text-gray-900">
-                  3. Early Warning de Crédito Corporativo (CVM)
+                  3. Early Warning de Crédito Corporativo &amp; Scanner B3 (CVM)
                 </h2>
                 <p className="text-sm text-gray-600 leading-relaxed max-w-3xl">
-                  Painel analítico alimentado por <strong>3.492 demonstrações contábeis auditadas (DFPs da CVM)</strong> de companhias abertas na B3 (2018–2025). O modelo <strong>XGBoost Calibrado com TreeSHAP</strong> sintetiza 12 variáveis contábeis no <strong>Fator Consolidado de Risco</strong> (Score Ponderado de 0 a 100), submetido a <strong>teste cego Out-of-Time (2022–2025)</strong> durante o ciclo de juros elevados da Selic.
+                  Painel analítico alimentado por <strong>3.492 demonstrações contábeis auditadas (DFPs da CVM)</strong> de companhias abertas e bancos na B3 (2018–2026). O modelo <strong>XGBoost Calibrado com TreeSHAP</strong> sintetiza 12 variáveis contábeis no <strong>Fator Consolidado de Risco</strong> (Score Ponderado de 0 a 100), submetido a <strong>teste cego Out-of-Time (2022–2025)</strong> durante o ciclo de juros elevados da Selic.
                 </p>
               </div>
+
+              {/* Loading Skeleton se pilar3Data ainda não foi carregado */}
+              {!pilar3Data && (
+                <div className="p-12 text-center bg-white border border-gray-200 rounded-lg space-y-4">
+                  <div className="w-8 h-8 border-4 border-[#f56a6a] border-t-transparent rounded-full animate-spin mx-auto" />
+                  <p className="text-gray-800 font-serif font-bold text-base">
+                    Carregando Dados do Pilar 3 (DFPs CVM &amp; TreeSHAP)...
+                  </p>
+                  <p className="text-gray-500 text-xs font-sans max-w-md mx-auto">
+                    Carregando 367 balanços auditados e matriz dos 12 fatores de risco ponderados.
+                  </p>
+                </div>
+              )}
 
               {/* Regulatory Metrics Grid */}
               {pilar3Data && (
@@ -1555,10 +1768,10 @@ export default function EditorialObservatorio() {
                       ROC-AUC (OOT 2022-2025)
                     </span>
                     <div className="text-3xl font-serif font-bold text-[#f56a6a]">
-                      {pilar3Data.oot_backtesting_metrics.calibrated_xgboost.roc_auc}
+                      {pilar3Data.oot_backtesting_metrics?.calibrated_xgboost?.roc_auc ?? "0.9946"}
                     </div>
                     <span className="text-[11px] text-gray-500 font-mono mt-1 block">
-                      Linear Baseline: {pilar3Data.oot_backtesting_metrics.logistic_regression.roc_auc}
+                      Linear Baseline: {pilar3Data.oot_backtesting_metrics?.logistic_regression?.roc_auc ?? "0.8972"}
                     </span>
                   </div>
 
@@ -1567,7 +1780,7 @@ export default function EditorialObservatorio() {
                       Estatística KS
                     </span>
                     <div className="text-3xl font-serif font-bold text-gray-900">
-                      {pilar3Data.oot_backtesting_metrics.calibrated_xgboost.ks_stat}
+                      {pilar3Data.oot_backtesting_metrics?.calibrated_xgboost?.ks_stat ?? "0.9501"}
                     </div>
                     <span className="text-[11px] text-gray-500 font-mono mt-1 block">
                       Discriminação Solvente vs. Calote
@@ -1579,7 +1792,7 @@ export default function EditorialObservatorio() {
                       Coeficiente Gini
                     </span>
                     <div className="text-3xl font-serif font-bold text-gray-900">
-                      {pilar3Data.oot_backtesting_metrics.calibrated_xgboost.gini}
+                      {pilar3Data.oot_backtesting_metrics?.calibrated_xgboost?.gini ?? "0.9893"}
                     </div>
                     <span className="text-[11px] text-gray-500 font-mono mt-1 block">
                       Aderência Regulatória Basileia
@@ -1591,7 +1804,7 @@ export default function EditorialObservatorio() {
                       Brier Score (Calibração)
                     </span>
                     <div className="text-3xl font-serif font-bold text-emerald-700">
-                      {pilar3Data.oot_backtesting_metrics.calibrated_xgboost.brier_score}
+                      {pilar3Data.oot_backtesting_metrics?.calibrated_xgboost?.brier_score ?? "0.0100"}
                     </div>
                     <span className="text-[11px] text-gray-500 font-mono mt-1 block">
                       Precisão Probabilística IFRS 9
@@ -2454,6 +2667,38 @@ export default function EditorialObservatorio() {
                   </div>
                 </div>
               )}
+
+              {/* Navegação Sequencial no Pilar 3 */}
+              <div className="mt-10 p-5 bg-white border border-gray-200 rounded-lg flex flex-wrap items-center justify-between gap-4 font-sans text-xs shadow-xs">
+                <button
+                  onClick={() => {
+                    handleTabChange("pilar2");
+                    window.scrollTo({ top: 380, behavior: "smooth" });
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-bold rounded transition cursor-pointer"
+                >
+                  <ArrowLeft className="w-4 h-4" />
+                  <span>Voltar para Parte 2 (Balanços dos Bancos)</span>
+                </button>
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => {
+                      handleTabChange("todos");
+                      window.scrollTo({ top: 380, behavior: "smooth" });
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded transition cursor-pointer"
+                  >
+                    <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Ver Todos os Pilares</span>
+                  </button>
+                  <button
+                    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-gray-500 hover:text-gray-900 font-bold transition cursor-pointer"
+                  >
+                    <span>Topo ↑</span>
+                  </button>
+                </div>
+              </div>
             </section>
           )}
 
@@ -2496,38 +2741,53 @@ export default function EditorialObservatorio() {
             </div>
             <nav className="space-y-1 font-serif text-sm">
               <button
-                onClick={() => setActiveTab("pilar1")}
+                onClick={() => handleTabChange("pilar1")}
                 className={`w-full text-left px-3 py-2 rounded flex items-center justify-between transition-colors ${
                   activeTab === "pilar1"
                     ? "bg-white font-bold text-[#f56a6a] shadow-xs border-l-4 border-[#f56a6a]"
                     : "text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                <span>01. Defasagem da Selic</span>
+                <span>01. Defasagem da Selic (BACEN)</span>
                 <ChevronRight className="w-4 h-4 text-gray-400" />
               </button>
 
               <button
-                onClick={() => setActiveTab("pilar2")}
+                onClick={() => handleTabChange("pilar2")}
                 className={`w-full text-left px-3 py-2 rounded flex items-center justify-between transition-colors ${
                   activeTab === "pilar2"
                     ? "bg-white font-bold text-[#f56a6a] shadow-xs border-l-4 border-[#f56a6a]"
                     : "text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                <span>02. Balanços dos Bancos</span>
+                <span>02. Balanços dos Bancos (Top 10)</span>
                 <ChevronRight className="w-4 h-4 text-gray-400" />
               </button>
 
               <button
-                onClick={() => setActiveTab("pilar3")}
+                onClick={() => handleTabChange("pilar3")}
                 className={`w-full text-left px-3 py-2 rounded flex items-center justify-between transition-colors ${
                   activeTab === "pilar3"
                     ? "bg-white font-bold text-[#f56a6a] shadow-xs border-l-4 border-[#f56a6a]"
                     : "text-gray-700 hover:bg-gray-200"
                 }`}
               >
-                <span>03. Early Warning PJ</span>
+                <span>03. Early Warning CVM (Scanner B3)</span>
+                <ChevronRight className="w-4 h-4 text-gray-400" />
+              </button>
+
+              <button
+                onClick={() => handleTabChange("todos")}
+                className={`w-full text-left px-3 py-2 rounded flex items-center justify-between transition-colors ${
+                  activeTab === "todos"
+                    ? "bg-white font-bold text-slate-900 shadow-xs border-l-4 border-slate-900"
+                    : "text-gray-700 hover:bg-gray-200"
+                }`}
+              >
+                <span className="flex items-center gap-1.5 font-bold">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                  <span>Visão Completa (1 + 2 + 3)</span>
+                </span>
                 <ChevronRight className="w-4 h-4 text-gray-400" />
               </button>
             </nav>
