@@ -542,179 +542,409 @@ export default function EditorialObservatorio() {
           )}
 
           {/* ======================================================== */}
-          {/* PILAR 2: BALANÇOS BANCÁRIOS & STRESS TESTING            */}
+          {/* PILAR 2: 10 MAIORES BANCOS DO BRASIL (RI & IFRS 9)       */}
           {/* ======================================================== */}
           {activeTab === "pilar2" && (
-            <section className="space-y-10 animate-fadeIn">
+            <section className="space-y-12 animate-fadeIn">
               <div>
                 <h2 className="major-heading text-xl sm:text-2xl text-gray-900">
-                  2. Raio-X dos Grandes Bancos &amp; Teste de Estresse
+                  2. Raio-X dos 10 Maiores Bancos &amp; Stress Testing (IFRS 9 / CMN 4.966)
                 </h2>
                 <p className="text-sm text-gray-600 leading-relaxed max-w-3xl">
-                  Demonstrações contábeis auditadas pela CVM e BACEN de 2018 a 2025. Revela a dimensão dos ativos de trilhões dos grandes conglomerados brasileiros e simula um teste de estresse prospectivo (*Forward-Looking Stress*) de perda de crédito adicional de +1.5% do ativo total, espelhando os requisitos da <strong>Resolução CMN nº 4.966</strong> e <strong>IFRS 9</strong>.
+                  Análise comparativa aprofundada com base nas demonstrações contábeis auditadas da CVM (2018–2025) e dados oficiais extraídos diretamente dos <strong>Releases de Resultados das Relações com Investidores (RI)</strong> das 10 maiores instituições financeiras do Brasil. Inclui simulação de estresse prospectivo de <strong>migração de estágios de risco de crédito</strong> e impacto no Capital Regulatório de Basileia.
                 </p>
               </div>
 
-              {/* Bank Cards Grid */}
+              {/* 2.1 Tabela Comparativa de Benchmark dos 10 Maiores Bancos */}
               {pilar2Data && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {Object.keys(pilar2Data.banks).map((bName) => {
-                    const b = pilar2Data.banks[bName];
-                    const latest = b.historico[b.historico.length - 1];
-                    const isSelected = selectedBank === bName;
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <div>
+                      <h3 className="font-serif font-bold text-gray-900 text-base flex items-center gap-2">
+                        <Landmark className="w-4 h-4 text-[#f56a6a]" />
+                        Ranking Comparativo de Crédito, Solvência e Risco (RI Benchmark)
+                      </h3>
+                      <p className="text-xs text-gray-600">
+                        Indicadores regulatórios oficiais dos 10 maiores conglomerados bancários brasileiros:
+                      </p>
+                    </div>
+                    <span className="text-xs font-mono text-gray-500 hidden sm:inline-block">
+                      Posição Consolidada mais recente
+                    </span>
+                  </div>
 
-                    return (
-                      <div
-                        key={bName}
-                        onClick={() => setSelectedBank(bName)}
-                        className={`p-5 rounded-lg border-2 cursor-pointer transition-all bg-white ${
-                          isSelected
-                            ? "border-[#f56a6a] shadow-md shadow-[#f56a6a]/10"
-                            : "border-gray-200 hover:border-gray-400"
-                        }`}
-                      >
-                        <div className="flex justify-between items-start mb-3">
-                          <h4 className="font-serif font-bold text-gray-900 text-sm">
-                            {bName}
-                          </h4>
-                          <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-gray-100 text-gray-600 border border-gray-300">
-                            {b.tipo}
-                          </span>
-                        </div>
+                  <div tabIndex={0} role="region" aria-label="Ranking dos 10 Maiores Bancos" className="table-wrapper shadow-xs">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Instituição</th>
+                          <th>Ticker / Tipo</th>
+                          <th>Carteira de Crédito</th>
+                          <th>NPL 90+</th>
+                          <th>Cobertura</th>
+                          <th>Basileia Atual</th>
+                          <th>Capital CET1</th>
+                          <th>Custo Crédito</th>
+                          <th>ROE Atual</th>
+                          <th>Basileia Estressada</th>
+                          <th>Ação</th>
+                        </tr>
+                      </thead>
+                      <tbody className="font-mono text-xs">
+                        {Object.keys(pilar2Data.banks).map((bName) => {
+                          const b = pilar2Data.banks[bName];
+                          const rm = b.ri_metrics;
+                          const st = b.stress_test;
+                          const latest = b.historico[b.historico.length - 1];
+                          const isSelected = selectedBank === bName;
 
-                        <div className="space-y-1.5 font-mono text-xs">
-                          <div className="flex justify-between text-gray-600">
-                            <span>Ativo:</span>
-                            <span className="font-bold text-gray-900">
-                              R$ {latest.ativo_total_bi} bi
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-gray-600">
-                            <span>Patrimônio:</span>
-                            <span className="font-bold text-gray-900">
-                              R$ {latest.patrimonio_liquido_bi} bi
-                            </span>
-                          </div>
-                          <div className="flex justify-between text-gray-600">
-                            <span>ROE {latest.ano}:</span>
-                            <span
-                              className={`font-bold ${
-                                latest.roe_pct >= 0 ? "text-emerald-700" : "text-rose-700"
-                              }`}
-                            >
-                              {latest.roe_pct}%
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
+                          return (
+                            <tr key={bName} className={isSelected ? "bg-[#fff5f5] font-semibold" : ""}>
+                              <td className="font-sans font-medium text-gray-900 flex items-center gap-2">
+                                <span className={`w-2 h-2 rounded-full ${rm.inadimplencia_npl90_pct < 3.0 ? "bg-emerald-500" : rm.inadimplencia_npl90_pct < 4.5 ? "bg-amber-500" : "bg-rose-500"}`} />
+                                {bName}
+                              </td>
+                              <td className="font-sans text-gray-500 text-[11px]">
+                                <span className="font-bold text-gray-800">{b.ticker}</span> • {b.tipo.split("/")[0]}
+                              </td>
+                              <td className="font-bold text-gray-900">
+                                R$ {rm.carteira_credito_expandida_bi} bi
+                              </td>
+                              <td className={rm.inadimplencia_npl90_pct < 2.5 ? "text-emerald-700 font-bold" : rm.inadimplencia_npl90_pct > 4.5 ? "text-rose-700 font-bold" : "text-gray-900"}>
+                                {rm.inadimplencia_npl90_pct}%
+                              </td>
+                              <td className="text-gray-800">
+                                {rm.indice_cobertura_pct}%
+                              </td>
+                              <td className="text-gray-900 font-bold">
+                                {rm.indice_basileia_pct}%
+                              </td>
+                              <td className="text-gray-600">
+                                {rm.capital_cet1_pct}%
+                              </td>
+                              <td className="text-gray-600">
+                                {rm.custo_credito_pct}%
+                              </td>
+                              <td className={latest.roe_pct >= 15 ? "text-emerald-700 font-bold" : "text-gray-900"}>
+                                {latest.roe_pct}%
+                              </td>
+                              <td>
+                                <span className={`px-2 py-0.5 rounded text-[11px] font-bold ${st.solvente_acima_minimo_cmn ? "bg-emerald-100 text-emerald-800" : "bg-rose-100 text-rose-800"}`}>
+                                  {st.basileia_estressado_pct}% ({st.alerta_capital})
+                                </span>
+                              </td>
+                              <td className="font-sans">
+                                <button
+                                  onClick={() => setSelectedBank(bName)}
+                                  className="text-xs text-[#f56a6a] hover:underline font-bold uppercase tracking-wider"
+                                >
+                                  Inspecionar
+                                </button>
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               )}
 
-              {/* Bank Historical Trajectory & Stress Test */}
-              {bankData && (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {/* Historical Table */}
-                  <div className="lg:col-span-2 bg-white border border-gray-200 rounded-lg p-6 space-y-4">
-                    <h3 className="font-serif font-bold text-gray-900 text-base flex justify-between items-center">
-                      <span>Série Histórica Auditada (CVM): {selectedBank}</span>
-                      <span className="text-xs font-mono text-gray-500 font-normal">
-                        Valores Consolidados em R$ Bilhões
-                      </span>
-                    </h3>
+              {/* 2.2 Grid de Seleção dos 10 Bancos */}
+              {pilar2Data && (
+                <div>
+                  <h3 className="font-serif font-bold text-gray-900 text-sm mb-3">
+                    Selecione uma Instituição para Análise Aprofundada de RI:
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                    {Object.keys(pilar2Data.banks).map((bName) => {
+                      const b = pilar2Data.banks[bName];
+                      const rm = b.ri_metrics;
+                      const isSelected = selectedBank === bName;
 
-                    <div
-                      tabIndex={0}
-                      role="region"
-                      aria-label="Tabela Histórica do Banco"
-                      className="table-wrapper shadow-xs"
-                    >
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Ano</th>
-                            <th>Ativo Total</th>
-                            <th>Patr. Líquido</th>
-                            <th>Lucro Líquido</th>
-                            <th>Desp. Captação</th>
-                            <th>ROE</th>
-                          </tr>
-                        </thead>
-                        <tbody className="font-mono text-xs">
-                          {bankData.historico.map((h: any) => (
-                            <tr key={h.ano}>
-                              <td className="font-bold text-gray-900">{h.ano}</td>
-                              <td>R$ {h.ativo_total_bi} bi</td>
-                              <td>R$ {h.patrimonio_liquido_bi} bi</td>
-                              <td className="text-emerald-700 font-bold">R$ {h.lucro_liquido_bi} bi</td>
-                              <td className="text-gray-600">R$ {h.despesas_captacao_bi} bi</td>
-                              <td className="font-bold text-gray-900">{h.roe_pct}%</td>
-                            </tr>
+                      return (
+                        <div
+                          key={bName}
+                          onClick={() => setSelectedBank(bName)}
+                          className={`p-3.5 rounded-lg border-2 cursor-pointer transition-all bg-white ${
+                            isSelected
+                              ? "border-[#f56a6a] shadow-md shadow-[#f56a6a]/10"
+                              : "border-gray-200 hover:border-gray-400"
+                          }`}
+                        >
+                          <div className="flex justify-between items-start mb-1.5">
+                            <h4 className="font-serif font-bold text-gray-900 text-xs truncate max-w-[110px]">
+                              {bName}
+                            </h4>
+                            <span className="text-[9px] font-mono font-bold text-[#f56a6a] bg-rose-50 px-1 rounded">
+                              {b.ticker}
+                            </span>
+                          </div>
+                          <div className="space-y-1 font-mono text-[11px] text-gray-600">
+                            <div className="flex justify-between">
+                              <span className="text-gray-400 font-sans">Carteira:</span>
+                              <span className="font-bold text-gray-900">R$ {rm.carteira_credito_expandida_bi}b</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-400 font-sans">NPL 90+:</span>
+                              <span className={rm.inadimplencia_npl90_pct < 2.5 ? "text-emerald-700 font-bold" : "text-gray-800"}>
+                                {rm.inadimplencia_npl90_pct}%
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-gray-400 font-sans">Basileia:</span>
+                              <span className="font-bold text-gray-900">{rm.indice_basileia_pct}%</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* 2.3 Deep-Dive do Banco Selecionado */}
+              {bankData && (
+                <div className="space-y-6">
+                  {/* Spotlight Header */}
+                  <div className="bg-white border-2 border-gray-200 rounded-lg p-6 sm:p-8 space-y-6 shadow-xs">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-gray-200 gap-3">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-semibold uppercase tracking-wider text-[#f56a6a]">
+                            Relatório Executivo de RI
+                          </span>
+                          <span className="text-xs font-mono px-2 py-0.5 rounded bg-gray-100 text-gray-700 font-bold border border-gray-300">
+                            Ticker: {bankData.ticker}
+                          </span>
+                          <span className="text-xs font-mono text-gray-500">
+                            CNPJ: {bankData.cnpj}
+                          </span>
+                        </div>
+                        <h3 className="text-2xl font-serif font-bold text-gray-900">
+                          {selectedBank}
+                        </h3>
+                      </div>
+
+                      <a
+                        href={bankData.ri_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-gray-100 hover:bg-gray-200 text-xs font-sans font-bold text-gray-800 border border-gray-300 transition-colors self-start sm:self-auto"
+                      >
+                        Portal de RI Oficial <ExternalLink className="w-3.5 h-3.5" />
+                      </a>
+                    </div>
+
+                    <p className="text-sm text-gray-700 leading-relaxed font-sans bg-gray-50 p-4 rounded-lg border-l-4 border-[#f56a6a]">
+                      <strong>Perfil Estratégico &amp; Risco de Crédito:</strong> {bankData.perfil_estrategico}
+                    </p>
+
+                    {/* 8 Cards de Métricas Granulares de RI */}
+                    <div>
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 font-sans mb-3">
+                        Métricas Operacionais, Capital e Qualidade de Ativos (RI Consolidado)
+                      </h4>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3 font-mono text-xs">
+                        <div className="p-3 bg-white border border-gray-200 rounded-lg">
+                          <span className="text-[10px] text-gray-400 font-sans block uppercase">Carteira Total</span>
+                          <span className="text-base font-bold text-gray-900 block mt-1">R$ {bankData.ri_metrics.carteira_credito_expandida_bi} bi</span>
+                        </div>
+
+                        <div className="p-3 bg-white border border-gray-200 rounded-lg">
+                          <span className="text-[10px] text-gray-400 font-sans block uppercase">NPL &gt; 90 dias</span>
+                          <span className={`text-base font-bold block mt-1 ${bankData.ri_metrics.inadimplencia_npl90_pct < 2.5 ? "text-emerald-700" : "text-rose-700"}`}>
+                            {bankData.ri_metrics.inadimplencia_npl90_pct}%
+                          </span>
+                        </div>
+
+                        <div className="p-3 bg-white border border-gray-200 rounded-lg">
+                          <span className="text-[10px] text-gray-400 font-sans block uppercase">NPL 15-90d</span>
+                          <span className="text-base font-bold text-amber-700 block mt-1">{bankData.ri_metrics.inadimplencia_npl15_90_pct}%</span>
+                        </div>
+
+                        <div className="p-3 bg-white border border-gray-200 rounded-lg">
+                          <span className="text-[10px] text-gray-400 font-sans block uppercase">Cobertura</span>
+                          <span className="text-base font-bold text-gray-900 block mt-1">{bankData.ri_metrics.indice_cobertura_pct}%</span>
+                        </div>
+
+                        <div className="p-3 bg-white border border-gray-200 rounded-lg">
+                          <span className="text-[10px] text-gray-400 font-sans block uppercase">Custo Crédito</span>
+                          <span className="text-base font-bold text-gray-900 block mt-1">{bankData.ri_metrics.custo_credito_pct}% a.a.</span>
+                        </div>
+
+                        <div className="p-3 bg-white border border-gray-200 rounded-lg">
+                          <span className="text-[10px] text-gray-400 font-sans block uppercase">Margem (NIM)</span>
+                          <span className="text-base font-bold text-gray-900 block mt-1">{bankData.ri_metrics.margem_financeira_nim_pct}%</span>
+                        </div>
+
+                        <div className="p-3 bg-white border border-gray-200 rounded-lg">
+                          <span className="text-[10px] text-gray-400 font-sans block uppercase">Eficiência</span>
+                          <span className="text-base font-bold text-gray-900 block mt-1">{bankData.ri_metrics.indice_eficiencia_pct}%</span>
+                        </div>
+
+                        <div className="p-3 bg-white border border-gray-200 rounded-lg">
+                          <span className="text-[10px] text-gray-400 font-sans block uppercase">Basileia / CET1</span>
+                          <span className="text-base font-bold text-[#f56a6a] block mt-1">{bankData.ri_metrics.indice_basileia_pct}%</span>
+                          <span className="text-[10px] text-gray-500 block">CET1: {bankData.ri_metrics.capital_cet1_pct}%</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Segmentação da Carteira e Decomposição CMN 4.966 / IFRS 9 */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-200">
+                      <div>
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 font-sans mb-3">
+                          Composição da Carteira por Segmento de Tomador
+                        </h4>
+                        <div className="space-y-2 font-mono text-xs">
+                          {Object.entries(bankData.ri_metrics.segmentacao_carteira).map(([seg, pct]: [string, any]) => (
+                            <div key={seg} className="flex items-center gap-3">
+                              <span className="w-40 text-gray-600 font-sans truncate capitalize">
+                                {seg.replace("_pct", "").replace("_", " ")}:
+                              </span>
+                              <div className="flex-1 bg-gray-100 rounded h-3 overflow-hidden border border-gray-200">
+                                <div style={{ width: `${pct}%` }} className="h-full bg-slate-700" />
+                              </div>
+                              <span className="w-12 text-right font-bold text-gray-900">{pct}%</span>
+                            </div>
                           ))}
-                        </tbody>
-                      </table>
+                        </div>
+                      </div>
+
+                      <div>
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-gray-500 font-sans mb-3">
+                          Estágios de Risco de Crédito (Resolução CMN nº 4.966 / IFRS 9)
+                        </h4>
+                        <div className="space-y-2 font-mono text-xs">
+                          <div className="flex items-center gap-3">
+                            <span className="w-44 text-gray-700 font-sans">Estágio 1 (Risco Normal - 12m):</span>
+                            <div className="flex-1 bg-gray-100 rounded h-3 overflow-hidden border border-gray-200">
+                              <div style={{ width: `${bankData.ri_metrics.cmn_4966_estagios.estagio_1_pct}%` }} className="h-full bg-emerald-600" />
+                            </div>
+                            <span className="w-12 text-right font-bold text-emerald-700">{bankData.ri_metrics.cmn_4966_estagios.estagio_1_pct}%</span>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <span className="w-44 text-gray-700 font-sans">Estágio 2 (SICR - Lifetime ECL):</span>
+                            <div className="flex-1 bg-gray-100 rounded h-3 overflow-hidden border border-gray-200">
+                              <div style={{ width: `${bankData.ri_metrics.cmn_4966_estagios.estagio_2_sicr_pct}%` }} className="h-full bg-amber-500" />
+                            </div>
+                            <span className="w-12 text-right font-bold text-amber-700">{bankData.ri_metrics.cmn_4966_estagios.estagio_2_sicr_pct}%</span>
+                          </div>
+
+                          <div className="flex items-center gap-3">
+                            <span className="w-44 text-gray-700 font-sans">Estágio 3 (Inadimplente / Default):</span>
+                            <div className="flex-1 bg-gray-100 rounded h-3 overflow-hidden border border-gray-200">
+                              <div style={{ width: `${bankData.ri_metrics.cmn_4966_estagios.estagio_3_default_pct}%` }} className="h-full bg-rose-600" />
+                            </div>
+                            <span className="w-12 text-right font-bold text-rose-700">{bankData.ri_metrics.cmn_4966_estagios.estagio_3_default_pct}%</span>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Stress Testing Box */}
-                  <div className="bg-white border-2 border-gray-200 rounded-lg p-6 space-y-4 flex flex-col justify-between">
-                    <div>
-                      <div className="text-xs uppercase tracking-wider font-bold text-[#f56a6a] mb-1">
-                        Resolução CMN nº 4.966
-                      </div>
-                      <h3 className="font-serif font-bold text-gray-900 text-base mb-4">
-                        Teste de Estresse de Crédito
+                  {/* Historical Table & Stress Test Simulator */}
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Historical Table */}
+                    <div className="lg:col-span-2 bg-white border border-gray-200 rounded-lg p-6 space-y-4 shadow-xs">
+                      <h3 className="font-serif font-bold text-gray-900 text-base flex justify-between items-center">
+                        <span>Série Histórica Contábil Auditada (CVM): {selectedBank}</span>
+                        <span className="text-xs font-mono text-gray-500 font-normal">
+                          Valores em R$ Bilhões (2018–2025)
+                        </span>
                       </h3>
 
-                      <div className="space-y-3 font-mono text-xs">
-                        <div className="p-3 bg-gray-50 rounded border border-gray-200">
-                          <span className="text-gray-500 block text-[11px] font-sans">
-                            Cenário de Estresse Prospectivo:
-                          </span>
-                          <span className="font-bold text-gray-900 mt-0.5 block font-sans">
-                            Choque de Inadimplência (+1.5% do Ativo)
-                          </span>
-                        </div>
-
-                        <div className="p-3 bg-gray-50 rounded border border-gray-200 flex justify-between items-center">
-                          <span className="text-gray-600 font-sans">Perda Estimada:</span>
-                          <span className="text-rose-700 font-bold">
-                            -R$ {bankData.stress_test.perda_adicional_estimada_bi} bi
-                          </span>
-                        </div>
-
-                        <div className="p-3 bg-gray-50 rounded border border-gray-200 flex justify-between items-center">
-                          <span className="text-gray-600 font-sans">ROE Pós-Choque:</span>
-                          <span
-                            className={`font-bold ${
-                              bankData.stress_test.roe_pos_choque_pct >= 0
-                                ? "text-emerald-700"
-                                : "text-rose-700"
-                            }`}
-                          >
-                            {bankData.stress_test.roe_pos_choque_pct}%
-                          </span>
-                        </div>
-
-                        <div className="p-3 bg-gray-50 rounded border border-gray-200 flex justify-between items-center">
-                          <span className="text-gray-600 font-sans">Resiliência:</span>
-                          <span
-                            className={`px-2 py-0.5 rounded text-[11px] font-bold ${
-                              bankData.stress_test.resiliente
-                                ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
-                                : "bg-rose-100 text-rose-800 border border-rose-300"
-                            }`}
-                          >
-                            {bankData.stress_test.resiliente ? "CAPITAL SOLVENTE" : "ALERTA PRUDENCIAL"}
-                          </span>
-                        </div>
+                      <div tabIndex={0} role="region" aria-label="Tabela Histórica do Banco" className="table-wrapper shadow-xs">
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Ano</th>
+                              <th>Ativo Total</th>
+                              <th>Patr. Líquido</th>
+                              <th>Lucro Líquido</th>
+                              <th>Desp. Captação</th>
+                              <th>ROE</th>
+                            </tr>
+                          </thead>
+                          <tbody className="font-mono text-xs">
+                            {bankData.historico.map((h: any) => (
+                              <tr key={h.ano}>
+                                <td className="font-bold text-gray-900">{h.ano}</td>
+                                <td>R$ {h.ativo_total_bi} bi</td>
+                                <td>R$ {h.patrimonio_liquido_bi} bi</td>
+                                <td className="text-emerald-700 font-bold">R$ {h.lucro_liquido_bi} bi</td>
+                                <td className="text-gray-600">R$ {h.despesas_captacao_bi} bi</td>
+                                <td className="font-bold text-gray-900">{h.roe_pct}%</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
                     </div>
 
-                    <p className="text-[11px] text-gray-500 font-sans leading-relaxed border-t border-gray-200 pt-3">
-                      Métrica prospectiva simulando necessidade de provisão (PCLD) em ambiente de estresse severo de liquidez e juros.
-                    </p>
+                    {/* Stress Testing Box (Stage Migration CMN 4.966) */}
+                    <div className="bg-white border-2 border-gray-200 rounded-lg p-6 space-y-4 flex flex-col justify-between shadow-xs">
+                      <div>
+                        <div className="text-xs uppercase tracking-wider font-bold text-[#f56a6a] mb-1">
+                          Simulador de Estresse Prospectivo
+                        </div>
+                        <h3 className="font-serif font-bold text-gray-900 text-base mb-3">
+                          Migração de Estágios CMN 4.966
+                        </h3>
+
+                        <div className="space-y-2.5 font-mono text-xs">
+                          <div className="p-3 bg-gray-50 rounded border border-gray-200">
+                            <span className="text-gray-500 block text-[11px] font-sans">
+                              Cenário Regulatório Severo:
+                            </span>
+                            <span className="font-bold text-gray-900 mt-0.5 block font-sans text-xs">
+                              12% E1 → E2 (Lifetime) &amp; 20% E2 → E3 (Default)
+                            </span>
+                          </div>
+
+                          <div className="p-2.5 bg-gray-50 rounded border border-gray-200 flex justify-between items-center">
+                            <span className="text-gray-600 font-sans">PDD Adicional:</span>
+                            <span className="text-rose-700 font-bold">
+                              -R$ {bankData.stress_test.perda_adicional_estimada_bi} bi
+                            </span>
+                          </div>
+
+                          <div className="p-2.5 bg-gray-50 rounded border border-gray-200 flex justify-between items-center">
+                            <span className="text-gray-600 font-sans">Lucro Pós-Choque:</span>
+                            <span className={`font-bold ${bankData.stress_test.lucro_pos_choque_bi >= 0 ? "text-emerald-700" : "text-rose-700"}`}>
+                              R$ {bankData.stress_test.lucro_pos_choque_bi} bi
+                            </span>
+                          </div>
+
+                          <div className="p-2.5 bg-gray-50 rounded border border-gray-200 flex justify-between items-center">
+                            <span className="text-gray-600 font-sans">Consumo Basileia:</span>
+                            <span className="text-amber-800 font-bold">
+                              -{bankData.stress_test.consumo_capital_bps} bps
+                            </span>
+                          </div>
+
+                          <div className="p-2.5 bg-gray-50 rounded border border-gray-200 flex justify-between items-center">
+                            <span className="text-gray-600 font-sans">Basileia Pós-Choque:</span>
+                            <span className="text-[#f56a6a] font-bold text-sm">
+                              {bankData.stress_test.basileia_estressado_pct}%
+                            </span>
+                          </div>
+
+                          <div className="p-2.5 bg-gray-50 rounded border border-gray-200 flex justify-between items-center">
+                            <span className="text-gray-600 font-sans">Status Prudencial:</span>
+                            <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${bankData.stress_test.solvente_acima_minimo_cmn ? "bg-emerald-100 text-emerald-800 border border-emerald-300" : "bg-rose-100 text-rose-800 border border-rose-300"}`}>
+                              {bankData.stress_test.alerta_capital.toUpperCase()} (&gt; 11% BACEN)
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <p className="text-[11px] text-gray-500 font-sans leading-relaxed border-t border-gray-200 pt-3">
+                        Simula a necessidade de provisão contra perda esperada de longo prazo e absorção pelo Patrimônio de Referência, conforme as diretrizes do Acordo de Basileia III e CMN 4.966.
+                      </p>
+                    </div>
                   </div>
                 </div>
               )}
