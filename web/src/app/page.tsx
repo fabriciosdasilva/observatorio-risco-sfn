@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   TrendingUp,
   Landmark,
@@ -18,6 +18,8 @@ import {
   Menu,
   X,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Info,
   Percent,
   Briefcase,
@@ -25,6 +27,11 @@ import {
   DollarSign,
   Layers,
   History,
+  Filter,
+  SlidersHorizontal,
+  CheckCircle2,
+  TrendingDown,
+  Gauge,
 } from "lucide-react";
 
 export default function EditorialObservatorio() {
@@ -35,6 +42,11 @@ export default function EditorialObservatorio() {
   const [selectedModality, setSelectedModality] = useState<string>("inad_pf_cartao_rotativo");
   const [selectedBank, setSelectedBank] = useState<string>("Itaú Unibanco");
   const [searchCompany, setSearchCompany] = useState<string>("");
+  const [selectedRiskFactor, setSelectedRiskFactor] = useState<string>("all");
+  const [selectedRating, setSelectedRating] = useState<string>("all");
+  const [selectedYear, setSelectedYear] = useState<string>("all");
+  const [expandedCompanyKey, setExpandedCompanyKey] = useState<string | null>(null);
+  const [showWeightsDetails, setShowWeightsDetails] = useState<boolean>(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
 
   useEffect(() => {
@@ -56,6 +68,60 @@ export default function EditorialObservatorio() {
 
   const modData = pilar1Data?.modalities?.[selectedModality];
   const bankData = pilar2Data?.banks?.[selectedBank];
+
+  // Filtros Avançados do Pilar 3 (Fatores de Risco, Rating, Ano, Busca)
+  const filteredCompanies = useMemo(() => {
+    if (!pilar3Data?.sample_companies_monitor) return [];
+
+    return pilar3Data.sample_companies_monitor.filter((company: any) => {
+      // 1. Busca textual (Nome limpo, razão social ou CNPJ)
+      const query = searchCompany.toLowerCase().trim();
+      const matchesSearch =
+        query === "" ||
+        company.DENOM_CIA_CLEAN?.toLowerCase().includes(query) ||
+        company.DENOM_CIA?.toLowerCase().includes(query) ||
+        company.CNPJ_CIA?.includes(query);
+
+      if (!matchesSearch) return false;
+
+      // 2. Filtro por Ano
+      if (selectedYear !== "all" && String(company.ano) !== selectedYear) {
+        return false;
+      }
+
+      // 3. Filtro por Rating Regulatório
+      if (selectedRating !== "all") {
+        if (selectedRating === "distress" && company.rating !== "CCC/Distress") return false;
+        if (selectedRating === "high_risk" && !["BB", "B"].includes(company.rating)) return false;
+        if (selectedRating === "moderate" && company.rating !== "BBB") return false;
+        if (selectedRating === "investment_grade" && !["AAA", "AA", "A"].includes(company.rating)) return false;
+      }
+
+      // 4. Filtro por Fator de Risco Específico
+      if (selectedRiskFactor !== "all") {
+        const isPrimary = company.alerta_principal?.feature === selectedRiskFactor;
+        const isInVulns = company.vulnerabilidades_ativas?.includes(selectedRiskFactor);
+        const detailedItem = company.fatores_detalhados?.find((f: any) => f.key === selectedRiskFactor);
+        const isCriticalOrAlert =
+          detailedItem &&
+          (detailedItem.shap_impact > 0.02 ||
+            detailedItem.status === "Crítico" ||
+            detailedItem.status === "Atenção");
+
+        if (!isPrimary && !isInVulns && !isCriticalOrAlert) {
+          return false;
+        }
+      }
+
+      return true;
+    });
+  }, [pilar3Data, searchCompany, selectedYear, selectedRating, selectedRiskFactor]);
+
+  // Metadados do Fator de Risco Selecionado
+  const selectedRiskFactorMeta = useMemo(() => {
+    if (!pilar3Data?.pesos_globais_modelo || selectedRiskFactor === "all") return null;
+    return pilar3Data.pesos_globais_modelo.find((item: any) => item.key === selectedRiskFactor) || null;
+  }, [pilar3Data, selectedRiskFactor]);
 
   return (
     <div className="min-h-screen bg-[#f8f9fa] text-[#4a5568] flex flex-col antialiased">
@@ -961,7 +1027,7 @@ export default function EditorialObservatorio() {
                   3. Early Warning de Crédito Corporativo (CVM)
                 </h2>
                 <p className="text-sm text-gray-600 leading-relaxed max-w-3xl">
-                  Painel de mais de <strong>3.400 balanços contábeis da CVM</strong> de companhias abertas na B3. O modelo preditivo <strong>XGBoost Calibrado</strong> foi treinado no período 2018–2021 e submetido a <strong>teste cego Out-of-Time (2022–2025)</strong> no ápice do ciclo de Selic alta e recuperação subsequente. A metodologia de explicabilidade <strong>TreeSHAP</strong> revela as variáveis contábeis que precipitam a quebra antes de atrasos bancários formais.
+                  Painel analítico alimentado por <strong>3.492 demonstrações contábeis auditadas (DFPs da CVM)</strong> de companhias abertas na B3 (2018–2025). O modelo <strong>XGBoost Calibrado com TreeSHAP</strong> sintetiza 12 variáveis contábeis no <strong>Fator Consolidado de Risco</strong> (Score Ponderado de 0 a 100), submetido a <strong>teste cego Out-of-Time (2022–2025)</strong> durante o ciclo de juros elevados da Selic.
                 </p>
               </div>
 
@@ -970,13 +1036,13 @@ export default function EditorialObservatorio() {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                   <div className="p-5 bg-white border-2 border-gray-200 rounded-lg">
                     <span className="text-xs uppercase font-bold tracking-wider text-gray-500 font-sans block mb-1">
-                      ROC-AUC (OOT)
+                      ROC-AUC (OOT 2022-2025)
                     </span>
                     <div className="text-3xl font-serif font-bold text-[#f56a6a]">
                       {pilar3Data.oot_backtesting_metrics.calibrated_xgboost.roc_auc}
                     </div>
                     <span className="text-[11px] text-gray-500 font-mono mt-1 block">
-                      Linear: {pilar3Data.oot_backtesting_metrics.logistic_regression.roc_auc}
+                      Linear Baseline: {pilar3Data.oot_backtesting_metrics.logistic_regression.roc_auc}
                     </span>
                   </div>
 
@@ -988,7 +1054,7 @@ export default function EditorialObservatorio() {
                       {pilar3Data.oot_backtesting_metrics.calibrated_xgboost.ks_stat}
                     </div>
                     <span className="text-[11px] text-gray-500 font-mono mt-1 block">
-                      Separação Solvente vs. Falência
+                      Discriminação Solvente vs. Calote
                     </span>
                   </div>
 
@@ -1000,131 +1066,618 @@ export default function EditorialObservatorio() {
                       {pilar3Data.oot_backtesting_metrics.calibrated_xgboost.gini}
                     </div>
                     <span className="text-[11px] text-gray-500 font-mono mt-1 block">
-                      2 * AUC - 1
+                      Aderência Regulatória Basileia
                     </span>
                   </div>
 
                   <div className="p-5 bg-white border-2 border-gray-200 rounded-lg">
                     <span className="text-xs uppercase font-bold tracking-wider text-gray-500 font-sans block mb-1">
-                      Brier Score
+                      Brier Score (Calibração)
                     </span>
                     <div className="text-3xl font-serif font-bold text-emerald-700">
                       {pilar3Data.oot_backtesting_metrics.calibrated_xgboost.brier_score}
                     </div>
                     <span className="text-[11px] text-gray-500 font-mono mt-1 block">
-                      Alta Precisão de Probabilidade
+                      Precisão Probabilística IFRS 9
                     </span>
                   </div>
                 </div>
               )}
 
-              {/* TreeSHAP & Monitored Scanner */}
+              {/* PAINEL DE FATOR CONSOLIDADO E MATRIZ DE PESOS GLOBAIS */}
               {pilar3Data && (
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                  {/* SHAP Feature Importance */}
-                  <div className="bg-white border-2 border-gray-200 rounded-lg p-6 space-y-4">
-                    <div className="text-xs uppercase font-bold tracking-wider text-[#f56a6a]">
-                      Explicabilidade de Modelo
+                <div className="bg-white border-2 border-gray-200 rounded-lg p-6 sm:p-8 space-y-6 shadow-xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 pb-4">
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs uppercase font-bold tracking-wider text-[#f56a6a]">
+                          Ponderação Multidimensional
+                        </span>
+                        <span className="text-[10px] bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-mono font-bold">
+                          TreeSHAP Normalized Weights
+                        </span>
+                      </div>
+                      <h3 className="font-serif font-bold text-gray-900 text-lg sm:text-xl mt-1">
+                        Fator Consolidado: Matriz de Pesos Globais do Modelo
+                      </h3>
                     </div>
-                    <h3 className="font-serif font-bold text-gray-900 text-base">
-                      Fatores de Risco TreeSHAP
-                    </h3>
-                    <p className="text-xs text-gray-600 leading-relaxed font-sans">
-                      Impacto médio das variáveis contábeis na decisão do algoritmo de classificar a companhia em risco de distress.
-                    </p>
 
-                    <div className="space-y-2.5 font-mono text-xs pt-2">
-                      {Object.entries(pilar3Data.feature_importance_shap).slice(0, 8).map(([feat, imp]: any, idx: number) => (
-                        <div
-                          key={feat}
-                          className="flex justify-between items-center py-1 border-b border-gray-100"
-                        >
-                          <span className="text-gray-700 font-sans capitalize">
-                            {idx + 1}. {feat.replace(/_/g, " ")}:
-                          </span>
-                          <span className="font-bold text-[#f56a6a]">{imp}</span>
-                        </div>
-                      ))}
-                    </div>
+                    <button
+                      onClick={() => setShowWeightsDetails(!showWeightsDetails)}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans font-bold bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-300 rounded transition"
+                    >
+                      <SlidersHorizontal className="w-3.5 h-3.5 text-[#f56a6a]" />
+                      {showWeightsDetails ? "Ocultar Metodologia de Pesos" : "Exibir Metodologia de Pesos"}
+                    </button>
                   </div>
 
-                  {/* Company Scanner Table */}
-                  <div className="lg:col-span-2 bg-white border-2 border-gray-200 rounded-lg p-6 space-y-4">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <div>
-                        <div className="text-xs uppercase font-bold tracking-wider text-[#f56a6a]">
-                          Teste Cego Out-of-Time
+                  {showWeightsDetails && (
+                    <div className="space-y-6">
+                      {/* Explicação da Fórmula do Fator Consolidado */}
+                      <div className="bg-slate-50 border border-slate-200 rounded-lg p-5 space-y-3 font-sans text-xs">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          <div>
+                            <span className="font-bold text-gray-900 text-sm block">
+                              Como o Fator Consolidado é calculado?
+                            </span>
+                            <p className="text-gray-600 mt-1 leading-relaxed max-w-2xl">
+                              O <strong>Fator Consolidado</strong> sintetiza os 12 indicadores contábeis da CVM em um score único de 0 a 100. Cada fator possui um peso global relativo ($w_k$) determinado pela magnitude média de impacto marginal no algoritmo ($\sum w_k = 100\%$). Para cada balanço auditado, a combinação das forças de solvência e das pressões de juros determina a classificação final.
+                            </p>
+                          </div>
+                          <div className="bg-white border border-gray-300 rounded p-3 font-mono text-[11px] text-gray-800 shrink-0">
+                            <span className="text-gray-500 block text-[10px] uppercase font-sans font-bold">
+                              Fórmula do Escore Sintético:
+                            </span>
+                            <span className="text-[#f56a6a] font-bold">
+                              Score = &sum;<sub>k=1..12</sub> (w<sub>k</sub> &times; &phi;<sub>k</sub>(x)) &rarr; PD (%)
+                            </span>
+                          </div>
                         </div>
-                        <h3 className="font-serif font-bold text-gray-900 text-base">
-                          Scanner de Empresas da B3
-                        </h3>
-                      </div>
-                      <div className="relative">
-                        <Search className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
-                        <input
-                          type="text"
-                          placeholder="Buscar empresa (ex: Americanas, Gol)..."
-                          value={searchCompany}
-                          onChange={(e) => setSearchCompany(e.target.value)}
-                          className="pl-9 pr-3 py-1.5 text-xs bg-gray-50 border border-gray-300 rounded font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a] w-full sm:w-64"
-                        />
-                      </div>
-                    </div>
 
-                    <div
-                      tabIndex={0}
-                      role="region"
-                      aria-label="Tabela de Empresas Monitoradas"
-                      className="table-wrapper shadow-xs"
-                    >
-                      <table>
-                        <thead>
-                          <tr>
-                            <th>Companhia</th>
-                            <th>Ano</th>
-                            <th>Prob. Calote (PD)</th>
-                            <th>Rating</th>
-                            <th>Alerta Principal (TreeSHAP)</th>
-                          </tr>
-                        </thead>
-                        <tbody className="font-mono text-xs">
-                          {pilar3Data.sample_companies_monitor
-                            .filter((c: any) =>
-                              c.DENOM_CIA.toLowerCase().includes(searchCompany.toLowerCase())
-                            )
-                            .map((c: any, idx: number) => {
-                              const isDistress = c.prob_distress > 50;
-                              const mainDriver = c.top_shap_drivers?.[0];
+                        {/* Escala de Cores do Fator Consolidado */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2 border-t border-slate-200">
+                          <div className="p-2 bg-emerald-50 border border-emerald-200 rounded">
+                            <span className="text-[10px] uppercase font-bold text-emerald-800 block">
+                              0 a 15 • Sólido
+                            </span>
+                            <span className="text-[11px] text-emerald-900 font-bold">Grau de Investimento (AAA/AA)</span>
+                          </div>
+                          <div className="p-2 bg-blue-50 border border-blue-200 rounded">
+                            <span className="text-[10px] uppercase font-bold text-blue-800 block">
+                              15 a 40 • Moderado
+                            </span>
+                            <span className="text-[11px] text-blue-900 font-bold">Solvência Monitorada (A/BBB)</span>
+                          </div>
+                          <div className="p-2 bg-amber-50 border border-amber-200 rounded">
+                            <span className="text-[10px] uppercase font-bold text-amber-800 block">
+                              40 a 70 • Alerta Alto
+                            </span>
+                            <span className="text-[11px] text-amber-900 font-bold">Vulnerabilidade a Juros (BB/B)</span>
+                          </div>
+                          <div className="p-2 bg-rose-50 border border-rose-200 rounded">
+                            <span className="text-[10px] uppercase font-bold text-rose-800 block">
+                              70 a 100 • Distress
+                            </span>
+                            <span className="text-[11px] text-rose-900 font-bold">Risco Iminente / RJ (CCC)</span>
+                          </div>
+                        </div>
+                      </div>
 
+                      {/* Tabela Interativa de Pesos Globais */}
+                      <div tabIndex={0} role="region" aria-label="Matriz de Pesos Globais" className="table-wrapper shadow-xs">
+                        <table>
+                          <thead>
+                            <tr>
+                              <th>Rank</th>
+                              <th>Fator de Risco Contábil</th>
+                              <th>Categoria</th>
+                              <th>Peso Global (%)</th>
+                              <th>Importância TreeSHAP</th>
+                              <th>Gatilho / Limite Prudencial</th>
+                              <th>Ação</th>
+                            </tr>
+                          </thead>
+                          <tbody className="font-mono text-xs">
+                            {pilar3Data.pesos_globais_modelo?.map((item: any, idx: number) => {
+                              const isSelected = selectedRiskFactor === item.key;
                               return (
-                                <tr key={idx}>
+                                <tr
+                                  key={item.key}
+                                  className={isSelected ? "bg-amber-50/60 font-bold" : ""}
+                                >
+                                  <td className="text-gray-500">{idx + 1}º</td>
                                   <td className="font-sans font-bold text-gray-900">
-                                    {c.DENOM_CIA.slice(0, 30)}
-                                  </td>
-                                  <td className="text-gray-500">{c.ano}</td>
-                                  <td>
-                                    <span
-                                      className={`px-2 py-0.5 rounded font-bold ${
-                                        isDistress
-                                          ? "bg-rose-100 text-rose-800"
-                                          : "bg-emerald-100 text-emerald-800"
-                                      }`}
-                                    >
-                                      {c.prob_distress}%
+                                    <div className="flex items-center gap-2">
+                                      <span>{item.nome}</span>
+                                      {idx === 0 && (
+                                        <span className="px-1.5 py-0.5 rounded text-[9px] bg-[#f56a6a]/10 text-[#f56a6a] uppercase font-bold">
+                                          Maior Peso
+                                        </span>
+                                      )}
+                                    </div>
+                                    <span className="text-[11px] text-gray-500 font-normal block font-sans">
+                                      {item.descricao}
                                     </span>
                                   </td>
-                                  <td className="font-bold text-gray-900">{c.rating}</td>
+                                  <td className="font-sans">
+                                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700">
+                                      {item.categoria}
+                                    </span>
+                                  </td>
+                                  <td>
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-24 bg-gray-200 rounded h-2.5 overflow-hidden">
+                                        <div
+                                          style={{ width: `${item.peso_pct}%` }}
+                                          className="h-full bg-[#f56a6a]"
+                                        />
+                                      </div>
+                                      <span className="font-bold text-gray-900">{item.peso_pct}%</span>
+                                    </div>
+                                  </td>
+                                  <td className="text-gray-600">{item.mean_abs_shap}</td>
                                   <td className="font-sans text-gray-600 text-[11px]">
-                                    {mainDriver
-                                      ? `${mainDriver.feature} (${mainDriver.shap_impact > 0 ? "+" : ""}${mainDriver.shap_impact})`
-                                      : "-"}
+                                    <span className="text-amber-800 font-bold block">{item.benchmark_alerta}</span>
+                                    <span className="text-[10px] text-gray-500">{item.direcao_economica}</span>
+                                  </td>
+                                  <td>
+                                    <button
+                                      onClick={() => setSelectedRiskFactor(item.key)}
+                                      className={`px-2.5 py-1 rounded text-[11px] font-sans font-bold transition ${
+                                        isSelected
+                                          ? "bg-[#f56a6a] text-white"
+                                          : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                                      }`}
+                                    >
+                                      {isSelected ? "Filtrado" : "Filtrar"}
+                                    </button>
                                   </td>
                                 </tr>
                               );
                             })}
-                        </tbody>
-                      </table>
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
+                  )}
+                </div>
+              )}
+
+              {/* SCANNER DE EMPRESAS DA B3 COM FILTROS MULTIDIMENSIONAIS */}
+              {pilar3Data && (
+                <div className="bg-white border-2 border-gray-200 rounded-lg p-6 sm:p-8 space-y-6 shadow-xs">
+                  {/* Cabeçalho do Scanner */}
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 pb-5">
+                    <div>
+                      <div className="text-xs uppercase font-bold tracking-wider text-[#f56a6a]">
+                        Monitoramento Contábil Prospectivo
+                      </div>
+                      <h3 className="font-serif font-bold text-gray-900 text-lg sm:text-xl">
+                        Scanner de Empresas da B3: Fator Consolidado e Fatores de Risco
+                      </h3>
+                      <p className="text-xs text-gray-600 font-sans mt-0.5">
+                        Exibindo {filteredCompanies.length} de {pilar3Data.sample_companies_monitor?.length} registros contábeis auditados (DFP CVM 2022–2025).
+                      </p>
+                    </div>
+
+                    {/* Botão de Limpar Filtros quando algum filtro estiver ativo */}
+                    {(selectedRiskFactor !== "all" || selectedRating !== "all" || selectedYear !== "all" || searchCompany !== "") && (
+                      <button
+                        onClick={() => {
+                          setSelectedRiskFactor("all");
+                          setSelectedRating("all");
+                          setSelectedYear("all");
+                          setSearchCompany("");
+                        }}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans font-bold text-rose-700 bg-rose-50 border border-rose-200 rounded hover:bg-rose-100 transition self-start md:self-auto"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                        Limpar Todos os Filtros
+                      </button>
+                    )}
+                  </div>
+
+                  {/* BARRA DE FILTROS INTERATIVOS */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                    {/* Filtro 1: Todos os Fatores de Risco */}
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans mb-1.5">
+                        <span className="flex items-center gap-1">
+                          <Filter className="w-3 h-3 text-[#f56a6a]" />
+                          Fator de Risco:
+                        </span>
+                      </label>
+                      <select
+                        value={selectedRiskFactor}
+                        onChange={(e) => setSelectedRiskFactor(e.target.value)}
+                        className="w-full text-xs bg-white border border-gray-300 rounded p-2 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
+                      >
+                        <option value="all">Todos os Fatores (Visão Consolidada)</option>
+                        {pilar3Data.pesos_globais_modelo?.map((item: any) => (
+                          <option key={item.key} value={item.key}>
+                            {item.nome} (Peso: {item.peso_pct}%)
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* Filtro 2: Rating Regulatório */}
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans mb-1.5">
+                        <span className="flex items-center gap-1">
+                          <ShieldCheck className="w-3 h-3 text-[#f56a6a]" />
+                          Rating de Risco:
+                        </span>
+                      </label>
+                      <select
+                        value={selectedRating}
+                        onChange={(e) => setSelectedRating(e.target.value)}
+                        className="w-full text-xs bg-white border border-gray-300 rounded p-2 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
+                      >
+                        <option value="all">Todos os Ratings</option>
+                        <option value="distress">CCC / Distress (Score &gt; 70)</option>
+                        <option value="high_risk">BB e B (Risco Elevado • Score 40-70)</option>
+                        <option value="moderate">BBB (Moderado • Score 15-40)</option>
+                        <option value="investment_grade">AAA, AA e A (Grau de Investimento)</option>
+                      </select>
+                    </div>
+
+                    {/* Filtro 3: Ano do Balanço Auditado */}
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans mb-1.5">
+                        <span className="flex items-center gap-1">
+                          <Clock className="w-3 h-3 text-[#f56a6a]" />
+                          Ano do Balanço:
+                        </span>
+                      </label>
+                      <select
+                        value={selectedYear}
+                        onChange={(e) => setSelectedYear(e.target.value)}
+                        className="w-full text-xs bg-white border border-gray-300 rounded p-2 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
+                      >
+                        <option value="all">Todos os Anos (2022–2025)</option>
+                        <option value="2025">2025 (Mais Recente / CVM)</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                      </select>
+                    </div>
+
+                    {/* Filtro 4: Busca por Nome ou CNPJ */}
+                    <div>
+                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans mb-1.5">
+                        <span className="flex items-center gap-1">
+                          <Search className="w-3 h-3 text-[#f56a6a]" />
+                          Buscar Empresa / CNPJ:
+                        </span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Ex: Americanas, Gol, Petrobras..."
+                        value={searchCompany}
+                        onChange={(e) => setSearchCompany(e.target.value)}
+                        className="w-full text-xs bg-white border border-gray-300 rounded p-2 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* BANNER INFORMATIVO QUANDO UM FATOR ESPECÍFICO ESTÁ SELECIONADO */}
+                  {selectedRiskFactorMeta && (
+                    <div className="bg-amber-50/80 border-2 border-amber-300/80 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans text-xs">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <AlertTriangle className="w-4 h-4 text-amber-600" />
+                          <span className="font-bold text-gray-900 text-sm">
+                            Filtro Ativo: {selectedRiskFactorMeta.nome}
+                          </span>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-200 text-amber-900">
+                            Peso Global: {selectedRiskFactorMeta.peso_pct}%
+                          </span>
+                        </div>
+                        <p className="text-gray-700 leading-relaxed">
+                          <strong>Gatilho Prudencial:</strong> {selectedRiskFactorMeta.benchmark_alerta} •{" "}
+                          <strong>Direção Econômica:</strong> {selectedRiskFactorMeta.direcao_economica}
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() => setSelectedRiskFactor("all")}
+                        className="px-3 py-1 bg-white border border-amber-400 rounded text-amber-900 hover:bg-amber-100 font-bold text-xs shrink-0"
+                      >
+                        Voltar à Visão Geral Consolidada
+                      </button>
+                    </div>
+                  )}
+
+                  {/* TABELA DO SCANNER */}
+                  <div tabIndex={0} role="region" aria-label="Scanner de Empresas" className="table-wrapper shadow-xs">
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Companhia &amp; CNPJ</th>
+                          <th>Ano</th>
+                          <th>Fator Consolidado (Score Ponderado)</th>
+                          <th>Rating</th>
+                          <th>Alerta Principal (TreeSHAP)</th>
+                          <th>Decomposição de Pesos</th>
+                        </tr>
+                      </thead>
+                      <tbody className="font-mono text-xs">
+                        {filteredCompanies.length === 0 ? (
+                          <tr>
+                            <td colSpan={6} className="text-center py-8 text-gray-500 font-sans">
+                              Nenhuma empresa encontrada com os filtros selecionados. Tente ajustar os parâmetros de busca.
+                            </td>
+                          </tr>
+                        ) : (
+                          filteredCompanies.map((c: any) => {
+                            const rowKey = `${c.CNPJ_CIA}_${c.ano}`;
+                            const isExpanded = expandedCompanyKey === rowKey;
+                            const score = c.score_fator_consolidado ?? c.prob_distress;
+                            const isDistress = score >= 70;
+                            const isHighRisk = score >= 40 && score < 70;
+                            const isModerate = score >= 15 && score < 40;
+                            const isSolid = score < 15;
+
+                            const mainAlert = c.alerta_principal;
+                            const selectedFactorDetail = selectedRiskFactor !== "all"
+                              ? c.fatores_detalhados?.find((f: any) => f.key === selectedRiskFactor)
+                              : null;
+
+                            return (
+                              <React.Fragment key={rowKey}>
+                                <tr className={isExpanded ? "bg-slate-50 border-b-0" : ""}>
+                                  <td className="font-sans">
+                                    <div className="font-bold text-gray-900">
+                                      {c.DENOM_CIA_CLEAN || c.DENOM_CIA}
+                                    </div>
+                                    <span className="text-[10px] text-gray-500 font-mono">
+                                      CNPJ: {c.CNPJ_CIA}
+                                    </span>
+                                  </td>
+                                  <td className="text-gray-600 font-bold">{c.ano}</td>
+                                  <td>
+                                    <div className="space-y-1">
+                                      <div className="flex items-center gap-2">
+                                        <div className="w-20 bg-gray-200 rounded h-2.5 overflow-hidden border border-gray-300">
+                                          <div
+                                            style={{ width: `${Math.min(score, 100)}%` }}
+                                            className={`h-full ${
+                                              isDistress
+                                                ? "bg-rose-600"
+                                                : isHighRisk
+                                                ? "bg-amber-500"
+                                                : isModerate
+                                                ? "bg-blue-600"
+                                                : "bg-emerald-600"
+                                            }`}
+                                          />
+                                        </div>
+                                        <span className="font-bold text-gray-900">{score}%</span>
+                                      </div>
+                                      <span
+                                        className={`inline-block px-1.5 py-0.2 rounded text-[10px] font-sans font-bold ${
+                                          isDistress
+                                            ? "bg-rose-100 text-rose-800"
+                                            : isHighRisk
+                                            ? "bg-amber-100 text-amber-800"
+                                            : isModerate
+                                            ? "bg-blue-100 text-blue-800"
+                                            : "bg-emerald-100 text-emerald-800"
+                                        }`}
+                                      >
+                                        {c.fator_consolidado_classificacao || (isDistress ? "Distress Crítico" : "Sólido")}
+                                      </span>
+                                    </div>
+                                  </td>
+                                  <td>
+                                    <span
+                                      className={`px-2 py-0.5 rounded font-bold text-xs ${
+                                        c.rating === "CCC/Distress"
+                                          ? "bg-rose-100 text-rose-800 border border-rose-300"
+                                          : ["BB", "B"].includes(c.rating)
+                                          ? "bg-amber-100 text-amber-800 border border-amber-300"
+                                          : c.rating === "BBB"
+                                          ? "bg-blue-100 text-blue-800 border border-blue-300"
+                                          : "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                                      }`}
+                                    >
+                                      {c.rating}
+                                    </span>
+                                  </td>
+                                  <td className="font-sans text-[11px]">
+                                    {selectedFactorDetail ? (
+                                      <div className="space-y-0.5">
+                                        <span className="font-bold text-gray-900">
+                                          {selectedFactorDetail.nome}: {selectedFactorDetail.valor_formatado}
+                                        </span>
+                                        <div className="flex items-center gap-1.5 font-mono text-[10px]">
+                                          <span className="text-gray-500">SHAP:</span>
+                                          <span
+                                            className={`font-bold ${
+                                              selectedFactorDetail.shap_impact > 0
+                                                ? "text-rose-700"
+                                                : "text-emerald-700"
+                                            }`}
+                                          >
+                                            {selectedFactorDetail.shap_impact > 0 ? "+" : ""}
+                                            {selectedFactorDetail.shap_impact}
+                                          </span>
+                                          <span className="text-gray-400">
+                                            ({selectedFactorDetail.direcao})
+                                          </span>
+                                        </div>
+                                      </div>
+                                    ) : mainAlert ? (
+                                      <div className="space-y-0.5">
+                                        <span className="font-bold text-gray-900">
+                                          {mainAlert.nome || mainAlert.feature}
+                                        </span>
+                                        <div className="flex items-center gap-1.5 font-mono text-[10px]">
+                                          <span className="text-gray-500">Impacto:</span>
+                                          <span className="font-bold text-rose-700">
+                                            {mainAlert.shap_impact > 0 ? "+" : ""}
+                                            {mainAlert.shap_impact}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <span className="text-gray-400">-</span>
+                                    )}
+                                  </td>
+                                  <td>
+                                    <button
+                                      onClick={() =>
+                                        setExpandedCompanyKey(isExpanded ? null : rowKey)
+                                      }
+                                      className={`inline-flex items-center gap-1 px-2.5 py-1 rounded text-[11px] font-sans font-bold transition ${
+                                        isExpanded
+                                          ? "bg-slate-800 text-white"
+                                          : "bg-gray-100 hover:bg-gray-200 text-gray-700"
+                                      }`}
+                                    >
+                                      <span>{isExpanded ? "Recolher" : "Decompor (12 Fatores)"}</span>
+                                      {isExpanded ? (
+                                        <ChevronUp className="w-3.5 h-3.5" />
+                                      ) : (
+                                        <ChevronDown className="w-3.5 h-3.5" />
+                                      )}
+                                    </button>
+                                  </td>
+                                </tr>
+
+                                {/* LINHA EXPANDIDA COM A DECOMPOSIÇÃO COMPLETA DOS 12 FATORES */}
+                                {isExpanded && (
+                                  <tr className="bg-slate-50 border-b-2 border-slate-300">
+                                    <td colSpan={6} className="p-4 sm:p-6">
+                                      <div className="bg-white border border-gray-300 rounded-lg p-5 space-y-4">
+                                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-200 pb-3">
+                                          <div>
+                                            <div className="text-[11px] uppercase tracking-wider font-bold text-[#f56a6a]">
+                                              Decomposição do Fator Consolidado (TreeSHAP)
+                                            </div>
+                                            <h4 className="font-serif font-bold text-gray-900 text-base">
+                                              {c.DENOM_CIA_CLEAN || c.DENOM_CIA} — Balanço {c.ano}
+                                            </h4>
+                                          </div>
+                                          <div className="flex items-center gap-3 font-mono text-xs">
+                                            <div className="p-2 bg-gray-50 border border-gray-200 rounded">
+                                              <span className="text-gray-500 block text-[10px] font-sans">
+                                                Fator Consolidado:
+                                              </span>
+                                              <span className="font-bold text-gray-900 text-sm">
+                                                {score}%
+                                              </span>
+                                            </div>
+                                            <div className="p-2 bg-gray-50 border border-gray-200 rounded">
+                                              <span className="text-gray-500 block text-[10px] font-sans">
+                                                Rating Atribuído:
+                                              </span>
+                                              <span className="font-bold text-[#f56a6a] text-sm">
+                                                {c.rating}
+                                              </span>
+                                            </div>
+                                          </div>
+                                        </div>
+
+                                        <p className="text-xs text-gray-600 font-sans leading-relaxed">
+                                          Abaixo está o detalhamento de como cada um dos 12 fatores de risco influenciou a composição do rating. Valores positivos no impacto TreeSHAP aumentam a vulnerabilidade de calote (vermelho), enquanto valores negativos ou nulos atestam robustez patrimonial e mitigam o risco (verde).
+                                        </p>
+
+                                        {/* Tabela dos 12 Fatores da Empresa */}
+                                        <div tabIndex={0} role="region" aria-label="Fatores Detalhados da Empresa" className="table-wrapper">
+                                          <table>
+                                            <thead>
+                                              <tr>
+                                                <th>Fator Contábil</th>
+                                                <th>Categoria</th>
+                                                <th>Valor Auditado CVM</th>
+                                                <th>Peso Global</th>
+                                                <th>Contribuição SHAP</th>
+                                                <th>Efeito no Risco</th>
+                                                <th>Status</th>
+                                              </tr>
+                                            </thead>
+                                            <tbody className="font-mono text-xs">
+                                              {c.fatores_detalhados?.map((f: any) => {
+                                                const isRisk = f.shap_impact > 0.02;
+                                                const isShield = f.shap_impact < -0.05;
+                                                return (
+                                                  <tr key={f.key}>
+                                                    <td className="font-sans font-bold text-gray-900">
+                                                      {f.nome}
+                                                    </td>
+                                                    <td className="font-sans">
+                                                      <span className="px-1.5 py-0.5 rounded text-[10px] bg-gray-100 text-gray-700">
+                                                        {f.categoria}
+                                                      </span>
+                                                    </td>
+                                                    <td className="font-bold text-gray-900">
+                                                      {f.valor_formatado}
+                                                    </td>
+                                                    <td className="text-gray-600 font-bold">
+                                                      {f.peso_global_pct}%
+                                                    </td>
+                                                    <td>
+                                                      <span
+                                                        className={`font-bold ${
+                                                          isRisk
+                                                            ? "text-rose-700"
+                                                            : isShield
+                                                            ? "text-emerald-700"
+                                                            : "text-gray-600"
+                                                        }`}
+                                                      >
+                                                        {f.shap_impact > 0 ? "+" : ""}
+                                                        {f.shap_impact}
+                                                      </span>
+                                                    </td>
+                                                    <td className="font-sans text-[11px]">
+                                                      {isRisk ? (
+                                                        <span className="text-rose-700 font-bold flex items-center gap-1">
+                                                          <TrendingUp className="w-3 h-3 text-rose-600" />
+                                                          Aumenta Risco
+                                                        </span>
+                                                      ) : isShield ? (
+                                                        <span className="text-emerald-700 font-bold flex items-center gap-1">
+                                                          <TrendingDown className="w-3 h-3 text-emerald-600" />
+                                                          Mitiga Risco (Proteção)
+                                                        </span>
+                                                      ) : (
+                                                        <span className="text-gray-500">Neutro</span>
+                                                      )}
+                                                    </td>
+                                                    <td>
+                                                      <span
+                                                        className={`px-2 py-0.5 rounded text-[10px] font-sans font-bold ${
+                                                          f.status === "Crítico"
+                                                            ? "bg-rose-100 text-rose-800 border border-rose-300"
+                                                            : f.status === "Atenção"
+                                                            ? "bg-amber-100 text-amber-800 border border-amber-300"
+                                                            : f.status === "Forte"
+                                                            ? "bg-emerald-100 text-emerald-800 border border-emerald-300"
+                                                            : "bg-gray-100 text-gray-700"
+                                                        }`}
+                                                      >
+                                                        {f.status}
+                                                      </span>
+                                                    </td>
+                                                  </tr>
+                                                );
+                                              })}
+                                            </tbody>
+                                          </table>
+                                        </div>
+                                      </div>
+                                    </td>
+                                  </tr>
+                                )}
+                              </React.Fragment>
+                            );
+                          })
+                        )}
+                      </tbody>
+                    </table>
                   </div>
                 </div>
               )}
