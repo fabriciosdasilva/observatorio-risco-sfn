@@ -1,0 +1,9 @@
+{
+  "name": "observatorio-risco-sfn-root",
+  "private": true,
+  "scripts": {
+    "build": "npm --prefix web run build",
+    "start": "npm --prefix web run start",
+    "dev": "npm --prefix web run dev"
+  }
+}
