@@ -19,6 +19,8 @@ data/processed/*.parquet
 !data/processed/.gitkeep
 
 # Node / Next.js
+.next/
+node_modules/
 web/node_modules/
 web/.next/
 web/out/

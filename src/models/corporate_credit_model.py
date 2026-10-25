@@ -753,11 +753,32 @@ def run_corporate_credit_pipeline() -> Dict[str, Any]:
         "sample_companies_monitor": tracked_sample.to_dict(orient="records"),
     }
 
+    import math
+
+    def sanitize_for_json(obj):
+        if isinstance(obj, float):
+            if math.isnan(obj) or math.isinf(obj):
+                return None
+            return obj
+        elif isinstance(obj, dict):
+            return {k: sanitize_for_json(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [sanitize_for_json(v) for v in obj]
+        return obj
+
+    clean_output = sanitize_for_json(output_dict)
+
     # Salvar artefato JSON
     Path("data/output_json").mkdir(parents=True, exist_ok=True)
     out_file = "data/output_json/pilar3_cvm_empresas.json"
     with open(out_file, "w", encoding="utf-8") as f:
-        json.dump(output_dict, f, ensure_ascii=False, indent=2)
+        json.dump(clean_output, f, ensure_ascii=False, indent=2)
+
+    # Atualizar web/public/data se existir
+    web_file = Path("web/public/data/pilar3_cvm_empresas.json")
+    if web_file.parent.exists():
+        with open(web_file, "w", encoding="utf-8") as f:
+            json.dump(clean_output, f, ensure_ascii=False, indent=2)
 
     logger.info(f"Resultados do Pilar 3 salvos em {out_file} com {len(tracked_sample)} registros!")
 
