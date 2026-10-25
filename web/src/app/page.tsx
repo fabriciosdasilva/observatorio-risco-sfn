@@ -1407,7 +1407,7 @@ export default function EditorialObservatorio() {
                           <span>Série Histórica Contábil Auditada: {selectedBank}</span>
                         </span>
                         <span className="text-xs font-mono text-gray-500 font-normal">
-                          Valores em R$ Bilhões (2018–2025)
+                          Valores em R$ Bilhões (2018–2026 • 1S26 / 2T26)
                         </span>
                       </h3>
 
@@ -1415,7 +1415,7 @@ export default function EditorialObservatorio() {
                         <table>
                           <thead>
                             <tr>
-                              <th>Ano</th>
+                              <th>Ano / Período</th>
                               <th>Ativo Total</th>
                               <th>Patr. Líquido</th>
                               <th>Lucro Líquido</th>
@@ -1426,7 +1426,18 @@ export default function EditorialObservatorio() {
                           <tbody className="font-mono text-xs">
                             {bankData.historico.map((h: any) => (
                               <tr key={h.ano}>
-                                <td className="font-bold text-gray-900">{h.ano}</td>
+                                <td className="font-bold text-gray-900">
+                                  {h.ano === 2026 ? (
+                                    <span className="flex items-center gap-1.5">
+                                      <span>2026</span>
+                                      <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                        1S26
+                                      </span>
+                                    </span>
+                                  ) : (
+                                    h.ano
+                                  )}
+                                </td>
                                 <td>R$ {h.ativo_total_bi} bi</td>
                                 <td>R$ {h.patrimonio_liquido_bi} bi</td>
                                 <td className="text-emerald-700 font-bold">R$ {h.lucro_liquido_bi} bi</td>
@@ -1868,8 +1879,9 @@ export default function EditorialObservatorio() {
                           onChange={(e) => setSelectedYear(e.target.value)}
                           className="w-full text-xs bg-white border border-gray-300 rounded p-2 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
                         >
-                          <option value="all">Todos os Anos (2022–2025)</option>
-                          <option value="2025">2025 (Mais Recente / CVM)</option>
+                          <option value="all">Todos os Períodos (2022–2026 / 1S26)</option>
+                          <option value="2026">2026 (1S26 / 2T26 • Posição mais recente)</option>
+                          <option value="2025">2025 (DFP Consolidada)</option>
                           <option value="2024">2024</option>
                           <option value="2023">2023</option>
                           <option value="2022">2022</option>
@@ -1896,7 +1908,7 @@ export default function EditorialObservatorio() {
                         <button
                           onClick={() => {
                             setOnlyTopLatestYear(!onlyTopLatestYear);
-                            if (!onlyTopLatestYear) setSelectedYear("2025");
+                            if (!onlyTopLatestYear) setSelectedYear("2026");
                           }}
                           className={`px-2.5 py-1.5 rounded text-xs font-sans font-bold transition flex items-center gap-1 ${
                             onlyTopLatestYear
@@ -1904,7 +1916,7 @@ export default function EditorialObservatorio() {
                               : "bg-white hover:bg-gray-100 text-gray-700 border border-gray-300"
                           }`}
                         >
-                          <span>⭐ Top 25 Maiores no Último Ano (2025)</span>
+                          <span>⭐ Top 25 Maiores no Último Período (2026 • 1S26)</span>
                         </button>
 
                         <button
@@ -2129,7 +2141,7 @@ export default function EditorialObservatorio() {
                                       </span>
                                       {c.top_maior_ultimo_ano && (
                                         <span className="px-1.5 py-0.2 rounded text-[9px] bg-amber-100 text-amber-900 border border-amber-300 font-bold">
-                                          ⭐ Top 25
+                                          {c.ano === 2026 ? "⭐ Top 25 (2026)" : "⭐ Top 25"}
                                         </span>
                                       )}
                                       {bankTheme ? (
@@ -2153,7 +2165,18 @@ export default function EditorialObservatorio() {
                                       CNPJ: {c.CNPJ_CIA}
                                     </span>
                                   </td>
-                                  <td className="text-gray-600 font-bold">{c.ano}</td>
+                                  <td className="text-gray-600 font-bold">
+                                    {c.ano === 2026 ? (
+                                      <span className="flex items-center gap-1">
+                                        <span>2026</span>
+                                        <span className="text-[9px] font-mono px-1 py-0.2 rounded bg-emerald-100 text-emerald-800 border border-emerald-300">
+                                          1S26
+                                        </span>
+                                      </span>
+                                    ) : (
+                                      c.ano
+                                    )}
+                                  </td>
                                   <td className="font-sans text-[11px]">
                                     <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700 block w-fit mb-0.5">
                                       {c.setor || "Geral"}

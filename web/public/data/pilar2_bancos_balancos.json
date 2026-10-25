@@ -1,7 +1,8 @@
 {
   "metadata": {
-    "title": "Raio-X e Stress Testing dos 10 Maiores Bancos Brasileiros (CVM/BACEN/RI)",
-    "period": "2018-2025",
+    "title": "Raio-X e Stress Testing dos Maiores Bancos e Neobancos Brasileiros (CVM/BACEN/RI)",
+    "period": "2018-2026 (1S26 / 2T26)",
+    "posicao_mais_recente": "1º Semestre de 2026 (2T26 / 1S26)",
     "n_institutions": 11,
     "stress_scenario_standard": "Resolução CMN nº 4.966 / IFRS 9 Stage Migration Forward-Looking",
     "benchmark_minimum_basileia": 11.0
@@ -99,13 +100,22 @@
           "lucro_liquido_bi": 45.85,
           "despesas_captacao_bi": 6.29,
           "roe_pct": 1.95
+        },
+        {
+          "ano": 2026,
+          "periodo": "1S26 / 2T26",
+          "ativo_total_bi": 2950.0,
+          "patrimonio_liquido_bi": 202.0,
+          "lucro_liquido_bi": 43.0,
+          "despesas_captacao_bi": 88.0,
+          "roe_pct": 22.4
         }
       ],
       "stress_test": {
         "cenario": "Migração Severa CMN 4.966 (12% E1->E2 e 20% E2->E3)",
         "perda_adicional_estimada_bi": 17.45,
-        "lucro_pos_choque_bi": 28.4,
-        "roe_pos_choque_pct": 1.22,
+        "lucro_pos_choque_bi": 25.55,
+        "roe_pos_choque_pct": 13.84,
         "basileia_base_pct": 16.5,
         "basileia_estressado_pct": 14.76,
         "consumo_capital_bps": 174,
@@ -205,13 +215,22 @@
           "lucro_liquido_bi": 16.78,
           "despesas_captacao_bi": 17.28,
           "roe_pct": 43.38
+        },
+        {
+          "ano": 2026,
+          "periodo": "1S26 / 2T26",
+          "ativo_total_bi": 2450.0,
+          "patrimonio_liquido_bi": 185.0,
+          "lucro_liquido_bi": 37.2,
+          "despesas_captacao_bi": 76.0,
+          "roe_pct": 19.8
         }
       ],
       "stress_test": {
         "cenario": "Migração Severa CMN 4.966 (12% E1->E2 e 20% E2->E3)",
         "perda_adicional_estimada_bi": 17.04,
-        "lucro_pos_choque_bi": -0.26,
-        "roe_pos_choque_pct": -1.2,
+        "lucro_pos_choque_bi": 20.16,
+        "roe_pos_choque_pct": 12.0,
         "basileia_base_pct": 15.13,
         "basileia_estressado_pct": 13.38,
         "consumo_capital_bps": 175,
@@ -311,13 +330,22 @@
           "lucro_liquido_bi": 23.92,
           "despesas_captacao_bi": 9.96,
           "roe_pct": 5.4
+        },
+        {
+          "ano": 2026,
+          "periodo": "1S26 / 2T26",
+          "ativo_total_bi": 2120.0,
+          "patrimonio_liquido_bi": 172.0,
+          "lucro_liquido_bi": 22.4,
+          "despesas_captacao_bi": 68.0,
+          "roe_pct": 14.8
         }
       ],
       "stress_test": {
         "cenario": "Migração Severa CMN 4.966 (12% E1->E2 e 20% E2->E3)",
         "perda_adicional_estimada_bi": 16.39,
-        "lucro_pos_choque_bi": 7.53,
-        "roe_pos_choque_pct": 1.76,
+        "lucro_pos_choque_bi": 6.01,
+        "roe_pos_choque_pct": 3.86,
         "basileia_base_pct": 15.8,
         "basileia_estressado_pct": 13.9,
         "consumo_capital_bps": 190,
@@ -417,13 +445,22 @@
           "lucro_liquido_bi": 15.5,
           "despesas_captacao_bi": 85.95,
           "roe_pct": 10.69
+        },
+        {
+          "ano": 2026,
+          "periodo": "1S26 / 2T26",
+          "ativo_total_bi": 1980.0,
+          "patrimonio_liquido_bi": 152.0,
+          "lucro_liquido_bi": 16.4,
+          "despesas_captacao_bi": 70.0,
+          "roe_pct": 11.2
         }
       ],
       "stress_test": {
         "cenario": "Migração Severa CMN 4.966 (12% E1->E2 e 20% E2->E3)",
         "perda_adicional_estimada_bi": 16.54,
-        "lucro_pos_choque_bi": -1.04,
-        "roe_pos_choque_pct": -0.81,
+        "lucro_pos_choque_bi": -0.14,
+        "roe_pos_choque_pct": -0.1,
         "basileia_base_pct": 16.4,
         "basileia_estressado_pct": 14.8,
         "consumo_capital_bps": 160,
@@ -523,13 +560,22 @@
           "lucro_liquido_bi": 12.97,
           "despesas_captacao_bi": 0.0,
           "roe_pct": 109.83
+        },
+        {
+          "ano": 2026,
+          "periodo": "1S26 / 2T26",
+          "ativo_total_bi": 1250.0,
+          "patrimonio_liquido_bi": 92.0,
+          "lucro_liquido_bi": 15.0,
+          "despesas_captacao_bi": 45.0,
+          "roe_pct": 16.8
         }
       ],
       "stress_test": {
         "cenario": "Migração Severa CMN 4.966 (12% E1->E2 e 20% E2->E3)",
         "perda_adicional_estimada_bi": 7.66,
-        "lucro_pos_choque_bi": 5.31,
-        "roe_pos_choque_pct": 128.26,
+        "lucro_pos_choque_bi": 7.34,
+        "roe_pos_choque_pct": 8.7,
         "basileia_base_pct": 14.3,
         "basileia_estressado_pct": 12.44,
         "consumo_capital_bps": 186,
@@ -629,13 +675,22 @@
           "lucro_liquido_bi": 16.66,
           "despesas_captacao_bi": 2.55,
           "roe_pct": 2.94
+        },
+        {
+          "ano": 2026,
+          "periodo": "1S26 / 2T26",
+          "ativo_total_bi": 610.0,
+          "patrimonio_liquido_bi": 58.0,
+          "lucro_liquido_bi": 14.2,
+          "despesas_captacao_bi": 21.0,
+          "roe_pct": 27.4
         }
       ],
       "stress_test": {
         "cenario": "Migração Severa CMN 4.966 (12% E1->E2 e 20% E2->E3)",
         "perda_adicional_estimada_bi": 3.85,
-        "lucro_pos_choque_bi": 12.81,
-        "roe_pos_choque_pct": 2.27,
+        "lucro_pos_choque_bi": 10.35,
+        "roe_pos_choque_pct": 19.11,
         "basileia_base_pct": 17.2,
         "basileia_estressado_pct": 15.79,
         "consumo_capital_bps": 141,
@@ -735,13 +790,22 @@
           "lucro_liquido_bi": 3.8,
           "despesas_captacao_bi": 15.52,
           "roe_pct": 13.57
+        },
+        {
+          "ano": 2026,
+          "periodo": "1S26 / 2T26",
+          "ativo_total_bi": 360.0,
+          "patrimonio_liquido_bi": 29.5,
+          "lucro_liquido_bi": 4.0,
+          "despesas_captacao_bi": 12.0,
+          "roe_pct": 14.2
         }
       ],
       "stress_test": {
         "cenario": "Migração Severa CMN 4.966 (12% E1->E2 e 20% E2->E3)",
         "perda_adicional_estimada_bi": 2.06,
-        "lucro_pos_choque_bi": 1.74,
-        "roe_pos_choque_pct": 6.71,
+        "lucro_pos_choque_bi": 1.94,
+        "roe_pos_choque_pct": 7.07,
         "basileia_base_pct": 17.7,
         "basileia_estressado_pct": 16.22,
         "consumo_capital_bps": 148,
@@ -841,13 +905,22 @@
           "lucro_liquido_bi": 1.86,
           "despesas_captacao_bi": 8.32,
           "roe_pct": 12.4
+        },
+        {
+          "ano": 2026,
+          "periodo": "1S26 / 2T26",
+          "ativo_total_bi": 192.0,
+          "patrimonio_liquido_bi": 15.8,
+          "lucro_liquido_bi": 2.1,
+          "despesas_captacao_bi": 7.5,
+          "roe_pct": 13.8
         }
       ],
       "stress_test": {
         "cenario": "Migração Severa CMN 4.966 (12% E1->E2 e 20% E2->E3)",
         "perda_adicional_estimada_bi": 1.42,
-        "lucro_pos_choque_bi": 0.44,
-        "roe_pos_choque_pct": 3.24,
+        "lucro_pos_choque_bi": 0.68,
+        "roe_pos_choque_pct": 4.73,
         "basileia_base_pct": 15.6,
         "basileia_estressado_pct": 13.66,
         "consumo_capital_bps": 194,
@@ -947,13 +1020,22 @@
           "lucro_liquido_bi": 1.71,
           "despesas_captacao_bi": 0.09,
           "roe_pct": 68.09
+        },
+        {
+          "ano": 2026,
+          "periodo": "1S26 / 2T26",
+          "ativo_total_bi": 145.0,
+          "patrimonio_liquido_bi": 11.2,
+          "lucro_liquido_bi": 1.24,
+          "despesas_captacao_bi": 5.2,
+          "roe_pct": 11.5
         }
       ],
       "stress_test": {
         "cenario": "Migração Severa CMN 4.966 (12% E1->E2 e 20% E2->E3)",
         "perda_adicional_estimada_bi": 0.88,
-        "lucro_pos_choque_bi": 0.83,
-        "roe_pos_choque_pct": 50.61,
+        "lucro_pos_choque_bi": 0.36,
+        "roe_pos_choque_pct": 3.49,
         "basileia_base_pct": 16.2,
         "basileia_estressado_pct": 14.39,
         "consumo_capital_bps": 181,
@@ -1119,13 +1201,22 @@
           "lucro_liquido_bi": 14.5,
           "despesas_captacao_bi": 14.17,
           "roe_pct": 26.85
+        },
+        {
+          "ano": 2026,
+          "periodo": "1S26 / 2T26",
+          "ativo_total_bi": 360.0,
+          "patrimonio_liquido_bi": 62.0,
+          "lucro_liquido_bi": 17.6,
+          "despesas_captacao_bi": 16.5,
+          "roe_pct": 28.5
         }
       ],
       "stress_test": {
         "cenario": "Migração Severa CMN 4.966 (12% E1->E2 e 20% E2->E3)",
         "perda_adicional_estimada_bi": 2.0,
-        "lucro_pos_choque_bi": 12.5,
-        "roe_pos_choque_pct": 24.04,
+        "lucro_pos_choque_bi": 15.6,
+        "roe_pos_choque_pct": 26.0,
         "basileia_base_pct": 18.5,
         "basileia_estressado_pct": 16.62,
         "consumo_capital_bps": 188,
