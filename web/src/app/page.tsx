@@ -34,6 +34,306 @@ import {
   Gauge,
 } from "lucide-react";
 
+export interface BankBrandTheme {
+  name: string;
+  ticker: string;
+  primary: string; // Cor principal da marca
+  secondary: string; // Cor secundária
+  badgeBg: string; // Fundo do chip
+  badgeText: string; // Texto contrastante
+  borderColor: string; // Borda do chip/card
+  accentLight: string; // Fundo sutil com transparência
+  accentBorder: string; // Borda de destaque
+}
+
+export const BANK_BRAND_THEMES: Record<string, BankBrandTheme> = {
+  "Nubank (Nu Holdings)": {
+    name: "Nubank (Nu Holdings)",
+    ticker: "ROXO34",
+    primary: "#820AD1",
+    secondary: "#9D2DE0",
+    badgeBg: "#FAF5FF",
+    badgeText: "#6B21A8",
+    borderColor: "#C084FC",
+    accentLight: "rgba(130, 10, 209, 0.08)",
+    accentBorder: "rgba(130, 10, 209, 0.4)",
+  },
+  "Itaú Unibanco": {
+    name: "Itaú Unibanco",
+    ticker: "ITUB4",
+    primary: "#EC7000",
+    secondary: "#002D62",
+    badgeBg: "#FFF7ED",
+    badgeText: "#C2410C",
+    borderColor: "#FDBA74",
+    accentLight: "rgba(236, 112, 0, 0.08)",
+    accentBorder: "rgba(236, 112, 0, 0.4)",
+  },
+  "Bradesco": {
+    name: "Bradesco",
+    ticker: "BBDC4",
+    primary: "#CC092F",
+    secondary: "#ED1941",
+    badgeBg: "#FEF2F2",
+    badgeText: "#991B1B",
+    borderColor: "#FCA5A5",
+    accentLight: "rgba(204, 9, 47, 0.08)",
+    accentBorder: "rgba(204, 9, 47, 0.4)",
+  },
+  "Banco do Brasil": {
+    name: "Banco do Brasil",
+    ticker: "BBAS3",
+    primary: "#003882",
+    secondary: "#F8D117",
+    badgeBg: "#EFF6FF",
+    badgeText: "#1E40AF",
+    borderColor: "#93C5FD",
+    accentLight: "rgba(0, 56, 130, 0.08)",
+    accentBorder: "rgba(0, 56, 130, 0.4)",
+  },
+  "Caixa Econômica Federal": {
+    name: "Caixa Econômica Federal",
+    ticker: "CEF",
+    primary: "#005CA9",
+    secondary: "#F37021",
+    badgeBg: "#F0F9FF",
+    badgeText: "#0369A1",
+    borderColor: "#7DD3FC",
+    accentLight: "rgba(0, 92, 169, 0.08)",
+    accentBorder: "rgba(0, 92, 169, 0.4)",
+  },
+  "Santander Brasil": {
+    name: "Santander Brasil",
+    ticker: "SANB11",
+    primary: "#EC0000",
+    secondary: "#CC0000",
+    badgeBg: "#FFF1F2",
+    badgeText: "#BE123C",
+    borderColor: "#FDA4AF",
+    accentLight: "rgba(236, 0, 0, 0.08)",
+    accentBorder: "rgba(236, 0, 0, 0.4)",
+  },
+  "BTG Pactual": {
+    name: "BTG Pactual",
+    ticker: "BPAC11",
+    primary: "#0B1F3F",
+    secondary: "#1E3A8A",
+    badgeBg: "#F8FAFC",
+    badgeText: "#0F172A",
+    borderColor: "#94A3B8",
+    accentLight: "rgba(11, 31, 63, 0.08)",
+    accentBorder: "rgba(11, 31, 63, 0.4)",
+  },
+  "Banco Safra": {
+    name: "Banco Safra",
+    ticker: "Safra",
+    primary: "#002B49",
+    secondary: "#C5A059",
+    badgeBg: "#FDFBF7",
+    badgeText: "#854D0E",
+    borderColor: "#E2D4B7",
+    accentLight: "rgba(197, 160, 89, 0.12)",
+    accentBorder: "rgba(197, 160, 89, 0.45)",
+  },
+  "Banco BV": {
+    name: "Banco BV",
+    ticker: "BV",
+    primary: "#004B87",
+    secondary: "#00A3E0",
+    badgeBg: "#F0F8FD",
+    badgeText: "#075985",
+    borderColor: "#BAE6FD",
+    accentLight: "rgba(0, 75, 135, 0.08)",
+    accentBorder: "rgba(0, 75, 135, 0.4)",
+  },
+  "Banrisul": {
+    name: "Banrisul",
+    ticker: "BRSR6",
+    primary: "#008852",
+    secondary: "#005CA9",
+    badgeBg: "#F0FDF4",
+    badgeText: "#166534",
+    borderColor: "#86EFAC",
+    accentLight: "rgba(0, 136, 82, 0.08)",
+    accentBorder: "rgba(0, 136, 82, 0.4)",
+  },
+  "Banco Inter": {
+    name: "Banco Inter",
+    ticker: "INTR",
+    primary: "#FF7A00",
+    secondary: "#EA580C",
+    badgeBg: "#FFF7ED",
+    badgeText: "#C2410C",
+    borderColor: "#FDBA74",
+    accentLight: "rgba(255, 122, 0, 0.08)",
+    accentBorder: "rgba(255, 122, 0, 0.4)",
+  },
+};
+
+export function getBankTheme(nameOrDenom: string): BankBrandTheme | null {
+  if (!nameOrDenom) return null;
+  const n = nameOrDenom.toUpperCase();
+
+  if (n.includes("NUBANK") || n.includes("NU HOLDINGS")) return BANK_BRAND_THEMES["Nubank (Nu Holdings)"];
+  if (n.includes("ITAU") || n.includes("ITAÚ")) return BANK_BRAND_THEMES["Itaú Unibanco"];
+  if (n.includes("BRADESCO")) return BANK_BRAND_THEMES["Bradesco"];
+  if (n.includes("BCO BRASIL") || n.includes("BANCO DO BRASIL")) return BANK_BRAND_THEMES["Banco do Brasil"];
+  if (n.includes("SANTANDER")) return BANK_BRAND_THEMES["Santander Brasil"];
+  if (n.includes("BTG PACTUAL") || n.includes("BTG")) return BANK_BRAND_THEMES["BTG Pactual"];
+  if (n.includes("CAIXA") || n.includes("CEF")) return BANK_BRAND_THEMES["Caixa Econômica Federal"];
+  if (n.includes("SAFRA")) return BANK_BRAND_THEMES["Banco Safra"];
+  if (n.includes("BANCO BV") || n.includes("VOTORANTIM") || n.includes("BCO BV")) return BANK_BRAND_THEMES["Banco BV"];
+  if (n.includes("BANRISUL") || n.includes("ESTADO DO RIO GRANDE DO SUL")) return BANK_BRAND_THEMES["Banrisul"];
+  if (n.includes("BANCO INTER") || n.includes("INTER S.A.") || (n.includes("INTER") && !n.includes("INTERNATIONAL"))) return BANK_BRAND_THEMES["Banco Inter"];
+
+  // Demais instituições financeiras na B3 (Pilar 3)
+  if (n.includes("PAN")) {
+    return {
+      name: "Banco Pan",
+      ticker: "BPAN4",
+      primary: "#0099DA",
+      secondary: "#002B49",
+      badgeBg: "#F0F9FF",
+      badgeText: "#0369A1",
+      borderColor: "#7DD3FC",
+      accentLight: "rgba(0, 153, 218, 0.08)",
+      accentBorder: "rgba(0, 153, 218, 0.35)",
+    };
+  }
+  if (n.includes("BMG")) {
+    return {
+      name: "Banco BMG",
+      ticker: "BMGB4",
+      primary: "#FF6600",
+      secondary: "#000000",
+      badgeBg: "#FFF7ED",
+      badgeText: "#C2410C",
+      borderColor: "#FDBA74",
+      accentLight: "rgba(255, 102, 0, 0.08)",
+      accentBorder: "rgba(255, 102, 0, 0.35)",
+    };
+  }
+  if (n.includes("DAYCOVAL")) {
+    return {
+      name: "Banco Daycoval",
+      ticker: "DAYC",
+      primary: "#003865",
+      secondary: "#C5A059",
+      badgeBg: "#F0F4F8",
+      badgeText: "#0B1F3F",
+      borderColor: "#94A3B8",
+      accentLight: "rgba(0, 56, 101, 0.08)",
+      accentBorder: "rgba(0, 56, 101, 0.35)",
+    };
+  }
+  if (n.includes("B3 S.A.") || n.includes("B3")) {
+    return {
+      name: "B3 S.A.",
+      ticker: "B3SA3",
+      primary: "#003366",
+      secondary: "#D4AF37",
+      badgeBg: "#F0F4F8",
+      badgeText: "#1E3A8A",
+      borderColor: "#93C5FD",
+      accentLight: "rgba(0, 51, 102, 0.08)",
+      accentBorder: "rgba(0, 51, 102, 0.35)",
+    };
+  }
+  if (n.includes("XP INVESTIMENTOS") || n.includes("XP")) {
+    return {
+      name: "XP Investimentos",
+      ticker: "XPBR31",
+      primary: "#111111",
+      secondary: "#F2B705",
+      badgeBg: "#FEFCE8",
+      badgeText: "#854D0E",
+      borderColor: "#FDE047",
+      accentLight: "rgba(242, 183, 5, 0.12)",
+      accentBorder: "rgba(242, 183, 5, 0.5)",
+    };
+  }
+  if (n.includes("CIELO")) {
+    return {
+      name: "Cielo",
+      ticker: "CIEL3",
+      primary: "#00AEEF",
+      secondary: "#002B49",
+      badgeBg: "#F0F9FF",
+      badgeText: "#0284C7",
+      borderColor: "#38BDF8",
+      accentLight: "rgba(0, 174, 239, 0.08)",
+      accentBorder: "rgba(0, 174, 239, 0.35)",
+    };
+  }
+  if (n.includes("BB SEGURIDADE")) {
+    return {
+      name: "BB Seguridade",
+      ticker: "BBSE3",
+      primary: "#003882",
+      secondary: "#FCDE00",
+      badgeBg: "#EFF6FF",
+      badgeText: "#1E40AF",
+      borderColor: "#93C5FD",
+      accentLight: "rgba(0, 56, 130, 0.08)",
+      accentBorder: "rgba(0, 56, 130, 0.35)",
+    };
+  }
+  if (n.includes("CAIXA SEGURIDADE")) {
+    return {
+      name: "Caixa Seguridade",
+      ticker: "CXSE3",
+      primary: "#005CA9",
+      secondary: "#F37021",
+      badgeBg: "#F0F9FF",
+      badgeText: "#0369A1",
+      borderColor: "#7DD3FC",
+      accentLight: "rgba(0, 92, 169, 0.08)",
+      accentBorder: "rgba(0, 92, 169, 0.35)",
+    };
+  }
+  if (n.includes("PORTO SEGURO") || n.includes("PORTO")) {
+    return {
+      name: "Porto Seguro",
+      ticker: "PSSA3",
+      primary: "#003399",
+      secondary: "#00A3E0",
+      badgeBg: "#EFF6FF",
+      badgeText: "#1D4ED8",
+      borderColor: "#93C5FD",
+      accentLight: "rgba(0, 51, 153, 0.08)",
+      accentBorder: "rgba(0, 51, 153, 0.35)",
+    };
+  }
+  if (n.includes("BANESTES")) {
+    return {
+      name: "Banestes",
+      ticker: "BEES3",
+      primary: "#008542",
+      secondary: "#005CA9",
+      badgeBg: "#F0FDF4",
+      badgeText: "#166534",
+      borderColor: "#86EFAC",
+      accentLight: "rgba(0, 133, 66, 0.08)",
+      accentBorder: "rgba(0, 133, 66, 0.35)",
+    };
+  }
+  if (n.includes("BRB")) {
+    return {
+      name: "BRB Banco de Brasília",
+      ticker: "BSLI3",
+      primary: "#005CAA",
+      secondary: "#FCDE00",
+      badgeBg: "#EFF6FF",
+      badgeText: "#1E40AF",
+      borderColor: "#93C5FD",
+      accentLight: "rgba(0, 92, 170, 0.08)",
+      accentBorder: "rgba(0, 92, 170, 0.35)",
+    };
+  }
+
+  return null;
+}
+
 export default function EditorialObservatorio() {
   const [activeTab, setActiveTab] = useState<"pilar1" | "pilar2" | "pilar3">("pilar1");
   const [pilar1Data, setPilar1Data] = useState<any>(null);
@@ -700,15 +1000,56 @@ export default function EditorialObservatorio() {
                           const st = b.stress_test;
                           const latest = b.historico[b.historico.length - 1];
                           const isSelected = selectedBank === bName;
+                          const theme = getBankTheme(bName);
 
                           return (
-                            <tr key={bName} className={isSelected ? "bg-[#fff5f5] font-semibold" : ""}>
+                            <tr
+                              key={bName}
+                              className={`transition-colors ${isSelected ? "font-semibold" : "hover:bg-slate-50"}`}
+                              style={
+                                isSelected && theme
+                                  ? { backgroundColor: theme.accentLight, borderLeft: `4px solid ${theme.primary}` }
+                                  : isSelected
+                                  ? { backgroundColor: "#fff5f5" }
+                                  : {}
+                              }
+                            >
                               <td className="font-sans font-medium text-gray-900 flex items-center gap-2">
-                                <span className={`w-2 h-2 rounded-full ${rm.inadimplencia_npl90_pct < 3.0 ? "bg-emerald-500" : rm.inadimplencia_npl90_pct < 4.5 ? "bg-amber-500" : "bg-rose-500"}`} />
-                                {bName}
+                                {theme ? (
+                                  <span
+                                    className="w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs"
+                                    style={{ backgroundColor: theme.primary }}
+                                    title={`Cor característica oficial: ${theme.name}`}
+                                  />
+                                ) : (
+                                  <span
+                                    className={`w-2 h-2 rounded-full ${
+                                      rm.inadimplencia_npl90_pct < 3.0
+                                        ? "bg-emerald-500"
+                                        : rm.inadimplencia_npl90_pct < 4.5
+                                        ? "bg-amber-500"
+                                        : "bg-rose-500"
+                                    }`}
+                                  />
+                                )}
+                                <span className={isSelected && theme ? "font-bold text-gray-900" : ""}>{bName}</span>
                               </td>
                               <td className="font-sans text-gray-500 text-[11px]">
-                                <span className="font-bold text-gray-800">{b.ticker}</span> • {b.tipo.split("/")[0]}
+                                {theme ? (
+                                  <span
+                                    className="font-bold px-1.5 py-0.5 rounded text-[10px] font-mono border inline-block"
+                                    style={{
+                                      backgroundColor: theme.badgeBg,
+                                      color: theme.badgeText,
+                                      borderColor: theme.borderColor,
+                                    }}
+                                  >
+                                    {b.ticker}
+                                  </span>
+                                ) : (
+                                  <span className="font-bold text-gray-800">{b.ticker}</span>
+                                )}
+                                <span className="ml-1.5 text-gray-400">•</span> {b.tipo.split("/")[0]}
                               </td>
                               <td className="font-bold text-gray-900">
                                 R$ {rm.carteira_credito_expandida_bi} bi
@@ -739,7 +1080,8 @@ export default function EditorialObservatorio() {
                               <td className="font-sans">
                                 <button
                                   onClick={() => setSelectedBank(bName)}
-                                  className="text-xs text-[#f56a6a] hover:underline font-bold uppercase tracking-wider"
+                                  className="text-xs hover:underline font-bold uppercase tracking-wider"
+                                  style={{ color: theme ? theme.primary : "#f56a6a" }}
                                 >
                                   Inspecionar
                                 </button>
@@ -764,24 +1106,64 @@ export default function EditorialObservatorio() {
                       const b = pilar2Data.banks[bName];
                       const rm = b.ri_metrics;
                       const isSelected = selectedBank === bName;
+                      const theme = getBankTheme(bName);
 
                       return (
                         <div
                           key={bName}
                           onClick={() => setSelectedBank(bName)}
-                          className={`p-3.5 rounded-lg border-2 cursor-pointer transition-all bg-white ${
-                            isSelected
-                              ? "border-[#f56a6a] shadow-md shadow-[#f56a6a]/10"
-                              : "border-gray-200 hover:border-gray-400"
-                          }`}
+                          className="p-3.5 rounded-lg border-2 cursor-pointer transition-all bg-white relative overflow-hidden group hover:shadow-md"
+                          style={
+                            isSelected && theme
+                              ? {
+                                  borderColor: theme.primary,
+                                  boxShadow: `0 4px 14px ${theme.accentBorder}`,
+                                  backgroundColor: "#ffffff",
+                                }
+                              : theme
+                              ? {
+                                  borderColor: "#E2E8F0",
+                                }
+                              : {}
+                          }
                         >
-                          <div className="flex justify-between items-start mb-1.5">
-                            <h4 className="font-serif font-bold text-gray-900 text-xs truncate max-w-[110px]">
-                              {bName}
-                            </h4>
-                            <span className="text-[9px] font-mono font-bold text-[#f56a6a] bg-rose-50 px-1 rounded">
-                              {b.ticker}
-                            </span>
+                          {/* Barra superior de destaque na cor da marca do banco */}
+                          <div
+                            className="absolute top-0 left-0 right-0 transition-all"
+                            style={{
+                              backgroundColor: theme ? theme.primary : "#94A3B8",
+                              height: isSelected ? "3px" : "2px",
+                            }}
+                          />
+
+                          <div className="flex justify-between items-start mb-1.5 pt-0.5">
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              {theme && (
+                                <span
+                                  className="w-2 h-2 rounded-full shrink-0"
+                                  style={{ backgroundColor: theme.primary }}
+                                />
+                              )}
+                              <h4 className="font-serif font-bold text-gray-900 text-xs truncate max-w-[105px]">
+                                {bName}
+                              </h4>
+                            </div>
+                            {theme ? (
+                              <span
+                                className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded border shrink-0"
+                                style={{
+                                  backgroundColor: theme.badgeBg,
+                                  color: theme.badgeText,
+                                  borderColor: theme.borderColor,
+                                }}
+                              >
+                                {b.ticker}
+                              </span>
+                            ) : (
+                              <span className="text-[9px] font-mono font-bold text-[#f56a6a] bg-rose-50 px-1 rounded">
+                                {b.ticker}
+                              </span>
+                            )}
                           </div>
                           <div className="space-y-1 font-mono text-[11px] text-gray-600">
                             <div className="flex justify-between">
@@ -807,41 +1189,93 @@ export default function EditorialObservatorio() {
               )}
 
               {/* 2.3 Deep-Dive do Banco Selecionado */}
-              {bankData && (
-                <div className="space-y-6">
-                  {/* Spotlight Header */}
-                  <div className="bg-white border-2 border-gray-200 rounded-lg p-6 sm:p-8 space-y-6 shadow-xs">
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-gray-200 gap-3">
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className="text-xs font-semibold uppercase tracking-wider text-[#f56a6a]">
-                            Relatório Executivo de RI
-                          </span>
-                          <span className="text-xs font-mono px-2 py-0.5 rounded bg-gray-100 text-gray-700 font-bold border border-gray-300">
-                            Ticker: {bankData.ticker}
-                          </span>
-                          <span className="text-xs font-mono text-gray-500">
-                            CNPJ: {bankData.cnpj}
-                          </span>
+              {bankData && (() => {
+                const bankTheme = getBankTheme(selectedBank);
+
+                return (
+                  <div className="space-y-6">
+                    {/* Spotlight Header */}
+                    <div
+                      className="bg-white border-2 border-gray-200 rounded-lg p-6 sm:p-8 space-y-6 shadow-xs relative overflow-hidden"
+                      style={bankTheme ? { borderTop: `5px solid ${bankTheme.primary}` } : {}}
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pb-4 border-b border-gray-200 gap-3">
+                        <div>
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <span
+                              className="text-xs font-semibold uppercase tracking-wider flex items-center gap-1.5"
+                              style={{ color: bankTheme ? bankTheme.primary : "#f56a6a" }}
+                            >
+                              {bankTheme && (
+                                <span
+                                  className="w-2.5 h-2.5 rounded-full inline-block"
+                                  style={{ backgroundColor: bankTheme.primary }}
+                                />
+                              )}
+                              Relatório Executivo de RI
+                            </span>
+                            {bankTheme ? (
+                              <span
+                                className="text-xs font-mono px-2 py-0.5 rounded font-bold border"
+                                style={{
+                                  backgroundColor: bankTheme.badgeBg,
+                                  color: bankTheme.badgeText,
+                                  borderColor: bankTheme.borderColor,
+                                }}
+                              >
+                                Ticker: {bankData.ticker}
+                              </span>
+                            ) : (
+                              <span className="text-xs font-mono px-2 py-0.5 rounded bg-gray-100 text-gray-700 font-bold border border-gray-300">
+                                Ticker: {bankData.ticker}
+                              </span>
+                            )}
+                            <span className="text-xs font-mono text-gray-500">
+                              CNPJ: {bankData.cnpj}
+                            </span>
+                          </div>
+                          <h3 className="text-2xl font-serif font-bold text-gray-900 flex items-center gap-2.5">
+                            <span>{selectedBank}</span>
+                            {bankTheme && (
+                              <span
+                                className="text-[11px] font-sans font-bold px-2 py-0.5 rounded-full border hidden sm:inline-block"
+                                style={{
+                                  backgroundColor: bankTheme.badgeBg,
+                                  color: bankTheme.badgeText,
+                                  borderColor: bankTheme.borderColor,
+                                }}
+                              >
+                                Identidade Visual: {bankTheme.name}
+                              </span>
+                            )}
+                          </h3>
                         </div>
-                        <h3 className="text-2xl font-serif font-bold text-gray-900">
-                          {selectedBank}
-                        </h3>
+
+                        <a
+                          href={bankData.ri_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-sans font-bold border transition-all self-start sm:self-auto hover:opacity-90 shadow-xs"
+                          style={
+                            bankTheme
+                              ? {
+                                  backgroundColor: bankTheme.badgeBg,
+                                  color: bankTheme.badgeText,
+                                  borderColor: bankTheme.borderColor,
+                                }
+                              : { backgroundColor: "#f3f4f6", color: "#1f2937", borderColor: "#d1d5db" }
+                          }
+                        >
+                          Portal de RI Oficial <ExternalLink className="w-3.5 h-3.5" />
+                        </a>
                       </div>
 
-                      <a
-                        href={bankData.ri_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-gray-100 hover:bg-gray-200 text-xs font-sans font-bold text-gray-800 border border-gray-300 transition-colors self-start sm:self-auto"
+                      <p
+                        className="text-sm text-gray-700 leading-relaxed font-sans bg-gray-50 p-4 rounded-lg border-l-4"
+                        style={bankTheme ? { borderLeftColor: bankTheme.primary } : { borderLeftColor: "#f56a6a" }}
                       >
-                        Portal de RI Oficial <ExternalLink className="w-3.5 h-3.5" />
-                      </a>
-                    </div>
-
-                    <p className="text-sm text-gray-700 leading-relaxed font-sans bg-gray-50 p-4 rounded-lg border-l-4 border-[#f56a6a]">
-                      <strong>Perfil Estratégico &amp; Risco de Crédito:</strong> {bankData.perfil_estrategico}
-                    </p>
+                        <strong>Perfil Estratégico &amp; Risco de Crédito:</strong> {bankData.perfil_estrategico}
+                      </p>
 
                     {/* 8 Cards de Métricas Granulares de RI */}
                     <div>
@@ -901,17 +1335,27 @@ export default function EditorialObservatorio() {
                           Composição da Carteira por Segmento de Tomador
                         </h4>
                         <div className="space-y-2 font-mono text-xs">
-                          {Object.entries(bankData.ri_metrics.segmentacao_carteira).map(([seg, pct]: [string, any]) => (
-                            <div key={seg} className="flex items-center gap-3">
-                              <span className="w-40 text-gray-600 font-sans truncate capitalize">
-                                {seg.replace("_pct", "").replace("_", " ")}:
-                              </span>
-                              <div className="flex-1 bg-gray-100 rounded h-3 overflow-hidden border border-gray-200">
-                                <div style={{ width: `${pct}%` }} className="h-full bg-slate-700" />
+                          {Object.entries(bankData.ri_metrics.segmentacao_carteira).map(([seg, pct]: [string, any], segIdx: number) => {
+                            const opacityVal = Math.max(0.45, 1 - segIdx * 0.14);
+                            return (
+                              <div key={seg} className="flex items-center gap-3">
+                                <span className="w-40 text-gray-600 font-sans truncate capitalize">
+                                  {seg.replace("_pct", "").replace(/_/g, " ")}:
+                                </span>
+                                <div className="flex-1 bg-gray-100 rounded h-3 overflow-hidden border border-gray-200">
+                                  <div
+                                    style={{
+                                      width: `${pct}%`,
+                                      backgroundColor: bankTheme ? bankTheme.primary : "#334155",
+                                      opacity: bankTheme ? opacityVal : 1,
+                                    }}
+                                    className="h-full rounded-r transition-all"
+                                  />
+                                </div>
+                                <span className="w-12 text-right font-bold text-gray-900">{pct}%</span>
                               </div>
-                              <span className="w-12 text-right font-bold text-gray-900">{pct}%</span>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
 
@@ -953,7 +1397,15 @@ export default function EditorialObservatorio() {
                     {/* Historical Table */}
                     <div className="lg:col-span-2 bg-white border border-gray-200 rounded-lg p-6 space-y-4 shadow-xs">
                       <h3 className="font-serif font-bold text-gray-900 text-base flex justify-between items-center">
-                        <span>Série Histórica Contábil Auditada (CVM): {selectedBank}</span>
+                        <span className="flex items-center gap-2">
+                          {bankTheme && (
+                            <span
+                              className="w-2.5 h-2.5 rounded-full inline-block shadow-2xs"
+                              style={{ backgroundColor: bankTheme.primary }}
+                            />
+                          )}
+                          <span>Série Histórica Contábil Auditada: {selectedBank}</span>
+                        </span>
                         <span className="text-xs font-mono text-gray-500 font-normal">
                           Valores em R$ Bilhões (2018–2025)
                         </span>
@@ -988,9 +1440,15 @@ export default function EditorialObservatorio() {
                     </div>
 
                     {/* Stress Testing Box (Stage Migration CMN 4.966) */}
-                    <div className="bg-white border-2 border-gray-200 rounded-lg p-6 space-y-4 flex flex-col justify-between shadow-xs">
+                    <div
+                      className="bg-white border-2 border-gray-200 rounded-lg p-6 space-y-4 flex flex-col justify-between shadow-xs"
+                      style={bankTheme ? { borderTop: `4px solid ${bankTheme.primary}` } : {}}
+                    >
                       <div>
-                        <div className="text-xs uppercase tracking-wider font-bold text-[#f56a6a] mb-1">
+                        <div
+                          className="text-xs uppercase tracking-wider font-bold mb-1"
+                          style={{ color: bankTheme ? bankTheme.primary : "#f56a6a" }}
+                        >
                           Simulador de Estresse Prospectivo
                         </div>
                         <h3 className="font-serif font-bold text-gray-900 text-base mb-3">
@@ -1030,7 +1488,10 @@ export default function EditorialObservatorio() {
 
                           <div className="p-2.5 bg-gray-50 rounded border border-gray-200 flex justify-between items-center">
                             <span className="text-gray-600 font-sans">Basileia Pós-Choque:</span>
-                            <span className="text-[#f56a6a] font-bold text-sm">
+                            <span
+                              className="font-bold text-sm"
+                              style={{ color: bankTheme ? bankTheme.primary : "#f56a6a" }}
+                            >
                               {bankData.stress_test.basileia_estressado_pct}%
                             </span>
                           </div>
@@ -1050,7 +1511,8 @@ export default function EditorialObservatorio() {
                     </div>
                   </div>
                 </div>
-              )}
+              );
+            })()}
             </section>
           )}
 
@@ -1476,28 +1938,99 @@ export default function EditorialObservatorio() {
 
                   {/* BANNER INFORMATIVO PARA BANCOS & INSTITUIÇÕES FINANCEIRAS */}
                   {selectedSegment === "Financeiro" && (
-                    <div className="bg-indigo-50/80 border-2 border-indigo-200 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans text-xs">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <Landmark className="w-4 h-4 text-indigo-700" />
-                          <span className="font-bold text-gray-900 text-sm">
-                            Filtro Ativo: Instituições Financeiras da B3
-                          </span>
-                          <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-200 text-indigo-900">
-                            Bancos Comerciais, Múltiplos, Investimento, Seguradoras &amp; B3
-                          </span>
+                    <div className="bg-indigo-50/80 border-2 border-indigo-200 rounded-lg p-4 space-y-3 font-sans text-xs">
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <Landmark className="w-4 h-4 text-indigo-700" />
+                            <span className="font-bold text-gray-900 text-sm">
+                              Filtro Ativo: Instituições Financeiras da B3
+                            </span>
+                            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-200 text-indigo-900">
+                              Bancos Comerciais, Múltiplos, Investimento, Seguradoras &amp; B3
+                            </span>
+                          </div>
+                          <p className="text-gray-700 leading-relaxed">
+                            Os dados abaixo mostram a solvência contábil registrada nas DFPs auditadas da CVM. Para métricas regulatórias aprofundadas do BACEN (Índice de Basileia III, NII, carteira de crédito e Estresse de Estágios CMN 4.966 / IFRS 9), explore também o <strong>Pilar 02 (Balanços dos Bancos)</strong>.
+                          </p>
                         </div>
-                        <p className="text-gray-700 leading-relaxed">
-                          Os dados abaixo mostram a solvência contábil registrada nas DFPs auditadas da CVM. Para métricas regulatórias aprofundadas do BACEN (Índice de Basileia III, NII, carteira de crédito e Estresse de Estágios CMN 4.966 / IFRS 9), explore também o <strong>Pilar 02 (Balanços dos Bancos)</strong>.
-                        </p>
+
+                        <button
+                          onClick={() => setActiveTab("pilar2")}
+                          className="px-3 py-1.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded font-bold text-xs shrink-0 transition"
+                        >
+                          Ir para Pilar 02 (Top Bancos)
+                        </button>
                       </div>
 
-                      <button
-                        onClick={() => setActiveTab("pilar2")}
-                        className="px-3 py-1.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded font-bold text-xs shrink-0 transition"
-                      >
-                        Ir para Pilar 02 (Top 10 Bancos)
-                      </button>
+                      {/* Atalhos Rápidos com Cores Características Oficiais de Cada Instituição */}
+                      <div className="pt-2 border-t border-indigo-200/80">
+                        <span className="text-[10px] uppercase font-bold tracking-wider text-indigo-900 block mb-1.5">
+                          Filtrar por Banco / Instituição Específica (Cores Oficiais da Marca):
+                        </span>
+                        <div className="flex flex-wrap gap-1.5 items-center">
+                          {[
+                            { name: "Nubank", query: "NUBANK", theme: BANK_BRAND_THEMES["Nubank (Nu Holdings)"] },
+                            { name: "Itaú", query: "ITAU", theme: BANK_BRAND_THEMES["Itaú Unibanco"] },
+                            { name: "Banco do Brasil", query: "BRASIL", theme: BANK_BRAND_THEMES["Banco do Brasil"] },
+                            { name: "Bradesco", query: "BRADESCO", theme: BANK_BRAND_THEMES["Bradesco"] },
+                            { name: "Santander", query: "SANTANDER", theme: BANK_BRAND_THEMES["Santander Brasil"] },
+                            { name: "BTG Pactual", query: "BTG", theme: BANK_BRAND_THEMES["BTG Pactual"] },
+                            { name: "Banco Inter", query: "INTER", theme: BANK_BRAND_THEMES["Banco Inter"] },
+                            { name: "Banrisul", query: "BANRISUL", theme: BANK_BRAND_THEMES["Banrisul"] },
+                            {
+                              name: "Banco Pan",
+                              query: "PAN",
+                              theme: { primary: "#0099DA", badgeBg: "#F0F9FF", badgeText: "#0369A1", borderColor: "#7DD3FC", ticker: "BPAN4" },
+                            },
+                            {
+                              name: "B3",
+                              query: "B3",
+                              theme: { primary: "#003366", badgeBg: "#F0F4F8", badgeText: "#1E3A8A", borderColor: "#93C5FD", ticker: "B3SA3" },
+                            },
+                            {
+                              name: "XP",
+                              query: "XP",
+                              theme: { primary: "#111111", badgeBg: "#FEFCE8", badgeText: "#854D0E", borderColor: "#FDE047", ticker: "XPBR31" },
+                            },
+                            {
+                              name: "Cielo",
+                              query: "CIELO",
+                              theme: { primary: "#00AEEF", badgeBg: "#F0F9FF", badgeText: "#0284C7", borderColor: "#38BDF8", ticker: "CIEL3" },
+                            },
+                          ].map((item) => {
+                            const isActive = searchCompany.toUpperCase() === item.query;
+                            return (
+                              <button
+                                key={item.name}
+                                onClick={() => setSearchCompany(isActive ? "" : item.query)}
+                                className="px-2 py-0.5 rounded text-[11px] font-sans font-bold border transition flex items-center gap-1.5"
+                                style={{
+                                  backgroundColor: isActive ? item.theme.primary : item.theme.badgeBg,
+                                  color: isActive ? "#ffffff" : item.theme.badgeText,
+                                  borderColor: item.theme.borderColor,
+                                  boxShadow: isActive ? `0 2px 8px ${item.theme.primary}40` : "none",
+                                }}
+                              >
+                                <span
+                                  className="w-2 h-2 rounded-full inline-block"
+                                  style={{ backgroundColor: isActive ? "#ffffff" : item.theme.primary }}
+                                />
+                                <span>{item.name}</span>
+                                <span className="text-[9px] opacity-80 font-mono">({item.theme.ticker})</span>
+                              </button>
+                            );
+                          })}
+                          {searchCompany !== "" && (
+                            <button
+                              onClick={() => setSearchCompany("")}
+                              className="px-2 py-0.5 rounded text-[10px] font-sans text-gray-500 hover:text-gray-800 underline"
+                            >
+                              Limpar busca
+                            </button>
+                          )}
+                        </div>
+                      </div>
                     </div>
                   )}
 
@@ -1559,6 +2092,7 @@ export default function EditorialObservatorio() {
                             const isHighRisk = score >= 40 && score < 70;
                             const isModerate = score >= 15 && score < 40;
                             const isSolid = score < 15;
+                            const bankTheme = getBankTheme(c.DENOM_CIA_CLEAN || c.DENOM_CIA);
 
                             const mainAlert = c.alerta_principal;
                             const selectedFactorDetail = selectedRiskFactor !== "all"
@@ -1567,9 +2101,29 @@ export default function EditorialObservatorio() {
 
                             return (
                               <React.Fragment key={rowKey}>
-                                <tr className={isExpanded ? "bg-slate-50 border-b-0" : ""}>
+                                <tr
+                                  className={`transition-colors ${
+                                    isExpanded
+                                      ? "bg-slate-50 border-b-0"
+                                      : bankTheme && c.top_maior_ultimo_ano
+                                      ? "hover:bg-slate-50"
+                                      : "hover:bg-slate-50"
+                                  }`}
+                                  style={
+                                    isExpanded && bankTheme
+                                      ? { borderLeft: `4px solid ${bankTheme.primary}` }
+                                      : {}
+                                  }
+                                >
                                   <td className="font-sans">
-                                    <div className="flex items-center gap-1.5">
+                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                      {bankTheme && (
+                                        <span
+                                          className="w-2.5 h-2.5 rounded-full shrink-0 shadow-2xs"
+                                          style={{ backgroundColor: bankTheme.primary }}
+                                          title={`Instituição Financeira: ${bankTheme.name}`}
+                                        />
+                                      )}
                                       <span className="font-bold text-gray-900">
                                         {c.DENOM_CIA_CLEAN || c.DENOM_CIA}
                                       </span>
@@ -1578,11 +2132,22 @@ export default function EditorialObservatorio() {
                                           ⭐ Top 25
                                         </span>
                                       )}
-                                      {c.segmento === "Financeiro" && (
+                                      {bankTheme ? (
+                                        <span
+                                          className="px-1.5 py-0.2 rounded text-[9px] font-bold border"
+                                          style={{
+                                            backgroundColor: bankTheme.badgeBg,
+                                            color: bankTheme.badgeText,
+                                            borderColor: bankTheme.borderColor,
+                                          }}
+                                        >
+                                          🏛️ {bankTheme.ticker || "Banco"}
+                                        </span>
+                                      ) : c.segmento === "Financeiro" ? (
                                         <span className="px-1.5 py-0.2 rounded text-[9px] bg-indigo-100 text-indigo-800 border border-indigo-200 font-bold">
                                           🏛️ Banco/Fin
                                         </span>
-                                      )}
+                                      ) : null}
                                     </div>
                                     <span className="text-[10px] text-gray-500 font-mono block">
                                       CNPJ: {c.CNPJ_CIA}
@@ -1712,15 +2277,31 @@ export default function EditorialObservatorio() {
                                 {/* LINHA EXPANDIDA COM A DECOMPOSIÇÃO COMPLETA DOS 12 FATORES */}
                                 {isExpanded && (
                                   <tr className="bg-slate-50 border-b-2 border-slate-300">
-                                    <td colSpan={7} className="p-4 sm:p-6">
-                                      <div className="bg-white border border-gray-300 rounded-lg p-5 space-y-4">
+                                    <td
+                                      colSpan={7}
+                                      className="p-4 sm:p-6"
+                                      style={bankTheme ? { borderLeft: `4px solid ${bankTheme.primary}` } : {}}
+                                    >
+                                      <div
+                                        className="bg-white border border-gray-300 rounded-lg p-5 space-y-4"
+                                        style={bankTheme ? { borderTop: `3px solid ${bankTheme.primary}` } : {}}
+                                      >
                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-200 pb-3">
                                           <div>
-                                            <div className="text-[11px] uppercase tracking-wider font-bold text-[#f56a6a]">
+                                            <div
+                                              className="text-[11px] uppercase tracking-wider font-bold"
+                                              style={{ color: bankTheme ? bankTheme.primary : "#f56a6a" }}
+                                            >
                                               Decomposição do Fator Consolidado (TreeSHAP)
                                             </div>
-                                            <h4 className="font-serif font-bold text-gray-900 text-base">
-                                              {c.DENOM_CIA_CLEAN || c.DENOM_CIA} — Balanço {c.ano}
+                                            <h4 className="font-serif font-bold text-gray-900 text-base flex items-center gap-2">
+                                              {bankTheme && (
+                                                <span
+                                                  className="w-2.5 h-2.5 rounded-full inline-block shadow-2xs"
+                                                  style={{ backgroundColor: bankTheme.primary }}
+                                                />
+                                              )}
+                                              <span>{c.DENOM_CIA_CLEAN || c.DENOM_CIA} — Balanço {c.ano}</span>
                                             </h4>
                                           </div>
                                           <div className="flex items-center gap-3 font-mono text-xs">
