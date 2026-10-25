@@ -192,16 +192,32 @@ def clean_company_name(name: str) -> str:
         "TIM S.A.": "TIM S.A.",
         "ITAU UNIBANCO HOLDING S.A.": "ITAÚ UNIBANCO S.A.",
         "BCO BRADESCO S.A.": "BANCO BRADESCO S.A.",
-        "BCO SANTANDER (BRASIL) S.A.": "BANCO SANTANDER S.A.",
+        "BCO SANTANDER (BRASIL) S.A.": "BANCO SANTANDER BRASIL S.A.",
         "BCO BRASIL S.A.": "BANCO DO BRASIL S.A.",
+        "BCO BTG PACTUAL S.A.": "BANCO BTG PACTUAL S.A.",
+        "BANCO DO ESTADO DO RIO GRANDE DO SUL SA": "BANCO BANRISUL S.A.",
         "BANCO INTER S.A.": "BANCO INTER S.A.",
+        "BCO PAN S.A.": "BANCO PAN S.A.",
+        "BCO DAYCOVAL S.A.": "BANCO DAYCOVAL S.A.",
+        "BANCO BMG S/A": "BANCO BMG S.A.",
+        "BCO MERCANTIL DO BRASIL S.A.": "BANCO MERCANTIL DO BRASIL S.A.",
+        "BANESTES S.A. - BCO EST ESPIRITO SANTO": "BANESTES S.A.",
+        "BRB BANCO DE BRASILIA S.A.": "BRB (BANCO DE BRASÍLIA) S.A.",
+        "BCO PINE S.A": "BANCO PINE S.A.",
+        "XP INVESTIMENTOS S.A.": "XP INVESTIMENTOS S.A.",
+        "CIELO S.A. -  INSTITUIO DE PAGAMENTO": "CIELO S.A.",
+        "B3 S.A. - BRASIL, BOLSA, BALCAO": "B3 (BRASIL, BOLSA, BALCÃO) S.A.",
+        "BB SEGURIDADE PARTICIPAES S.A.": "BB SEGURIDADE S.A.",
+        "CAIXA SEGURIDADE PARTICIPAES S.A.": "CAIXA SEGURIDADE S.A.",
+        "PORTO SEGURO S.A.": "PORTO SEGURO SEGUROS S.A.",
+        "IRB - BRASIL RESSEGUROS S.A.": "IRB (BRASIL RESSEGUROS) S.A.",
+        "QUALICORP CONSULTORIA E CORRETORA DE SEGUROS S.A.": "QUALICORP S.A.",
+        "MINERVA S.A.": "MINERVA S.A.",
         "CVC BRASIL OPERADORA E AGENCIA DE VIAGENS S.A.": "CVC BRASIL S.A.",
         "INVESTIMENTOS E PARTICIP. EM INFRA S.A. - INVEPAR": "INVEPAR S.A.",
         "AMBEV S.A.": "AMBEV S.A.",
         "BRASKEM S.A.": "BRASKEM S.A.",
         "ATACADO S.A.": "ATACADÃO S.A.",
-        "CIELO S.A. -  INSTITUIO DE PAGAMENTO": "CIELO S.A.",
-        "B3 S.A. - BRASIL, BOLSA, BALCAO": "B3 S.A.",
     }
     for k, v in mapping.items():
         if k in name:
@@ -231,6 +247,46 @@ def clean_company_name(name: str) -> str:
         .strip()
     )
     return cleaned
+
+
+def get_company_sector(name: str) -> tuple[str, str]:
+    """Retorna (segmento, setor). Segmento: 'Financeiro' ou 'Não Financeiro'."""
+    name_upper = name.upper()
+    fin_patterns = [
+        "BCO", "BANCO", "ITAU", "BRADESCO", "SANTANDER", "BTG", "PAN", "DAYCOVAL",
+        "BMG", "MERCANTIL", "BANESTES", "BRB", "PINE", "B3", "XP", "CIELO",
+        "SEGURIDADE", "PORTO SEGURO", "RESSEGUROS", "IRB", "QUALICORP", "INTER"
+    ]
+    for p in fin_patterns:
+        if p in name_upper:
+            if any(s in name_upper for s in ["SEGURO", "SEGURIDADE", "RESSEGUROS", "QUALICORP"]):
+                return ("Financeiro", "Seguros & Previdência")
+            elif any(s in name_upper for s in ["B3", "XP", "CIELO"]):
+                return ("Financeiro", "Mercados de Capitais & Meios de Pgto")
+            return ("Financeiro", "Bancos & Crédito")
+
+    if any(k in name_upper for k in ["PETROLEO", "PETROBRAS", "RAIZEN", "RAZEN", "VIBRA", "ULTRAPAR", "COSAN"]):
+        return ("Não Financeiro", "Petróleo, Gás & Combustíveis")
+    if any(k in name_upper for k in ["VALE", "SIDERURGICA", "GERDAU", "USIMINAS", "CSN"]):
+        return ("Não Financeiro", "Mineração & Siderurgia")
+    if any(k in name_upper for k in ["JBS", "MARFRIG", "BRF", "AMBEV", "MINERVA"]):
+        return ("Não Financeiro", "Alimentos & Bebidas")
+    if any(k in name_upper for k in ["SUZANO", "KLABIN"]):
+        return ("Não Financeiro", "Papel & Celulose")
+    if any(k in name_upper for k in ["EMBRAER", "WEG"]):
+        return ("Não Financeiro", "Bens de Capital & Defesa")
+    if any(k in name_upper for k in ["ELETROBRAS", "EQUATORIAL", "CPFL", "CEMIG", "COPEL", "SABESP", "NEOENERGIA", "LIGHT"]):
+        return ("Não Financeiro", "Energia Elétrica & Saneamento")
+    if any(k in name_upper for k in ["TELEFONICA", "TIM", "CLARO", "OI S.A.", "TOTVS"]):
+        return ("Não Financeiro", "Telecom & Tecnologia")
+    if any(k in name_upper for k in ["REDE D OR", "HAPVIDA", "FLEURY", "HYPERA"]):
+        return ("Não Financeiro", "Saúde & Farmacêutica")
+    if any(k in name_upper for k in ["AMERICANAS", "MAGAZINE LUIZA", "CASAS BAHIA", "VIA", "MARISA", "LOJAS RENNER", "RAIA DROGASIL", "ATACADO"]):
+        return ("Não Financeiro", "Varejo & Consumo")
+    if any(k in name_upper for k in ["GOL LINHAS", "AZUL", "CVC", "LOCALIZA", "SIMPAR", "INVEPAR"]):
+        return ("Não Financeiro", "Transporte, Aviação & Logística")
+    return ("Não Financeiro", "Outros Setores")
+
 
 
 def format_feature_val(col: str, val: float) -> str:
@@ -479,32 +535,79 @@ def run_corporate_credit_pipeline() -> Dict[str, Any]:
     df_results["vulnerabilidades_ativas"] = company_active_vulns
     df_results["fatores_detalhados"] = company_detailed_factors
 
-    # 6. Selecionar amostra de alta relevância no mercado da B3
-    keywords = [
-        "AMERICANAS", "GOL LINHAS", "AZUL", "CASAS BAHIA", "MAGAZINE LUIZA", "MARISA",
-        "OI S.A.", "LIGHT", "CVC BRASIL", "INVEPAR", "PETROLEO BRASILEIRO", "VALE S.A.",
-        "EMBRAER", "WEG S.A.", "JBS S.A.", "MARFRIG", "BRF S.A.", "SUZANO S.A.",
-        "KLABIN", "SIDERURGICA NACIONAL", "GERDAU S.A.", "USIMINAS", "LOJAS RENNER",
-        "RAIA DROGASIL", "HYPERA", "LOCALIZA", "ELETROBRAS", "EQUATORIAL",
-        "CPFL ENERGIA", "CEMIG", "COPEL", "SABESP", "RAIZEN", "VIBRA ENERGIA",
-        "ULTRAPAR", "COSAN", "REDE D OR", "HAPVIDA", "FLEURY", "TOTVS",
-        "TELEFONICA BRASIL", "TIM S.A.", "ITAU UNIBANCO", "BCO BRADESCO", "BCO SANTANDER",
-        "BCO BRASIL", "BANCO INTER"
+    # Classificar segmento e setor econômico de cada entidade
+    segmentos = []
+    setores = []
+    receitas_bi = []
+    for i in range(len(df_results)):
+        clean_denom = df_results.iloc[i]["DENOM_CIA_CLEAN"]
+        seg, setr = get_company_sector(clean_denom)
+        segmentos.append(seg)
+        setores.append(setr)
+        raw_rec = float(X_test.iloc[i]["receita_liquida"]) if not pd.isna(X_test.iloc[i]["receita_liquida"]) else 0.0
+        receitas_bi.append(round(raw_rec / 1e9, 2))
+
+    df_results["segmento"] = segmentos
+    df_results["setor"] = setores
+    df_results["receita_liquida_bi"] = receitas_bi
+
+    # 6. Selecionar amostra de alta relevância: Bancos, Instituições Financeiras e Maiores Corporações
+    fin_keywords = [
+        "ITAU UNIBANCO", "BCO BRASIL", "BCO BRADESCO", "BCO SANTANDER", "BCO BTG PACTUAL",
+        "BANCO INTER", "BANCO DO ESTADO DO RIO GRANDE DO SUL", "BCO PAN", "BCO DAYCOVAL",
+        "BANCO BMG", "BCO MERCANTIL DO BRASIL", "BANESTES", "BRB BANCO DE BRASILIA",
+        "BCO PINE", "B3 S.A.", "XP INVESTIMENTOS", "CIELO", "BB SEGURIDADE",
+        "CAIXA SEGURIDADE", "PORTO SEGURO", "IRB - BRASIL RESSEGUROS", "QUALICORP"
     ]
-    pattern = "|".join(keywords)
+    corp_keywords = [
+        "PETROLEO BRASILEIRO", "VALE S.A.", "JBS", "MARFRIG", "BRF S.A.", "AMBEV",
+        "SUZANO", "KLABIN", "SIDERURGICA NACIONAL", "GERDAU", "USIMINAS", "EMBRAER",
+        "WEG S.A.", "RAIZEN", "VIBRA ENERGIA", "ULTRAPAR", "COSAN", "ELETROBRAS",
+        "EQUATORIAL", "CPFL ENERGIA", "CEMIG", "COPEL", "SABESP", "NEOENERGIA",
+        "TELEFONICA BRASIL", "TIM S.A.", "CLARO TELECOM", "REDE D OR", "HAPVIDA",
+        "RAIA DROGASIL", "HYPERA", "FLEURY", "LOCALIZA", "SIMPAR", "TOTVS",
+        "LOJAS RENNER", "MAGAZINE LUIZA", "AMERICANAS", "CASAS BAHIA", "VIA S.A.",
+        "MARISA", "GOL LINHAS", "AZUL", "CVC BRASIL", "LIGHT", "OI S.A.", "INVEPAR",
+        "BRASKEM", "ATACADO", "MINERVA"
+    ]
+    all_keywords = fin_keywords + corp_keywords
+    pattern = "|".join(all_keywords)
     
     tracked_sample = df_results[
         df_results["DENOM_CIA"].str.contains(pattern, case=False, na=False)
-    ].drop_duplicates(subset=["DENOM_CIA", "ano"]).sort_values(["ano", "score_fator_consolidado"], ascending=[False, False])
+    ].drop_duplicates(subset=["DENOM_CIA", "ano"]).copy()
+
+    # Identificar as maiores entidades no último ano (2025) por faturamento / receita
+    top_2025_ids = set(
+        tracked_sample[tracked_sample["ano"] == 2025]
+        .sort_values("receita_liquida_bi", ascending=False)
+        .head(25)["DENOM_CIA"]
+        .tolist()
+    )
+    tracked_sample["top_maior_ultimo_ano"] = (
+        (tracked_sample["ano"] == 2025) & (tracked_sample["DENOM_CIA"].isin(top_2025_ids))
+    )
+
+    # Ordenar priorizando o ano mais recente e o faturamento / score de risco
+    tracked_sample = tracked_sample.sort_values(
+        ["ano", "score_fator_consolidado"],
+        ascending=[False, False]
+    )
 
     output_dict = {
         "metadata": {
-            "title": "Early Warning de Risco de Crédito PJ (CVM)",
+            "title": "Early Warning de Risco de Crédito PJ e Instituições Financeiras (CVM)",
             "train_period": "2018-2021",
             "test_oot_period": "2022-2025",
             "n_train_samples": len(X_train),
             "n_test_samples": len(X_test),
             "formula_fator_consolidado": "Score Ponderado (0-100) derivado da integração dos 12 fatores contábeis via TreeSHAP e Calibração Sigmoidal (IFRS 9 / Basileia III)",
+            "entidades_monitoradas": {
+                "total_registros": len(tracked_sample),
+                "total_financeiro": int((tracked_sample["segmento"] == "Financeiro").sum()),
+                "total_nao_financeiro": int((tracked_sample["segmento"] == "Não Financeiro").sum()),
+                "total_2025": int((tracked_sample["ano"] == 2025).sum()),
+            }
         },
         "oot_backtesting_metrics": {
             "logistic_regression": metrics_log_reg,

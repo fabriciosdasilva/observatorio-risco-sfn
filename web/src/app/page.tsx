@@ -45,6 +45,9 @@ export default function EditorialObservatorio() {
   const [selectedRiskFactor, setSelectedRiskFactor] = useState<string>("all");
   const [selectedRating, setSelectedRating] = useState<string>("all");
   const [selectedYear, setSelectedYear] = useState<string>("all");
+  const [selectedSegment, setSelectedSegment] = useState<string>("all");
+  const [onlyTopLatestYear, setOnlyTopLatestYear] = useState<boolean>(false);
+  const [sortBy, setSortBy] = useState<"risk_desc" | "revenue_desc" | "risk_asc">("risk_desc");
   const [expandedCompanyKey, setExpandedCompanyKey] = useState<string | null>(null);
   const [showWeightsDetails, setShowWeightsDetails] = useState<boolean>(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(true);
@@ -69,53 +72,87 @@ export default function EditorialObservatorio() {
   const modData = pilar1Data?.modalities?.[selectedModality];
   const bankData = pilar2Data?.banks?.[selectedBank];
 
-  // Filtros Avançados do Pilar 3 (Fatores de Risco, Rating, Ano, Busca)
+  // Filtros Avançados do Pilar 3 (Fatores de Risco, Segmento Financeiro/Corporativo, Rating, Ano, Maiores 2025)
   const filteredCompanies = useMemo(() => {
     if (!pilar3Data?.sample_companies_monitor) return [];
 
-    return pilar3Data.sample_companies_monitor.filter((company: any) => {
-      // 1. Busca textual (Nome limpo, razão social ou CNPJ)
-      const query = searchCompany.toLowerCase().trim();
-      const matchesSearch =
-        query === "" ||
-        company.DENOM_CIA_CLEAN?.toLowerCase().includes(query) ||
-        company.DENOM_CIA?.toLowerCase().includes(query) ||
-        company.CNPJ_CIA?.includes(query);
+    return pilar3Data.sample_companies_monitor
+      .filter((company: any) => {
+        // 1. Busca textual (Nome limpo, razão social, setor ou CNPJ)
+        const query = searchCompany.toLowerCase().trim();
+        const matchesSearch =
+          query === "" ||
+          company.DENOM_CIA_CLEAN?.toLowerCase().includes(query) ||
+          company.DENOM_CIA?.toLowerCase().includes(query) ||
+          company.setor?.toLowerCase().includes(query) ||
+          company.CNPJ_CIA?.includes(query);
 
-      if (!matchesSearch) return false;
+        if (!matchesSearch) return false;
 
-      // 2. Filtro por Ano
-      if (selectedYear !== "all" && String(company.ano) !== selectedYear) {
-        return false;
-      }
-
-      // 3. Filtro por Rating Regulatório
-      if (selectedRating !== "all") {
-        if (selectedRating === "distress" && company.rating !== "CCC/Distress") return false;
-        if (selectedRating === "high_risk" && !["BB", "B"].includes(company.rating)) return false;
-        if (selectedRating === "moderate" && company.rating !== "BBB") return false;
-        if (selectedRating === "investment_grade" && !["AAA", "AA", "A"].includes(company.rating)) return false;
-      }
-
-      // 4. Filtro por Fator de Risco Específico
-      if (selectedRiskFactor !== "all") {
-        const isPrimary = company.alerta_principal?.feature === selectedRiskFactor;
-        const isInVulns = company.vulnerabilidades_ativas?.includes(selectedRiskFactor);
-        const detailedItem = company.fatores_detalhados?.find((f: any) => f.key === selectedRiskFactor);
-        const isCriticalOrAlert =
-          detailedItem &&
-          (detailedItem.shap_impact > 0.02 ||
-            detailedItem.status === "Crítico" ||
-            detailedItem.status === "Atenção");
-
-        if (!isPrimary && !isInVulns && !isCriticalOrAlert) {
+        // 2. Filtro por Ano
+        if (selectedYear !== "all" && String(company.ano) !== selectedYear) {
           return false;
         }
-      }
 
-      return true;
-    });
-  }, [pilar3Data, searchCompany, selectedYear, selectedRating, selectedRiskFactor]);
+        // 3. Filtro por Segmento (Bancos & Financeiro vs Não Financeiro)
+        if (selectedSegment !== "all" && company.segmento !== selectedSegment) {
+          return false;
+        }
+
+        // 4. Filtro exclusivo das maiores no último ano (2025)
+        if (onlyTopLatestYear && !company.top_maior_ultimo_ano) {
+          return false;
+        }
+
+        // 5. Filtro por Rating Regulatório
+        if (selectedRating !== "all") {
+          if (selectedRating === "distress" && company.rating !== "CCC/Distress") return false;
+          if (selectedRating === "high_risk" && !["BB", "B"].includes(company.rating)) return false;
+          if (selectedRating === "moderate" && company.rating !== "BBB") return false;
+          if (selectedRating === "investment_grade" && !["AAA", "AA", "A"].includes(company.rating)) return false;
+        }
+
+        // 6. Filtro por Fator de Risco Específico
+        if (selectedRiskFactor !== "all") {
+          const isPrimary = company.alerta_principal?.feature === selectedRiskFactor;
+          const isInVulns = company.vulnerabilidades_ativas?.includes(selectedRiskFactor);
+          const detailedItem = company.fatores_detalhados?.find((f: any) => f.key === selectedRiskFactor);
+          const isCriticalOrAlert =
+            detailedItem &&
+            (detailedItem.shap_impact > 0.02 ||
+              detailedItem.status === "Crítico" ||
+              detailedItem.status === "Atenção");
+
+          if (!isPrimary && !isInVulns && !isCriticalOrAlert) {
+            return false;
+          }
+        }
+
+        return true;
+      })
+      .sort((a: any, b: any) => {
+        if (sortBy === "revenue_desc") {
+          return (b.receita_liquida_bi || 0) - (a.receita_liquida_bi || 0);
+        }
+        if (sortBy === "risk_asc") {
+          return (a.score_fator_consolidado || 0) - (b.score_fator_consolidado || 0);
+        }
+        // default: risk_desc (mantém agrupamento por ano e maior risco primeiro)
+        if (selectedYear === "all" && b.ano !== a.ano) {
+          return b.ano - a.ano;
+        }
+        return (b.score_fator_consolidado || 0) - (a.score_fator_consolidado || 0);
+      });
+  }, [
+    pilar3Data,
+    searchCompany,
+    selectedYear,
+    selectedSegment,
+    onlyTopLatestYear,
+    selectedRating,
+    selectedRiskFactor,
+    sortBy,
+  ]);
 
   // Metadados do Fator de Risco Selecionado
   const selectedRiskFactorMeta = useMemo(() => {
@@ -1249,25 +1286,38 @@ export default function EditorialObservatorio() {
                   {/* Cabeçalho do Scanner */}
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 pb-5">
                     <div>
-                      <div className="text-xs uppercase font-bold tracking-wider text-[#f56a6a]">
-                        Monitoramento Contábil Prospectivo
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs uppercase font-bold tracking-wider text-[#f56a6a]">
+                          Monitoramento Contábil Prospectivo
+                        </span>
+                        <span className="text-[10px] bg-slate-100 text-slate-800 px-2 py-0.5 rounded font-mono font-bold">
+                          Bancos + Grandes Corporações
+                        </span>
                       </div>
-                      <h3 className="font-serif font-bold text-gray-900 text-lg sm:text-xl">
-                        Scanner de Empresas da B3: Fator Consolidado e Fatores de Risco
+                      <h3 className="font-serif font-bold text-gray-900 text-lg sm:text-xl mt-1">
+                        Scanner da B3: Bancos, Instituições Financeiras e Maiores Empresas
                       </h3>
                       <p className="text-xs text-gray-600 font-sans mt-0.5">
-                        Exibindo {filteredCompanies.length} de {pilar3Data.sample_companies_monitor?.length} registros contábeis auditados (DFP CVM 2022–2025).
+                        Exibindo <strong>{filteredCompanies.length}</strong> de {pilar3Data.sample_companies_monitor?.length} balanços auditados (DFP CVM 2022–2025).
                       </p>
                     </div>
 
                     {/* Botão de Limpar Filtros quando algum filtro estiver ativo */}
-                    {(selectedRiskFactor !== "all" || selectedRating !== "all" || selectedYear !== "all" || searchCompany !== "") && (
+                    {(selectedRiskFactor !== "all" ||
+                      selectedRating !== "all" ||
+                      selectedYear !== "all" ||
+                      selectedSegment !== "all" ||
+                      onlyTopLatestYear ||
+                      searchCompany !== "") && (
                       <button
                         onClick={() => {
                           setSelectedRiskFactor("all");
                           setSelectedRating("all");
                           setSelectedYear("all");
+                          setSelectedSegment("all");
+                          setOnlyTopLatestYear(false);
                           setSearchCompany("");
+                          setSortBy("risk_desc");
                         }}
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-sans font-bold text-rose-700 bg-rose-50 border border-rose-200 rounded hover:bg-rose-100 transition self-start md:self-auto"
                       >
@@ -1278,88 +1328,178 @@ export default function EditorialObservatorio() {
                   </div>
 
                   {/* BARRA DE FILTROS INTERATIVOS */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                    {/* Filtro 1: Todos os Fatores de Risco */}
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans mb-1.5">
-                        <span className="flex items-center gap-1">
-                          <Filter className="w-3 h-3 text-[#f56a6a]" />
-                          Fator de Risco:
-                        </span>
-                      </label>
-                      <select
-                        value={selectedRiskFactor}
-                        onChange={(e) => setSelectedRiskFactor(e.target.value)}
-                        className="w-full text-xs bg-white border border-gray-300 rounded p-2 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
-                      >
-                        <option value="all">Todos os Fatores (Visão Consolidada)</option>
-                        {pilar3Data.pesos_globais_modelo?.map((item: any) => (
-                          <option key={item.key} value={item.key}>
-                            {item.nome} (Peso: {item.peso_pct}%)
-                          </option>
-                        ))}
-                      </select>
+                  <div className="space-y-3 p-4 bg-gray-50 border border-gray-200 rounded-lg">
+                    {/* Linha 1 de Filtros Principais */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                      {/* Filtro 1: Todos os Fatores de Risco */}
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans mb-1.5">
+                          <span className="flex items-center gap-1">
+                            <Filter className="w-3 h-3 text-[#f56a6a]" />
+                            Fator de Risco:
+                          </span>
+                        </label>
+                        <select
+                          value={selectedRiskFactor}
+                          onChange={(e) => setSelectedRiskFactor(e.target.value)}
+                          className="w-full text-xs bg-white border border-gray-300 rounded p-2 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
+                        >
+                          <option value="all">Todos os Fatores (Visão Consolidada)</option>
+                          {pilar3Data.pesos_globais_modelo?.map((item: any) => (
+                            <option key={item.key} value={item.key}>
+                              {item.nome} (Peso: {item.peso_pct}%)
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Filtro 2: Segmento (Financeiro vs Corporativo) */}
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans mb-1.5">
+                          <span className="flex items-center gap-1">
+                            <Landmark className="w-3 h-3 text-[#f56a6a]" />
+                            Segmento / Tipo:
+                          </span>
+                        </label>
+                        <select
+                          value={selectedSegment}
+                          onChange={(e) => setSelectedSegment(e.target.value)}
+                          className="w-full text-xs bg-white border border-gray-300 rounded p-2 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
+                        >
+                          <option value="all">Todos os Segmentos (Corporativo + Bancos)</option>
+                          <option value="Financeiro">🏛️ Bancos &amp; Instituições Financeiras</option>
+                          <option value="Não Financeiro">🏭 Empresas Corporativas Não Financeiras</option>
+                        </select>
+                      </div>
+
+                      {/* Filtro 3: Rating Regulatório */}
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans mb-1.5">
+                          <span className="flex items-center gap-1">
+                            <ShieldCheck className="w-3 h-3 text-[#f56a6a]" />
+                            Rating de Risco:
+                          </span>
+                        </label>
+                        <select
+                          value={selectedRating}
+                          onChange={(e) => setSelectedRating(e.target.value)}
+                          className="w-full text-xs bg-white border border-gray-300 rounded p-2 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
+                        >
+                          <option value="all">Todos os Ratings</option>
+                          <option value="distress">CCC / Distress (Score &gt; 70)</option>
+                          <option value="high_risk">BB e B (Risco Elevado • Score 40-70)</option>
+                          <option value="moderate">BBB (Moderado • Score 15-40)</option>
+                          <option value="investment_grade">AAA, AA e A (Grau de Investimento)</option>
+                        </select>
+                      </div>
+
+                      {/* Filtro 4: Ano do Balanço Auditado */}
+                      <div>
+                        <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans mb-1.5">
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-[#f56a6a]" />
+                            Ano do Balanço:
+                          </span>
+                        </label>
+                        <select
+                          value={selectedYear}
+                          onChange={(e) => setSelectedYear(e.target.value)}
+                          className="w-full text-xs bg-white border border-gray-300 rounded p-2 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
+                        >
+                          <option value="all">Todos os Anos (2022–2025)</option>
+                          <option value="2025">2025 (Mais Recente / CVM)</option>
+                          <option value="2024">2024</option>
+                          <option value="2023">2023</option>
+                          <option value="2022">2022</option>
+                        </select>
+                      </div>
                     </div>
 
-                    {/* Filtro 2: Rating Regulatório */}
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans mb-1.5">
-                        <span className="flex items-center gap-1">
-                          <ShieldCheck className="w-3 h-3 text-[#f56a6a]" />
-                          Rating de Risco:
-                        </span>
-                      </label>
-                      <select
-                        value={selectedRating}
-                        onChange={(e) => setSelectedRating(e.target.value)}
-                        className="w-full text-xs bg-white border border-gray-300 rounded p-2 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
-                      >
-                        <option value="all">Todos os Ratings</option>
-                        <option value="distress">CCC / Distress (Score &gt; 70)</option>
-                        <option value="high_risk">BB e B (Risco Elevado • Score 40-70)</option>
-                        <option value="moderate">BBB (Moderado • Score 15-40)</option>
-                        <option value="investment_grade">AAA, AA e A (Grau de Investimento)</option>
-                      </select>
-                    </div>
+                    {/* Linha 2: Busca Textual, Atalhos Rápidos e Ordenação */}
+                    <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3 pt-3 border-t border-gray-200">
+                      {/* Busca Textual */}
+                      <div className="relative flex-1 max-w-md">
+                        <Search className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
+                        <input
+                          type="text"
+                          placeholder="Buscar banco ou empresa (ex: Itaú, BB, Petrobras, Gol)..."
+                          value={searchCompany}
+                          onChange={(e) => setSearchCompany(e.target.value)}
+                          className="pl-9 pr-3 py-1.5 text-xs bg-white border border-gray-300 rounded font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a] w-full"
+                        />
+                      </div>
 
-                    {/* Filtro 3: Ano do Balanço Auditado */}
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans mb-1.5">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3 h-3 text-[#f56a6a]" />
-                          Ano do Balanço:
-                        </span>
-                      </label>
-                      <select
-                        value={selectedYear}
-                        onChange={(e) => setSelectedYear(e.target.value)}
-                        className="w-full text-xs bg-white border border-gray-300 rounded p-2 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
-                      >
-                        <option value="all">Todos os Anos (2022–2025)</option>
-                        <option value="2025">2025 (Mais Recente / CVM)</option>
-                        <option value="2024">2024</option>
-                        <option value="2023">2023</option>
-                        <option value="2022">2022</option>
-                      </select>
-                    </div>
+                      {/* Botões de Atalho Rápido */}
+                      <div className="flex flex-wrap items-center gap-2">
+                        <button
+                          onClick={() => {
+                            setOnlyTopLatestYear(!onlyTopLatestYear);
+                            if (!onlyTopLatestYear) setSelectedYear("2025");
+                          }}
+                          className={`px-2.5 py-1.5 rounded text-xs font-sans font-bold transition flex items-center gap-1 ${
+                            onlyTopLatestYear
+                              ? "bg-amber-600 text-white shadow-xs"
+                              : "bg-white hover:bg-gray-100 text-gray-700 border border-gray-300"
+                          }`}
+                        >
+                          <span>⭐ Top 25 Maiores no Último Ano (2025)</span>
+                        </button>
 
-                    {/* Filtro 4: Busca por Nome ou CNPJ */}
-                    <div>
-                      <label className="block text-[11px] font-bold uppercase tracking-wider text-gray-600 font-sans mb-1.5">
-                        <span className="flex items-center gap-1">
-                          <Search className="w-3 h-3 text-[#f56a6a]" />
-                          Buscar Empresa / CNPJ:
-                        </span>
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Ex: Americanas, Gol, Petrobras..."
-                        value={searchCompany}
-                        onChange={(e) => setSearchCompany(e.target.value)}
-                        className="w-full text-xs bg-white border border-gray-300 rounded p-2 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
-                      />
+                        <button
+                          onClick={() => setSelectedSegment(selectedSegment === "Financeiro" ? "all" : "Financeiro")}
+                          className={`px-2.5 py-1.5 rounded text-xs font-sans font-bold transition flex items-center gap-1 ${
+                            selectedSegment === "Financeiro"
+                              ? "bg-indigo-700 text-white shadow-xs"
+                              : "bg-white hover:bg-gray-100 text-gray-700 border border-gray-300"
+                          }`}
+                        >
+                          <Landmark className="w-3.5 h-3.5" />
+                          <span>Apenas Bancos / Financeiro</span>
+                        </button>
+
+                        {/* Seletor de Ordenação */}
+                        <div className="flex items-center gap-1.5 text-xs font-sans">
+                          <span className="text-gray-500 font-bold text-[11px]">Ordem:</span>
+                          <select
+                            value={sortBy}
+                            onChange={(e: any) => setSortBy(e.target.value)}
+                            className="text-xs bg-white border border-gray-300 rounded p-1.5 font-sans text-gray-900 focus:outline-none focus:border-[#f56a6a]"
+                          >
+                            <option value="risk_desc">Maior Risco Primeiro</option>
+                            <option value="revenue_desc">Maior Faturamento / Porte</option>
+                            <option value="risk_asc">Mais Sólidas (Menor Risco)</option>
+                          </select>
+                        </div>
+                      </div>
                     </div>
                   </div>
+
+                  {/* BANNER INFORMATIVO PARA BANCOS & INSTITUIÇÕES FINANCEIRAS */}
+                  {selectedSegment === "Financeiro" && (
+                    <div className="bg-indigo-50/80 border-2 border-indigo-200 rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans text-xs">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <Landmark className="w-4 h-4 text-indigo-700" />
+                          <span className="font-bold text-gray-900 text-sm">
+                            Filtro Ativo: Instituições Financeiras da B3
+                          </span>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-200 text-indigo-900">
+                            Bancos Comerciais, Múltiplos, Investimento, Seguradoras &amp; B3
+                          </span>
+                        </div>
+                        <p className="text-gray-700 leading-relaxed">
+                          Os dados abaixo mostram a solvência contábil registrada nas DFPs auditadas da CVM. Para métricas regulatórias aprofundadas do BACEN (Índice de Basileia III, NII, carteira de crédito e Estresse de Estágios CMN 4.966 / IFRS 9), explore também o <strong>Pilar 02 (Balanços dos Bancos)</strong>.
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() => setActiveTab("pilar2")}
+                        className="px-3 py-1.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded font-bold text-xs shrink-0 transition"
+                      >
+                        Ir para Pilar 02 (Top 10 Bancos)
+                      </button>
+                    </div>
+                  )}
 
                   {/* BANNER INFORMATIVO QUANDO UM FATOR ESPECÍFICO ESTÁ SELECIONADO */}
                   {selectedRiskFactorMeta && (
@@ -1390,23 +1530,24 @@ export default function EditorialObservatorio() {
                   )}
 
                   {/* TABELA DO SCANNER */}
-                  <div tabIndex={0} role="region" aria-label="Scanner de Empresas" className="table-wrapper shadow-xs">
+                  <div tabIndex={0} role="region" aria-label="Scanner de Empresas e Bancos" className="table-wrapper shadow-xs">
                     <table>
                       <thead>
                         <tr>
-                          <th>Companhia &amp; CNPJ</th>
+                          <th>Instituição / Empresa &amp; CNPJ</th>
                           <th>Ano</th>
+                          <th>Setor &amp; Escala CVM</th>
                           <th>Fator Consolidado (Score Ponderado)</th>
                           <th>Rating</th>
                           <th>Alerta Principal (TreeSHAP)</th>
-                          <th>Decomposição de Pesos</th>
+                          <th>Decomposição</th>
                         </tr>
                       </thead>
                       <tbody className="font-mono text-xs">
                         {filteredCompanies.length === 0 ? (
                           <tr>
-                            <td colSpan={6} className="text-center py-8 text-gray-500 font-sans">
-                              Nenhuma empresa encontrada com os filtros selecionados. Tente ajustar os parâmetros de busca.
+                            <td colSpan={7} className="text-center py-8 text-gray-500 font-sans">
+                              Nenhuma entidade encontrada com os filtros selecionados. Tente ajustar os parâmetros de busca.
                             </td>
                           </tr>
                         ) : (
@@ -1428,14 +1569,36 @@ export default function EditorialObservatorio() {
                               <React.Fragment key={rowKey}>
                                 <tr className={isExpanded ? "bg-slate-50 border-b-0" : ""}>
                                   <td className="font-sans">
-                                    <div className="font-bold text-gray-900">
-                                      {c.DENOM_CIA_CLEAN || c.DENOM_CIA}
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="font-bold text-gray-900">
+                                        {c.DENOM_CIA_CLEAN || c.DENOM_CIA}
+                                      </span>
+                                      {c.top_maior_ultimo_ano && (
+                                        <span className="px-1.5 py-0.2 rounded text-[9px] bg-amber-100 text-amber-900 border border-amber-300 font-bold">
+                                          ⭐ Top 25
+                                        </span>
+                                      )}
+                                      {c.segmento === "Financeiro" && (
+                                        <span className="px-1.5 py-0.2 rounded text-[9px] bg-indigo-100 text-indigo-800 border border-indigo-200 font-bold">
+                                          🏛️ Banco/Fin
+                                        </span>
+                                      )}
                                     </div>
-                                    <span className="text-[10px] text-gray-500 font-mono">
+                                    <span className="text-[10px] text-gray-500 font-mono block">
                                       CNPJ: {c.CNPJ_CIA}
                                     </span>
                                   </td>
                                   <td className="text-gray-600 font-bold">{c.ano}</td>
+                                  <td className="font-sans text-[11px]">
+                                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-gray-100 text-gray-700 block w-fit mb-0.5">
+                                      {c.setor || "Geral"}
+                                    </span>
+                                    {c.receita_liquida_bi > 0 && (
+                                      <span className="text-[10px] text-gray-500 font-mono">
+                                        Faturamento: <strong>R$ {c.receita_liquida_bi} bi</strong>
+                                      </span>
+                                    )}
+                                  </td>
                                   <td>
                                     <div className="space-y-1">
                                       <div className="flex items-center gap-2">
@@ -1549,7 +1712,7 @@ export default function EditorialObservatorio() {
                                 {/* LINHA EXPANDIDA COM A DECOMPOSIÇÃO COMPLETA DOS 12 FATORES */}
                                 {isExpanded && (
                                   <tr className="bg-slate-50 border-b-2 border-slate-300">
-                                    <td colSpan={6} className="p-4 sm:p-6">
+                                    <td colSpan={7} className="p-4 sm:p-6">
                                       <div className="bg-white border border-gray-300 rounded-lg p-5 space-y-4">
                                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-gray-200 pb-3">
                                           <div>
