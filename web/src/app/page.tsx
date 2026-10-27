@@ -789,12 +789,12 @@ export default function EditorialObservatorio() {
                         Matriz de Sensibilidade Macroeconômica Multivariada
                       </h3>
                       <p className="text-xs text-gray-600">
-                        Correlação linear de Pearson de cada modalidade de crédito com os principais indicadores do país:
+                        Correlação linear de Pearson de cada modalidade de crédito com os principais indicadores do país. <strong>Clique em qualquer linha</strong> para selecionar a modalidade e atualizar a análise detalhada:
                       </p>
                     </div>
                   </div>
 
-                  <div className="table-wrapper shadow-xs">
+                  <div tabIndex={0} role="region" aria-label="Matriz de Sensibilidade Macroeconômica" className="table-wrapper shadow-xs">
                     <table>
                       <thead>
                         <tr>
@@ -808,31 +808,53 @@ export default function EditorialObservatorio() {
                         </tr>
                       </thead>
                       <tbody className="font-mono text-xs">
-                        {pilar1Data.macro_sensitivity_matrix.map((row: any) => (
-                          <tr key={row.target} className={selectedModality === row.target ? "bg-[#fff5f5] font-semibold" : ""}>
-                            <td className="font-sans font-medium text-gray-900">
-                              {row.label}
-                            </td>
-                            <td className={row.correlations.selic_anualizada > 0.4 ? "text-[#f56a6a] font-bold" : "text-gray-700"}>
-                              {row.correlations.selic_anualizada > 0 ? `+${row.correlations.selic_anualizada}` : row.correlations.selic_anualizada}
-                            </td>
-                            <td className="text-gray-700">
-                              {row.correlations.ipca_12m > 0 ? `+${row.correlations.ipca_12m}` : row.correlations.ipca_12m}
-                            </td>
-                            <td className={row.correlations.desemprego_pnad > 0.4 ? "text-rose-700 font-bold" : "text-gray-700"}>
-                              {row.correlations.desemprego_pnad > 0 ? `+${row.correlations.desemprego_pnad}` : row.correlations.desemprego_pnad}
-                            </td>
-                            <td className="text-gray-700">
-                              {row.correlations.ibc_br_dessaz > 0 ? `+${row.correlations.ibc_br_dessaz}` : row.correlations.ibc_br_dessaz}
-                            </td>
-                            <td className={row.correlations.comprometimento_renda > 0.6 ? "text-rose-700 font-bold bg-rose-50" : "text-gray-700"}>
-                              {row.correlations.comprometimento_renda > 0 ? `+${row.correlations.comprometimento_renda}` : row.correlations.comprometimento_renda}
-                            </td>
-                            <td className={row.correlations.endividamento_familias > 0.6 ? "text-rose-700 font-bold bg-rose-50" : "text-gray-700"}>
-                              {row.correlations.endividamento_familias > 0 ? `+${row.correlations.endividamento_familias}` : row.correlations.endividamento_familias}
-                            </td>
-                          </tr>
-                        ))}
+                        {pilar1Data.macro_sensitivity_matrix.map((row: any) => {
+                          const isSelected = selectedModality === row.target;
+                          return (
+                            <tr
+                              key={row.target}
+                              onClick={() => setSelectedModality(row.target)}
+                              title={`Clique para selecionar ${row.label}`}
+                              className={`transition-all cursor-pointer select-none ${
+                                isSelected ? "font-semibold shadow-xs" : "hover:bg-slate-100/70"
+                              }`}
+                              style={
+                                isSelected
+                                  ? { backgroundColor: "#fff5f5", borderLeft: "4px solid #f56a6a" }
+                                  : {}
+                              }
+                            >
+                              <td className="font-sans font-medium text-gray-900">
+                                <div className="flex items-center gap-2">
+                                  <span className={isSelected ? "font-bold text-gray-900" : ""}>{row.label}</span>
+                                  {isSelected && (
+                                    <span className="text-[9px] font-sans font-bold px-1.5 py-0.5 rounded border border-[#f56a6a] bg-[#f56a6a] text-white ml-1 shrink-0">
+                                      SELECIONADO
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
+                              <td className={row.correlations.selic_anualizada > 0.4 ? "text-[#f56a6a] font-bold" : "text-gray-700"}>
+                                {row.correlations.selic_anualizada > 0 ? `+${row.correlations.selic_anualizada}` : row.correlations.selic_anualizada}
+                              </td>
+                              <td className="text-gray-700">
+                                {row.correlations.ipca_12m > 0 ? `+${row.correlations.ipca_12m}` : row.correlations.ipca_12m}
+                              </td>
+                              <td className={row.correlations.desemprego_pnad > 0.4 ? "text-rose-700 font-bold" : "text-gray-700"}>
+                                {row.correlations.desemprego_pnad > 0 ? `+${row.correlations.desemprego_pnad}` : row.correlations.desemprego_pnad}
+                              </td>
+                              <td className="text-gray-700">
+                                {row.correlations.ibc_br_dessaz > 0 ? `+${row.correlations.ibc_br_dessaz}` : row.correlations.ibc_br_dessaz}
+                              </td>
+                              <td className={row.correlations.comprometimento_renda > 0.6 ? "text-rose-700 font-bold bg-rose-50" : "text-gray-700"}>
+                                {row.correlations.comprometimento_renda > 0 ? `+${row.correlations.comprometimento_renda}` : row.correlations.comprometimento_renda}
+                              </td>
+                              <td className={row.correlations.endividamento_familias > 0.6 ? "text-rose-700 font-bold bg-rose-50" : "text-gray-700"}>
+                                {row.correlations.endividamento_familias > 0 ? `+${row.correlations.endividamento_familias}` : row.correlations.endividamento_familias}
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -905,7 +927,7 @@ export default function EditorialObservatorio() {
                         Matriz Econométrica de Defasagem (Lags) &amp; Backtesting Walk-Forward
                       </h3>
                       <p className="text-xs text-gray-600">
-                        Comparativo preditivo do modelo regularizado <strong>Ridge AR-X</strong> vs. <strong>Naive Baseline</strong> (Random Walk):
+                        Comparativo preditivo do modelo regularizado <strong>Ridge AR-X</strong> vs. <strong>Naive Baseline</strong> (Random Walk). <strong>Clique em qualquer linha</strong> para selecionar a modalidade e atualizar os gráficos:
                       </p>
                     </div>
                     <span className="text-xs font-mono text-gray-500 hidden sm:inline-block">
@@ -932,45 +954,73 @@ export default function EditorialObservatorio() {
                         </tr>
                       </thead>
                       <tbody className="font-mono text-xs">
-                        {pilar1Data.lag_summary_comparison.map((row: any) => (
-                          <tr
-                            key={row.target}
-                            className={selectedModality === row.target ? "bg-[#fff5f5] font-semibold" : ""}
-                          >
-                            <td className="font-sans font-medium text-gray-900">
-                              {row.label}
-                            </td>
-                            <td>
-                              <span className="inline-block px-2 py-0.5 rounded bg-gray-100 text-gray-800 font-bold border border-gray-300">
-                                {row.peak_lag_months} meses
-                              </span>
-                            </td>
-                            <td className="text-gray-900 font-bold">{row.peak_correlation}</td>
-                            <td className="text-gray-500">{row.naive_rmse}</td>
-                            <td className="text-[#f56a6a] font-bold">{row.ridge_rmse}</td>
-                            <td>
-                              <span
-                                className={`px-2 py-0.5 rounded text-[11px] font-bold ${
-                                  row.ridge_improvement_pct > 0
-                                    ? "bg-emerald-100 text-emerald-800"
-                                    : "bg-gray-100 text-gray-600"
-                                }`}
-                              >
-                                {row.ridge_improvement_pct > 0
-                                  ? `+${row.ridge_improvement_pct}%`
-                                  : `${row.ridge_improvement_pct}%`}
-                              </span>
-                            </td>
-                            <td className="font-sans">
-                              <button
-                                onClick={() => setSelectedModality(row.target)}
-                                className="text-xs text-[#f56a6a] hover:underline font-bold uppercase tracking-wider"
-                              >
-                                Selecionar
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
+                        {pilar1Data.lag_summary_comparison.map((row: any) => {
+                          const isSelected = selectedModality === row.target;
+                          return (
+                            <tr
+                              key={row.target}
+                              onClick={() => setSelectedModality(row.target)}
+                              title={`Clique para selecionar ${row.label}`}
+                              className={`transition-all cursor-pointer select-none ${
+                                isSelected ? "font-semibold shadow-xs" : "hover:bg-slate-100/70"
+                              }`}
+                              style={
+                                isSelected
+                                  ? { backgroundColor: "#fff5f5", borderLeft: "4px solid #f56a6a" }
+                                  : {}
+                              }
+                            >
+                              <td className="font-sans font-medium text-gray-900">
+                                <div className="flex items-center gap-2">
+                                  <span className={isSelected ? "font-bold text-gray-900" : ""}>{row.label}</span>
+                                  {isSelected && (
+                                    <span className="text-[9px] font-sans font-bold px-1.5 py-0.5 rounded border border-[#f56a6a] bg-[#f56a6a] text-white ml-1 shrink-0">
+                                      SELECIONADO
+                                    </span>
+                                  )}
+                                </div>
+                              </td>
+                              <td>
+                                <span className="inline-block px-2 py-0.5 rounded bg-gray-100 text-gray-800 font-bold border border-gray-300">
+                                  {row.peak_lag_months} meses
+                                </span>
+                              </td>
+                              <td className="text-gray-900 font-bold">{row.peak_correlation}</td>
+                              <td className="text-gray-500">{row.naive_rmse}</td>
+                              <td className="text-[#f56a6a] font-bold">{row.ridge_rmse}</td>
+                              <td>
+                                <span
+                                  className={`px-2 py-0.5 rounded text-[11px] font-bold ${
+                                    row.ridge_improvement_pct > 0
+                                      ? "bg-emerald-100 text-emerald-800"
+                                      : "bg-gray-100 text-gray-600"
+                                  }`}
+                                >
+                                  {row.ridge_improvement_pct > 0
+                                    ? `+${row.ridge_improvement_pct}%`
+                                    : `${row.ridge_improvement_pct}%`}
+                                </span>
+                              </td>
+                              <td className="font-sans">
+                                {isSelected ? (
+                                  <span className="text-xs text-[#f56a6a] font-bold uppercase tracking-wider flex items-center gap-1">
+                                    ✓ Ativo
+                                  </span>
+                                ) : (
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setSelectedModality(row.target);
+                                    }}
+                                    className="text-xs text-[#f56a6a] hover:underline font-bold uppercase tracking-wider"
+                                  >
+                                    Selecionar
+                                  </button>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>
